@@ -1,6 +1,6 @@
 #include "PreCompile.h"
 #include "GameEngineWindow.h"
-//#include "GameEngineInput.h"
+#include "GameEngineInput.h"
 
 GameEngineWindow* GameEngineWindow::inst_ = new GameEngineWindow();
 bool isWindowOn = true;
@@ -193,11 +193,11 @@ void GameEngineWindow::Update(void(*UpdateFunctions)())
         }
         else
         {
+            GameEngineTime::GetInst().Update();
             UpdateFunctions();
             //함수포인터도 변수처럼 쓰는 '함수'이므로 반드시 ()로 끝내줘야 한다.
-            GameEngineTime::GetInst().Update();
             //GameEngineInput::GetInst().Update();
-            GameEngineSoundManager::GetInst().Update();
+            //GameEngineSoundManager::GetInst().Update();
         }
 
         //GetMessageW(): 입력이 들어왔을때 다른 입력내용들은 첫번째 매개변수인 msg를 통해서 전달하고,

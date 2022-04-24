@@ -3,9 +3,15 @@
   <ItemGroup>
     <ClInclude Include="PreCompile.h" />
     <ClInclude Include="GameEngineWindow.h" />
+    <ClInclude Include="GameEngineImage.h" />
+    <ClInclude Include="GameEngineImageManager.h" />
+    <ClInclude Include="GameEngineInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />
     <ClCompile Include="GameEngineWindow.cpp" />
+    <ClCompile Include="GameEngineImage.cpp" />
+    <ClCompile Include="GameEngineImageManager.cpp" />
+    <ClCompile Include="GameEngineInput.cpp" />
   </ItemGroup>
 </Project>
