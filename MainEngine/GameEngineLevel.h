@@ -1,0 +1,101 @@
+#pragma once
+
+class GameEngineActor;
+class GameEngineLevel: public GameEngineNameBase
+{
+	//Friend Classes
+	friend class GameEngineLevelManager;
+
+	//Member Variables
+
+	std::map<std::string, GameEngineActor*> allActors_;					
+	//각 레벨별 액터들을 저장한 맵.
+
+	std::map<int, std::list<GameEngineActor*>> allActors_UpdateOrder_;	
+	//각 레벨별 액터들을 업데이트 순서대로 정리한 맵.
+
+	std::map<int, std::list<GameEngineActor*>> allActors_RenderOrder_;	
+	//각 레벨별 액터들을 렌더링 순서대로 정리한 맵.
+
+	float4 camPos_;			//카메라 위치. 
+	//따라다니는 플레이어의 이동량만큼 같이 변화하고, 그 변화량이 카메라의 영향을 받는 액터들의 윈도우 내 위치에 역산되서,
+	//플레이어는 계속 움직여서 좌표가 바뀌지만 윈도우 내에서는 고정된 자리에 계속 렌더링되고
+	//배경은 움직이지 않았지만 플레이어의 반대로 움직인것처럼 렌더링되어, 
+	//결과적으로 플레이어가 배경 위를 움직이는 것처럼 보인다.
+
+	bool isLoaded_;
+
+protected:
+	GameEngineLevel();
+	virtual ~GameEngineLevel();
+
+protected:
+	GameEngineLevel(const GameEngineLevel& _other) = delete;
+	GameEngineLevel(GameEngineLevel&& _other) noexcept = delete;
+
+private:
+	GameEngineLevel& operator=(const GameEngineLevel& _other) = delete;
+	GameEngineLevel& operator=(const GameEngineLevel&& _other) = delete;
+
+
+public:	//Member Function Headers.
+
+
+
+public:	//Getter, Setter, Templated Member Functions.
+
+
+protected:
+	virtual void Load() = 0;		//아래 Initialize() 함수가 호출하는, 레벨 구성요소들을 불러오는 함수.
+	
+
+
+
+protected:
+
+	template<typename ActorType>
+	void CreateActor(const std::string _actorName)
+	{
+		if (true == _actorName.empty())	//_actorName이 없다면 폭파.
+		{
+			GameEngineDebug::MsgBoxError("액터 이름이 없습니다.");
+			return;
+		}
+
+		std::map<int, std::list<GameEngineActor*>>::iterator it_Update = allActors_UpdateOrder_.find(0);
+		if (allActors_UpdateOrder_.end() == it_Update)	//기본적으로 있어야 할 0번리스트가 없다면 폭파.
+		{
+			GameEngineDebug::MsgBoxError("0번 업데이트오더 리스트가 없습니다.");
+			return;
+		}
+
+		std::map<int, std::list<GameEngineActor*>>::iterator it_Render = allActors_RenderOrder_.find(0);
+		if (allActors_RenderOrder_.end() == it_Render)	//기본적으로 있어야 할 0번리스트가 없다면 폭파.
+		{
+			GameEngineDebug::MsgBoxError("0번 렌더오더 리스트가 없습니다.");
+			return;
+		}
+
+
+		ActorType* newActor = new ActorType();
+		newActor->SetName(_actorName);
+		newActor->SetParent(this);
+		newActor->Initialize();
+
+		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.
+		allActors_.insert(std::map<std::string, GameEngineActor*>::value_type(_actorName, newActor));
+		it_Update->second.push_back(newActor);
+		it_Render->second.push_back(newActor);
+	}
+
+
+private://Member Function Headers.
+	void Initialize();
+	void Update();
+	void Render();
+	void SortUpdateOrder();			//업데이트 순서 정렬 함수.
+	void SortRenderOrder();			//렌더링 순서 정렬 함수.
+	//void RenderActors();
+	//void RenderLevel();
+};
+

@@ -68,12 +68,6 @@ void GameEngineInput::CreateKey(const std::string& _keyName, int _keyValue)
 	}
 
 	GameEngineKey* newKey = new GameEngineKey(_keyValue);
-	if (nullptr == newKey)
-	{
-		GameEngineDebug::MsgBoxError("키 생성 실패.");
-		delete newKey;
-		return;
-	}
 
 	std::pair<std::map<std::string, GameEngineKey*>::iterator, bool> insertResult = allKeys_.insert(
 		std::map<std::string, GameEngineKey*>::value_type(
@@ -103,10 +97,9 @@ bool GameEngineInput::IsDown(const std::string& _keyName)
 		GameEngineDebug::MsgBoxError(_keyName + ": 그런 이름의 키가 존재하지 않습니다.");
 		return false;
 	}
-	else
-	{
-		return findKeyIter->second->isDown_;
-	}
+
+	return findKeyIter->second->isDown_;
+	
 }
 
 bool GameEngineInput::IsPressed(const std::string& _keyName)
@@ -118,10 +111,9 @@ bool GameEngineInput::IsPressed(const std::string& _keyName)
 		GameEngineDebug::MsgBoxError(_keyName + ": 그런 이름의 키가 존재하지 않습니다.");
 		return false;
 	}
-	else
-	{
-		return findKeyIter->second->isPressed_;
-	}
+
+	return findKeyIter->second->isPressed_;
+	
 }
 
 bool GameEngineInput::IsUp(const std::string& _keyName)
@@ -133,10 +125,9 @@ bool GameEngineInput::IsUp(const std::string& _keyName)
 		GameEngineDebug::MsgBoxError(_keyName + ": 그런 이름의 키가 존재하지 않습니다.");
 		return false;
 	}
-	else
-	{
-		return findKeyIter->second->isUp_;
-	}
+
+	return findKeyIter->second->isUp_;
+	
 }
 
 bool GameEngineInput::IsFree(const std::string& _keyName)
@@ -148,8 +139,7 @@ bool GameEngineInput::IsFree(const std::string& _keyName)
 		GameEngineDebug::MsgBoxError(_keyName + ": 그런 이름의 키가 존재하지 않습니다.");
 		return false;
 	}
-	else
-	{
-		return findKeyIter->second->isFree_;
-	}
+
+	return findKeyIter->second->isFree_;
+	
 }

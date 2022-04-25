@@ -29,14 +29,14 @@ GameEngineImage* GameEngineImageManager::Load(const std::string& _name, const st
 {
     if (nullptr != Find(_name))
     {
-        GameEngineDebug::MsgBoxError("파일이 이미 로드되어있습니다.");
+        GameEngineDebug::MsgBoxError("이미지가 이미 로드되어있습니다.");
         return nullptr;
     }
 
     GameEngineImage* newImage = new GameEngineImage();
     if (nullptr == newImage)
     {
-        GameEngineDebug::MsgBoxError("파일 로드 실패.");
+        GameEngineDebug::MsgBoxError("이미지 로드 실패.");
         delete newImage;
         return nullptr;
     }

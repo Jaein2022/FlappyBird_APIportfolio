@@ -6,6 +6,10 @@
     <ClInclude Include="GameEngineImage.h" />
     <ClInclude Include="GameEngineImageManager.h" />
     <ClInclude Include="GameEngineInput.h" />
+    <ClInclude Include="GameEngineLevel.h" />
+    <ClInclude Include="GameEngineLevelManager.h" />
+    <ClInclude Include="GameEngineActor.h" />
+    <ClInclude Include="GameEngineRenderer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />
@@ -13,5 +17,9 @@
     <ClCompile Include="GameEngineImage.cpp" />
     <ClCompile Include="GameEngineImageManager.cpp" />
     <ClCompile Include="GameEngineInput.cpp" />
+    <ClCompile Include="GameEngineLevel.cpp" />
+    <ClCompile Include="GameEngineLevelManager.cpp" />
+    <ClCompile Include="GameEngineActor.cpp" />
+    <ClCompile Include="GameEngineRenderer.cpp" />
   </ItemGroup>
 </Project>

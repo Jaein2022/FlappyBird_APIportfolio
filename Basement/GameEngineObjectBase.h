@@ -93,6 +93,7 @@ public:	//Getter, Setter, Templated Member Functions
 		return parentObject_;
 	}
 
+protected:
 	void SetParent(GameEngineObjectBase* _parent)
 	{
 		parentObject_ = _parent;
