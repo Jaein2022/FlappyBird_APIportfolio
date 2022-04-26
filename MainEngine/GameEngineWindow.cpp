@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "GameEngineWindow.h"
 #include "GameEngineInput.h"
+#include "GameEngineImageManager.h"
 
 GameEngineWindow* GameEngineWindow::inst_ = new GameEngineWindow();
 bool isWindowOn = true;
@@ -25,18 +26,18 @@ GameEngineWindow::~GameEngineWindow()
     }
 }
 
-bool GameEngineWindow::CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName)
+void GameEngineWindow::CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName)
 {
     if (NULL == _hInstance)
     {
         GameEngineDebug::MsgBoxError("hInstance가 없습니다.");
-        return false;
+        return;
     }
 
     if (true == _windowClassName.empty())
     {
         GameEngineDebug::MsgBoxError("윈도우클래스 이름이 없습니다.");
-        return false;
+        return;
     }
 
     instanceHandle_ = _hInstance;
@@ -81,8 +82,12 @@ bool GameEngineWindow::CreateMainWindowClass(HINSTANCE _hInstance, const std::st
     wcex.lpszClassName = windowClassName_.c_str();
     wcex.hIconSm = nullptr;
 
-    return RegisterClassExA(&wcex);    
-    //위에서 설정한 옵션의 윈도우를 그리겠다고 OS에게 등록하는 함수. 실패하면 0을 반환.
+    if (0 == RegisterClassExA(&wcex))
+        //위에서 설정한 옵션의 윈도우를 그리겠다고 OS에게 등록하는 함수. 실패하면 0을 반환.
+    {
+        GameEngineDebug::MsgBoxError("윈도우클래스 등록 실패.");
+        return;
+    }
 }
 
 void GameEngineWindow::CreateMainWindow(
@@ -136,8 +141,8 @@ void GameEngineWindow::CreateMainWindow(
         return;
     }
 
-    //J_ImageManager::GetInstance().InitializeWindow(windowHDC);
-    ////프로그램이 종료되면 자동으로 윈도우즈가 모든 핸들들을 해제하므로 ReleaseDC()걱정은 하지 않아도 된다.
+    GameEngineImageManager::GetInst().InitializeWindowImage(windowHDC);
+
 }
 
 void GameEngineWindow::SetWindowPosAndSize(const float4& _windowPos, const float4& _windowSize)

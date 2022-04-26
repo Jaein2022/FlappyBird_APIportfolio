@@ -30,7 +30,7 @@ int APIENTRY wWinMain(
 
 
 
-
+    GameEngineImageManager::Destroy();
     GameEngineInput::Destroy();
     GameEngineWindow::Destroy();
     GameEngineSoundManager::Destroy();

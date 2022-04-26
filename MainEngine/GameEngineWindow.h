@@ -30,7 +30,7 @@ private:
 
 
 public:	//Member Function Headers
-	bool CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName);
+	void CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName);
 	void CreateMainWindow(
 		const std::string& _windowTitle,
 		const float4& _windowPos,

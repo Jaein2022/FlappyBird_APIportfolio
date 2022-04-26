@@ -1,10 +1,12 @@
 #include "PreCompile.h"
 #include "GameEngineImage.h"
 #include "GameEngineImageManager.h"
+#include "GameEngineWindow.h"
 
 GameEngineImageManager* GameEngineImageManager::inst_ = new GameEngineImageManager();
 
-GameEngineImageManager::GameEngineImageManager() : allImages_()
+GameEngineImageManager::GameEngineImageManager() 
+    : allImages_(), frontBufferImage_(nullptr), backBufferImage_(nullptr)
 {
 }
 
@@ -18,6 +20,18 @@ GameEngineImageManager::~GameEngineImageManager()
         }
     }
     allImages_.clear();
+
+    if (nullptr != frontBufferImage_)
+    {
+        delete frontBufferImage_;
+        frontBufferImage_ = nullptr;
+    }
+
+    if (nullptr != backBufferImage_)
+    {
+        delete backBufferImage_;
+        backBufferImage_ = nullptr;
+    }
 }
 
 GameEngineImage* GameEngineImageManager::Load(const std::string& _path)
@@ -34,10 +48,10 @@ GameEngineImage* GameEngineImageManager::Load(const std::string& _name, const st
     }
 
     GameEngineImage* newImage = new GameEngineImage();
-    if (nullptr == newImage)
+    if (false == newImage->Load(_path))
     {
-        GameEngineDebug::MsgBoxError("이미지 로드 실패.");
         delete newImage;
+        GameEngineDebug::MsgBoxError("이미지 로드 실패.");
         return nullptr;
     }
     newImage->SetName(_name);
@@ -59,5 +73,29 @@ GameEngineImage* GameEngineImageManager::Find(const std::string& _name)
     {
         return findIter->second;
     }
+}
 
+void GameEngineImageManager::InitializeWindowImage(const HDC& _windowHDC)
+{
+    if (nullptr == _windowHDC)
+    {
+        GameEngineDebug::MsgBoxError("_windowHDC가 없습니다.");
+        return;
+    }
+
+    backBufferImage_ = new GameEngineImage();
+    backBufferImage_->Create(_windowHDC, GameEngineWindow::GetInst().GetWindowSize());
+
+    frontBufferImage_ = new GameEngineImage();
+    frontBufferImage_->Create(_windowHDC);
+}
+
+void GameEngineImageManager::CopyToFrontBuffer()
+{
+    frontBufferImage_->BitCopy(
+        backBufferImage_,
+        float4::ZERO,
+        GameEngineWindow::GetInst().GetWindowSize(),
+        float4::ZERO
+    );
 }

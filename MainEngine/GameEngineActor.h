@@ -49,6 +49,11 @@ public:	//Getter, Setter, Templated Member Functions
 		pos_ += _direction;
 	}
 
+	//float4 GetCamPos()
+	//{
+	//	//return this->GetActorPos() - this->GetParent()->GetCamPos();
+	//}
+
 
 protected:
 	virtual void Initialize() = 0;

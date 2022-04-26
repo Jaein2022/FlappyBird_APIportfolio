@@ -1,6 +1,7 @@
 #include "PreCompile.h"
 #include "GameEngineLevel.h"
 #include "GameEngineLevelManager.h"
+#include "GameEngineImageManager.h"
 
 GameEngineLevelManager* GameEngineLevelManager::inst_ = new GameEngineLevelManager();
 
@@ -51,7 +52,7 @@ void GameEngineLevelManager::Update()
     curLevel_->Update();
 
     curLevel_->Render();
-    //GameEngineImageManager::GetInst().전면버퍼교체();
+    GameEngineImageManager::GetInst().CopyToFrontBuffer();
 }
 
 GameEngineLevel* GameEngineLevelManager::Find(const std::string& _name)

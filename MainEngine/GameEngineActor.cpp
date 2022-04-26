@@ -26,6 +26,15 @@ void GameEngineActor::CreateRenderer(const std::string& _imageName, const std::s
 	GameEngineRenderer* newRenderer = new GameEngineRenderer();
 	newRenderer->SetName(_rendererName);
 	newRenderer->SetParent(this);
+	//newRenderer->SetActorImage(_imageName);
+	
+	std::pair<std::map<std::string, GameEngineRenderer*>::iterator, bool> insertResult = allRenderers_.insert(
+		std::map<std::string, GameEngineRenderer*>::value_type(
+			_rendererName, newRenderer));
 
-
+	if (false == insertResult.second)
+	{
+		GameEngineDebug::MsgBoxError(insertResult.first->first + ": 이미 같은 이름의 렌더러가 존재합니다.");
+		return;
+	}
 }

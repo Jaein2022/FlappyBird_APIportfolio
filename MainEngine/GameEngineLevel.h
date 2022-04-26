@@ -62,21 +62,6 @@ protected:
 			return;
 		}
 
-		std::map<int, std::list<GameEngineActor*>>::iterator it_Update = allActors_UpdateOrder_.find(0);
-		if (allActors_UpdateOrder_.end() == it_Update)	//기본적으로 있어야 할 0번리스트가 없다면 폭파.
-		{
-			GameEngineDebug::MsgBoxError("0번 업데이트오더 리스트가 없습니다.");
-			return;
-		}
-
-		std::map<int, std::list<GameEngineActor*>>::iterator it_Render = allActors_RenderOrder_.find(0);
-		if (allActors_RenderOrder_.end() == it_Render)	//기본적으로 있어야 할 0번리스트가 없다면 폭파.
-		{
-			GameEngineDebug::MsgBoxError("0번 렌더오더 리스트가 없습니다.");
-			return;
-		}
-
-
 		ActorType* newActor = new ActorType();
 		newActor->SetName(_actorName);
 		newActor->SetParent(this);
@@ -84,8 +69,10 @@ protected:
 
 		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.
 		allActors_.insert(std::map<std::string, GameEngineActor*>::value_type(_actorName, newActor));
-		it_Update->second.push_back(newActor);
-		it_Render->second.push_back(newActor);
+		allActors_UpdateOrder_[0].push_back(newActor);
+		allActors_RenderOrder_[0].push_back(newActor);
+		//it_Update->second.push_back(newActor);
+		//it_Render->second.push_back(newActor);
 	}
 
 
