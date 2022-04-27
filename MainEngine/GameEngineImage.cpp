@@ -140,53 +140,53 @@ void GameEngineImage::TransparentCopy(
 	}
 }
 
-//void GameEngineImage::PlgCopy(
-//	GameEngineImage* _srcImage,
-//	const float4& _srcImagePos,
-//	const float4& _srcImageSize, 
-//	GameEngineImage* _maskImage,
-//	float _angle
-//)
-//{
-//	if (nullptr == _srcImage)
-//	{
-//		GameEngineDebug::MsgBoxError("복사할 이미지가 없습니다.");
-//		return;
-//	}
-//	
-//	if (nullptr == _maskImage)
-//	{
-//		GameEngineDebug::MsgBoxError("마스크 이미지가 없습니다.");
-//		return;
-//	}
-//
-//
-//	POINT pointArr[3] = { {0,0} };
-//	//좌상, 우상, 좌하 순으로 배치.
-//	 
-//	 
-//	//이미지 기울이는 코드 넣을 것.
-//
-//	int plgBltResult = PlgBlt(	//
-//		this->imageHDC_,		//sourceImage가 그려질 전체 백버퍼 이미지의 HDC.
-//		pointArr,				//srcImage를 배치할, 백버퍼이미지 내 세 점의 위치를 가진 POINT 구조체 배열.  
-//		_srcImage->GetDC(),		//srcImage의 HDC.
-//		_srcImagePos.IntX(),	//srcImage를 가져올, srcImage 내 왼쪽상단 x좌표. 
-//		_srcImagePos.IntY(),	//srcImage를 가져올, srcImage 내 왼쪽상단 y좌표.
-//		_srcImageSize.IntX(),	//srcImage를 가져올 가로 픽셀길이.
-//		_srcImageSize.IntY(),	//srcImage를 가져올 세로 픽셀길이.
-//		_maskImage->imageHBMP_,	//마스크 이미지의 정보를 가진 핸들.
-//		_srcImagePos.IntX(),	//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 x좌표.
-//		_srcImagePos.IntY()		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 y좌표.
-//		//마스크 이미지는 srcImage와 같은 크기 같은 위치에서 복사를 시작해야 한다.
-//	);
-//
-//	if (0 == plgBltResult)
-//	{
-//		GameEngineDebug::MsgBoxError("PlgBlt 실패.");
-//		return;
-//	}
-//}
+void GameEngineImage::PlgCopy(
+	GameEngineImage* _srcImage,
+	const float4& _srcImagePos,
+	const float4& _srcImageSize, 
+	GameEngineImage* _maskImage,
+	float _angle
+)
+{
+	if (nullptr == _srcImage)
+	{
+		GameEngineDebug::MsgBoxError("복사할 이미지가 없습니다.");
+		return;
+	}
+	
+	if (nullptr == _maskImage)
+	{
+		GameEngineDebug::MsgBoxError("마스크 이미지가 없습니다.");
+		return;
+	}
+
+
+	POINT pointArr[3] = { {0,0} };
+	//좌상, 우상, 좌하 순으로 배치.
+	 
+	 
+	//이미지 기울이는 코드 넣을 것.
+
+	int plgBltResult = PlgBlt(	//
+		this->imageHDC_,		//sourceImage가 그려질 전체 백버퍼 이미지의 HDC.
+		pointArr,				//srcImage를 배치할, 백버퍼이미지 내 세 점의 위치를 가진 POINT 구조체 배열.  
+		_srcImage->GetHDC(),	//srcImage의 HDC.
+		_srcImagePos.IntX(),	//srcImage를 가져올, srcImage 내 왼쪽상단 x좌표. 
+		_srcImagePos.IntY(),	//srcImage를 가져올, srcImage 내 왼쪽상단 y좌표.
+		_srcImageSize.IntX(),	//srcImage를 가져올 가로 픽셀길이.
+		_srcImageSize.IntY(),	//srcImage를 가져올 세로 픽셀길이.
+		_maskImage->imageHBMP_,	//마스크 이미지의 정보를 가진 핸들.
+		_srcImagePos.IntX(),	//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 x좌표.
+		_srcImagePos.IntY()		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 y좌표.
+		//마스크 이미지는 srcImage와 같은 크기 같은 위치에서 복사를 시작해야 한다.
+	);
+
+	if (0 == plgBltResult)
+	{
+		GameEngineDebug::MsgBoxError("PlgBlt 실패.");
+		return;
+	}
+}
 
 bool GameEngineImage::Create(HDC _curWindowHDC)
 {

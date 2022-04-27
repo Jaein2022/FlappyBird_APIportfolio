@@ -34,17 +34,17 @@ GameEngineImageManager::~GameEngineImageManager()
     }
 }
 
-GameEngineImage* GameEngineImageManager::Load(const std::string& _path)
+void GameEngineImageManager::Load(const std::string& _path)
 {
-    return Load(GameEnginePath::GetFileName(_path), _path);
+    Load(GameEnginePath::GetFileName(_path), _path);
 }
 
-GameEngineImage* GameEngineImageManager::Load(const std::string& _name, const std::string& _path)
+void GameEngineImageManager::Load(const std::string& _name, const std::string& _path)
 {
     if (nullptr != Find(_name))
     {
         GameEngineDebug::MsgBoxError("이미지가 이미 로드되어있습니다.");
-        return nullptr;
+        return;
     }
 
     GameEngineImage* newImage = new GameEngineImage();
@@ -52,14 +52,10 @@ GameEngineImage* GameEngineImageManager::Load(const std::string& _name, const st
     {
         delete newImage;
         GameEngineDebug::MsgBoxError("이미지 로드 실패.");
-        return nullptr;
+        return;
     }
     newImage->SetName(_name);
-
-    //여기에 코드를 넣으세요.
-
     allImages_.insert(std::map<std::string, GameEngineImage*>::value_type(_name, newImage));
-    return newImage;
 }
 
 GameEngineImage* GameEngineImageManager::Find(const std::string& _name)
@@ -90,7 +86,7 @@ void GameEngineImageManager::InitializeWindowImage(const HDC& _windowHDC)
     frontBufferImage_->Create(_windowHDC);
 }
 
-void GameEngineImageManager::CopyToFrontBuffer()
+void GameEngineImageManager::ExcuteDoubleBuffering()
 {
     frontBufferImage_->BitCopy(
         backBufferImage_,

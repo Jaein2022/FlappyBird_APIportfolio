@@ -21,11 +21,11 @@ private:
 	GameEngineImageManager& operator=(const GameEngineImageManager&& _other) = delete;
 
 public:			
-	GameEngineImage* Load(const std::string& _path);							
-	GameEngineImage* Load(const std::string& _name, const std::string& _path);	
+	void Load(const std::string& _path);							
+	void Load(const std::string& _name, const std::string& _path);	
 	GameEngineImage* Find(const std::string& _name);	
 	void InitializeWindowImage(const HDC& _windowHDC);
-	void CopyToFrontBuffer();
+	void ExcuteDoubleBuffering();
 	
 
 public:

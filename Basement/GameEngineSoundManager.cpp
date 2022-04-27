@@ -81,8 +81,8 @@ void GameEngineSoundManager::Load(const std::string& _name, const std::string& _
     GameEngineSound* newSound = new GameEngineSound();
     if (false == newSound->Load(_path))
     {
-        GameEngineDebug::MsgBoxError("사운드파일 로딩 실패.");
         delete newSound;
+        GameEngineDebug::MsgBoxError("사운드파일 로딩 실패.");
         return;
     }
     newSound->SetName(_name);

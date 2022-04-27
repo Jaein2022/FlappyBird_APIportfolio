@@ -4,6 +4,7 @@ class GameEngineImage: public GameEngineNameBase
 {
 	//Friend Classes
 	friend class GameEngineImageManager;
+	friend class GameEngineRenderer;
 
 	//Member Variables
 	HBITMAP imageHBMP_;			//비트맵 파일에서 불러온 이미지의 핸들. 
@@ -88,13 +89,13 @@ private://Member Function Headers
 		const float4& _srcImageSize,
 		int _transparency
 	);
-	//void PlgCopy(	
-	//	GameEngineImage* _srcImage,
-	//	const float4& _srcImagePos,
-	//	const float4& _srcImageSize,
-	//	GameEngineImage* _maskImage,
-	//	float _angle
-	//);
+	void PlgCopy(	
+		GameEngineImage* _srcImage,
+		const float4& _srcImagePos,
+		const float4& _srcImageSize,
+		GameEngineImage* _maskImage,
+		float _angle
+	);
 
 	bool Create(HDC _curWindowHDC);
 	bool Create(HDC _curWindowHDC, const float4& _windowSize);

@@ -52,7 +52,7 @@ void GameEngineLevelManager::Update()
     curLevel_->Update();
 
     curLevel_->Render();
-    GameEngineImageManager::GetInst().CopyToFrontBuffer();
+    GameEngineImageManager::GetInst().ExcuteDoubleBuffering();
 }
 
 GameEngineLevel* GameEngineLevelManager::Find(const std::string& _name)
