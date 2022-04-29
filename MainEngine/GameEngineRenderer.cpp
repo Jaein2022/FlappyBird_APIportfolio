@@ -2,6 +2,7 @@
 #include "GameEngineRenderer.h"
 #include "GameEngineImage.h"
 #include "GameEngineImageManager.h"
+#include "GameEngineActor.h"
 
 void GameEngineRenderer::Animation::Update()
 {
@@ -25,38 +26,57 @@ void GameEngineRenderer::Animation::Update()
 		}
 		curDelay_ = delayPerFrame_;
 	}
-	//parentRenderer_->SetFrameIndex(curIndex_, pivot_);
-	//parentRenderer_->Render();
+	parentRenderer_->SetFrameIndex(curIndex_, pivot_);
 }
 
 
-GameEngineRenderer::GameEngineRenderer()
+GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
+	: parentActor_(_actor),
+	renderingImage_(nullptr),
+	renderingImagePos_(float4::ZERO),
+	renderingImageSize_(float4::ZERO),
+	renderingImagePivot_(float4::ZERO),
+	angle_(0.000f),
+	renderSize_(float4::ZERO),
+	rendererLocalPosition_(float4::ZERO),
+	maskImage_(nullptr),
+	curAnimation_(nullptr),
+	isCameraEffect_(false)
 {
 }
 
 GameEngineRenderer::~GameEngineRenderer()
 {
+	for (std::pair<std::string, Animation*> animationPair : allAnimations_)
+	{
+		if (nullptr != animationPair.second)
+		{
+			delete animationPair.second;
+			animationPair.second = nullptr;
+		}
+	}
+	allAnimations_.clear();
 }
 
-void GameEngineRenderer::SetActorImage(const std::string& _imageName)
+void GameEngineRenderer::SetImage(const std::string& _imageName)
 {
-	actorImage_ = GameEngineImageManager::GetInst().Find(_imageName);
-	if (nullptr == actorImage_)
+	renderingImage_ = GameEngineImageManager::GetInst().Find(_imageName);
+	if (nullptr == renderingImage_)
 	{
 		GameEngineDebug::MsgBoxError(_imageName + ": 그런 이름의 이미지가 없습니다.");
 		return;
 	}
 
-	renderSize_ = actorImage_->GetSize();
-	actorImageSize_ = actorImage_->GetSize();
+	renderSize_ = renderingImage_->GetSize();
+	renderingImageSize_ = renderingImage_->GetSize();
 }
 
-void GameEngineRenderer::SetMaskImage(const std::string& _maskName)
+void GameEngineRenderer::SetMaskImage(const std::string& _ImageName)
 {
-	maskImage_ = GameEngineImageManager::GetInst().Find(_maskName);
+	maskImage_ = GameEngineImageManager::GetInst().Find(_ImageName);
 	if (nullptr == maskImage_)
 	{
-		GameEngineDebug::MsgBoxError(_maskName + ": 그런 이름의 마스크가 없습니다.");
+		GameEngineDebug::MsgBoxError(_ImageName + ": 그런 이름의 이미지가 없습니다.");
 		return;
 	}
 }
@@ -71,7 +91,7 @@ void GameEngineRenderer::Render()
 		return;
 	}
 
-	float4 renderPos = float4(0, 0);
+	float4 renderPos = parentActor_->GetPos();
 	//카메라 체계 잡히면 아래 코드 추가.
 	//if (true == isCameraEffect_)
 	//{
@@ -82,25 +102,43 @@ void GameEngineRenderer::Render()
 	//	renderPos = GetParent()->GetActorPos() + pivotPos_ - actorImagePivot_;
 	//}
 
-	backBufferImage->BitCopy(actorImage_, actorImagePos_, actorImageSize_, renderPos);
-	//나중에 TransparentCopy(), PlgCopy()도 추가하고 조건 달아서 쓸 수 있게 할 것.
 	
-
+	if (0.000f == angle_)
+	{
+		backBufferImage->TransparentCopy(
+			renderingImage_,
+			renderPos,
+			renderSize_,
+			renderingImagePos_,
+			renderingImageSize_,
+			RGB(255, 0, 255)
+		);
+	}
+	else
+	{
+		backBufferImage->PlgCopy(
+			renderingImage_,
+			renderPos,
+			renderingImageSize_,
+			maskImage_,
+			angle_
+		);
+	}
 }
 
-void GameEngineRenderer::SetActorImagePivot(RenderPivot _pivot)
+void GameEngineRenderer::SetRenderingImagePivot(RenderPivot _pivot)
 {
 	switch (_pivot)
 	{
 	case RenderPivot::CENTER:
-		actorImagePivot_ = actorImage_->GetSize().Half();
+		renderingImagePivot_ = renderingImage_->GetSize().Half();
 		break;
 	case RenderPivot::BOT:
-		actorImagePivot_ = actorImage_->GetSize().Half();
-		actorImagePivot_.y_ = actorImage_->GetSize().y_;
+		renderingImagePivot_ = renderingImage_->GetSize().Half();
+		renderingImagePivot_.y_ = renderingImage_->GetSize().y_;
 		break;
 	case RenderPivot::LEFTTOP:
-		actorImagePivot_ = float4::ZERO;
+		renderingImagePivot_ = float4::ZERO;
 		break;
 
 	default:
@@ -109,6 +147,135 @@ void GameEngineRenderer::SetActorImagePivot(RenderPivot _pivot)
 	}
 }
 
-void GameEngineRenderer::CreateAnimation(const std::string& _animationName, const std::string& _imageName, int _startIndex, int _finishIndex, float _delayPerFrame, bool isRepetitive_, RenderPivot _pivot)
+void GameEngineRenderer::CreateAnimation(
+	const std::string& _animationName,
+	const std::string& _imageName,
+	int _startIndex,
+	int _finishIndex,
+	float _delayPerFrame,
+	bool _isRepetitive /*= true*/,
+	RenderPivot _pivot /*= RenderPivot::CENTER*/
+)
 {
+	if (nullptr != FindAnimation(_animationName))
+	{
+		GameEngineDebug::MsgBoxError(_animationName + ": 이미 존재하는 애니메이션입니다.");
+		return;
+	}
+
+	GameEngineImage* newAnimationImage = GameEngineImageManager::GetInst().Find(_imageName);
+	if (nullptr == newAnimationImage)
+	{
+		GameEngineDebug::MsgBoxError(_imageName + ": 그런 이름의 이미지가 존재하지 않습니다.");
+		return;
+	}
+	if (false == newAnimationImage->IsCut())	
+	{
+		GameEngineDebug::MsgBoxError("아직 잘리지 않은 이미지입니다.");
+		return;
+	}
+	
+	renderingImage_ = newAnimationImage;
+
+	Animation* newAnimation = new Animation(this);
+
+	newAnimation->startIndex_ = _startIndex;
+	newAnimation->curIndex_ = _startIndex;
+	newAnimation->finishIndex_ = _finishIndex;
+	newAnimation->delayPerFrame_ = _delayPerFrame;
+	newAnimation->pivot_ = _pivot;
+	newAnimation->SetParent(this);
+	newAnimation->isRepetitive_ = _isRepetitive;
+	newAnimation->SetName(_animationName);
+
+	allAnimations_.insert(
+		std::map<std::string, Animation*>::value_type(
+			_animationName, newAnimation));
+}
+
+GameEngineRenderer::Animation* GameEngineRenderer::FindAnimation(const std::string& _animationName)
+{
+	std::map<std::string, Animation*>::iterator findIter = allAnimations_.find(_animationName);
+	if (allAnimations_.end() == findIter)
+	{
+		return nullptr;
+	}
+	else
+	{
+		return findIter->second;
+	}
+}
+
+void GameEngineRenderer::ChangeAnimation(const std::string& _animationName, bool _isForcedChange /*= false*/)
+{
+	if (nullptr != curAnimation_ &&					//기존 애니메이션도 진행하고 있고,
+		false == _isForcedChange &&					//강제교체도 아니고,
+		curAnimation_->GetName() == _animationName	//두 애니메이션 이름이 같으면 무시한다.
+	)
+	{
+		return;
+	}
+
+	curAnimation_ = FindAnimation(_animationName);
+
+	if (nullptr == curAnimation_)
+	{
+		GameEngineDebug::MsgBoxError(_animationName + ": 그런 이름의 애니메이션이 존재하지 않습니다.");
+		return;
+	}
+
+	curAnimation_->Reset();
+}
+
+void GameEngineRenderer::UpdateAnimation()
+{
+	if (nullptr == curAnimation_)
+	{
+		GameEngineDebug::MsgBoxError("현재 진행중인 애니메이션이 없습니다.");
+		return;
+	}
+
+	curAnimation_->Update();
+}
+
+void GameEngineRenderer::SetFrameIndex(int _index, RenderPivot _pivot)
+{
+	if (false == renderingImage_->IsCut())	
+	{
+		GameEngineDebug::MsgBoxError("아직 잘리지 않은 이미지입니다.");
+		return;
+	}
+
+	renderingImagePos_ = renderingImage_->GetCuttingPos(_index);
+	renderingImageSize_ = renderingImage_->GetCuttingSizes(_index);
+	renderSize_ = renderingImageSize_;
+
+	switch (_pivot)
+	{
+	case RenderPivot::CENTER:
+		renderingImagePivot_ = renderSize_.Half();
+		break;
+	case RenderPivot::BOT:
+		renderingImagePivot_ = renderSize_.Half();
+		renderingImagePivot_.y_ += renderSize_.Half().y_;
+		break;
+	case RenderPivot::LEFTTOP:
+		renderingImagePivot_ = float4::ZERO;
+		break;
+
+	default:
+		GameEngineDebug::MsgBoxError("사용할 수 없는 형태의 렌더피봇입니다.");
+		return;
+	}
+}
+
+bool GameEngineRenderer::IsCurAnimationFinished()
+{
+	if (nullptr == curAnimation_)
+	{
+		GameEngineDebug::MsgBoxError("현재 진행중인 애니메이션이 없습니다.");
+		return false;
+	}
+
+	return curAnimation_->isFinished_;
 }

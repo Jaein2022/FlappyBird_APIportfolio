@@ -58,19 +58,19 @@ public:	//Getter, Setter, Templated Member Functions
 			static_cast<float>(imageInfo_.bmHeight) };
 	}
 
-	float4 GetCuttingPos(int _index)
+	float4 GetCuttingPos(int _index) const
 	{
 		return cuttingPos_[_index];
 	}
 
-	float4 GetCuttingSizes(int _index)
+	float4 GetCuttingSizes(int _index) const
 	{
 		return cuttingSizes_[_index];
 	}
 
-	bool IsCut()
+	bool IsCut() const
 	{
-		return cuttingSizes_.empty();
+		return !(cuttingSizes_.empty());
 	}
 
 

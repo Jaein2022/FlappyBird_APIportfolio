@@ -7,7 +7,6 @@ class GameEngineLevel: public GameEngineNameBase
 	friend class GameEngineLevelManager;
 
 	//Member Variables
-
 	std::map<std::string, GameEngineActor*> allActors_;					
 	//각 레벨별 액터들을 저장한 맵.
 
@@ -17,7 +16,7 @@ class GameEngineLevel: public GameEngineNameBase
 	std::map<int, std::list<GameEngineActor*>> allActors_RenderOrder_;	
 	//각 레벨별 액터들을 렌더링 순서대로 정리한 맵.
 
-	float4 camPos_;			//카메라 위치. 
+	float4 cameraPos_;			//카메라 위치. 
 	//따라다니는 플레이어의 이동량만큼 같이 변화하고, 그 변화량이 카메라의 영향을 받는 액터들의 윈도우 내 위치에 역산되서,
 	//플레이어는 계속 움직여서 좌표가 바뀌지만 윈도우 내에서는 고정된 자리에 계속 렌더링되고
 	//배경은 움직이지 않았지만 플레이어의 반대로 움직인것처럼 렌더링되어, 
@@ -43,7 +42,19 @@ public:	//Member Function Headers.
 
 
 public:	//Getter, Setter, Templated Member Functions.
+	float4 GetCameraPos()
+	{
+		return cameraPos_;
+	}
+	void SetCameraPos(const float4& _pos)
+	{
+		cameraPos_ = _pos;
+	}
 
+	void MoveCamera(const float4& _direction)
+	{
+		cameraPos_ += _direction;
+	}
 
 protected:
 	virtual void Load() = 0;		//아래 Initialize() 함수가 호출하는, 레벨 구성요소들을 불러오는 함수.
@@ -54,7 +65,7 @@ protected:
 protected:
 
 	template<typename ActorType>
-	void CreateActor(const std::string _actorName)
+	void CreateActor(const std::string& _actorName, int _updateOrder = 0, int _renderOrder = 0)
 	{
 		if (true == _actorName.empty())	//_actorName이 없다면 폭파.
 		{
@@ -62,27 +73,23 @@ protected:
 			return;
 		}
 
-		ActorType* newActor = new ActorType();
+		ActorType* newActor = new ActorType(this);
 		newActor->SetName(_actorName);
 		newActor->SetParent(this);
 		newActor->Initialize();
 
 		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.
 		allActors_.insert(std::map<std::string, GameEngineActor*>::value_type(_actorName, newActor));
-		allActors_UpdateOrder_[0].push_back(newActor);
-		allActors_RenderOrder_[0].push_back(newActor);
-		//it_Update->second.push_back(newActor);
-		//it_Render->second.push_back(newActor);
+		allActors_UpdateOrder_[_updateOrder].push_back(newActor);
+		allActors_RenderOrder_[_renderOrder].push_back(newActor);
 	}
 
 
-private://Member Function Headers.
+private:	//Member Function Headers.
 	void Initialize();
 	void Update();
 	void Render();
 	void SortUpdateOrder();			//업데이트 순서 정렬 함수.
 	void SortRenderOrder();			//렌더링 순서 정렬 함수.
-	//void RenderActors();
-	//void RenderLevel();
 };
 

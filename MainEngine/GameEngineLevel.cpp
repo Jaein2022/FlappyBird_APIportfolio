@@ -2,16 +2,8 @@
 #include "GameEngineLevel.h"
 #include "GameEngineActor.h"
 
-GameEngineLevel::GameEngineLevel(): camPos_(float4::ZERO), isLoaded_(false)
+GameEngineLevel::GameEngineLevel(): cameraPos_(float4::ZERO), isLoaded_(false)
 {
-	//0번 리스트는 기본적으로 생성, 삽입해 놓는다.
-	allActors_RenderOrder_.insert(
-		std::map<int, std::list<GameEngineActor*>>::value_type(
-			0, std::list<GameEngineActor*>()));
-
-	allActors_UpdateOrder_.insert(
-		std::map<int, std::list<GameEngineActor*>>::value_type(
-			0, std::list<GameEngineActor*>()));
 }
 
 GameEngineLevel::~GameEngineLevel()

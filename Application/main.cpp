@@ -19,12 +19,12 @@ int APIENTRY wWinMain(
     GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
     GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 1280, 720 });
 
-    GameEnginePath* tempPath = new GameEnginePath();
-    tempPath->MoveToParent("FlappyBird_APIportfolio");
-    tempPath->MoveToChild("Resource");
-    tempPath->MoveToChild("Sound");
+    GameEnginePath tempPath = GameEnginePath();
+    tempPath.MoveToParent("FlappyBird_APIportfolio");
+    tempPath.MoveToChild("Resource");
+    tempPath.MoveToChild("Sound");
     
-    std::vector<const std::string&> allSoundFileNames = tempPath->CollectAllFileNames();
+    const std::vector<std::string>& allSoundFileNames = tempPath.CollectAllFileNames();
 
     for (size_t i = 0; i < allSoundFileNames.size(); i++)
     {
@@ -37,9 +37,6 @@ int APIENTRY wWinMain(
 
 
     GameEngineWindow::GetInst().Update(UpdateFunctions);
-
-
-
 
 
 

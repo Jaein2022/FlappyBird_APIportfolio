@@ -33,10 +33,10 @@ public:
 	std::string GetExtension();	//파일의 확장자만 반환하는 함수.
 
 
-public:	//파일 생성 시스템을 구성한다면 별개 클래스로 분리활 것.
+public:	
 	void MoveToParent(const std::string& _directoryName);
 	void MoveToChild(const std::string& _directoryName);
-	std::vector<const std::string&> CollectAllFileNames();
+	std::vector<std::string> CollectAllFileNames();
 
 
 private:

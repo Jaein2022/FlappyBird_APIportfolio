@@ -93,9 +93,9 @@ void GameEnginePath::MoveToChild(const std::string& _directoryName)
 	}
 }
 
-std::vector<const std::string&> GameEnginePath::CollectAllFileNames()
+std::vector<std::string> GameEnginePath::CollectAllFileNames()
 {
-	std::vector<const std::string&> allFileNames;
+	std::vector<std::string> allFileNames;
 	allFileNames.reserve(30);
 
 	if (false == std::filesystem::exists(path_))
