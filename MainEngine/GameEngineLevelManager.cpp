@@ -49,10 +49,17 @@ void GameEngineLevelManager::Update()
         return;
     }
 
+    //업데이트 순서, 렌더링 순서 정렬.
+    curLevel_->SortUpdateOrder();
+    curLevel_->SortRenderOrder();
+
+    //액터들 업데이트.
     curLevel_->Update();
 
+    //액터들 렌더(백버퍼에 각자 이미지들 추가).
     curLevel_->Render();
     GameEngineImageManager::GetInst().ExcuteDoubleBuffering();
+    curLevel_->RemoveDeadActor();
 }
 
 GameEngineLevel* GameEngineLevelManager::Find(const std::string& _name)

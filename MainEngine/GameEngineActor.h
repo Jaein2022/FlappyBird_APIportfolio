@@ -16,7 +16,7 @@ class GameEngineActor: public GameEngineNameBase
 	int updateOrder_;
 
 protected:
-	GameEngineActor(GameEngineLevel* _level);
+	GameEngineActor();
 	virtual ~GameEngineActor();
 
 protected:
@@ -41,12 +41,10 @@ public:	//Getter, Setter, Templated Member Functions
 	{
 		return pos_;
 	}
-
-	void SetPos(const float4& _pos)	//액터의 위치를 특정 지점으로 재설정.
+	void SetPos(const float4& _pos)		//액터의 위치를 특정 지점으로 재설정.
 	{
 		pos_ = _pos;
 	}
-
 	void Move(const float4& _direction)	//액터의 이동 방향과 속도 설정.
 	{
 		pos_ += _direction;

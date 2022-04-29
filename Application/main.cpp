@@ -19,21 +19,35 @@ int APIENTRY wWinMain(
     GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
     GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 1280, 720 });
 
-    GameEnginePath tempPath = GameEnginePath();
-    tempPath.MoveToParent("FlappyBird_APIportfolio");
-    tempPath.MoveToChild("Resource");
-    tempPath.MoveToChild("Sound");
+    GameEnginePath soundResourcePath = GameEnginePath();
+    soundResourcePath.MoveToParent("FlappyBird_APIportfolio");
+    soundResourcePath.MoveToChild("Resource");
+    soundResourcePath.MoveToChild("Sound");
     
-    const std::vector<std::string>& allSoundFileNames = tempPath.CollectAllFileNames();
+    std::vector<std::string> allSoundFileNames = soundResourcePath.CollectAllFileNames();
 
     for (size_t i = 0; i < allSoundFileNames.size(); i++)
     {
         GameEngineSoundManager::GetInst().Load(allSoundFileNames.at(i));
     }
 
-          
+
+    GameEnginePath imageResourcePath = GameEnginePath();
+    imageResourcePath.MoveToParent("FlappyBird_APIportfolio");
+    imageResourcePath.MoveToChild("Resource");
+    imageResourcePath.MoveToChild("Image");
+
+    std::vector<std::string> allImageFileNames = imageResourcePath.CollectAllFileNames();
+
+    for (size_t i = 0; i < allImageFileNames.size(); i++)
+    {
+        GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
+    }
 
     GameEngineInput::GetInst().CreateKey("Space", ' ');
+    //GameEngineInput::GetInst().CreateKey("Click", MK_LBUTTON);
+
+
 
 
     GameEngineWindow::GetInst().Update(UpdateFunctions);

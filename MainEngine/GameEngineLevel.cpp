@@ -9,21 +9,21 @@ GameEngineLevel::GameEngineLevel(): cameraPos_(float4::ZERO), isLoaded_(false)
 GameEngineLevel::~GameEngineLevel()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator it = allActors_UpdateOrder_.begin();
-		it != allActors_UpdateOrder_.end(); ++it)
+		it != allActors_UpdateOrder_.end(); it++)
 	{
 		it->second.clear();
 	}
 	allActors_UpdateOrder_.clear();
 
 	for (std::map<int, std::list<GameEngineActor*>>::iterator it = allActors_RenderOrder_.begin();
-		it != allActors_RenderOrder_.end(); ++it)
+		it != allActors_RenderOrder_.end(); it++)
 	{
 		it->second.clear();
 	}
 	allActors_RenderOrder_.clear();
 
 	for (std::map<std::string, GameEngineActor*>::iterator it = allActors_.begin();
-		it != allActors_.end(); ++it)
+		it != allActors_.end(); it++)
 	{
 		if (nullptr != it->second)
 		{
@@ -51,10 +51,10 @@ void GameEngineLevel::Initialize()
 void GameEngineLevel::Update()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_UpdateOrder_.begin();
-		mapIt != allActors_UpdateOrder_.end(); ++mapIt)
+		mapIt != allActors_UpdateOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
-			listIt != mapIt->second.end(); ++listIt)
+			listIt != mapIt->second.end(); listIt++)
 		{
 			(*listIt)->Update();
 		}
@@ -63,28 +63,24 @@ void GameEngineLevel::Update()
 
 void GameEngineLevel::Render()
 {
-	//RenderActors();
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_RenderOrder_.begin();
-		mapIt != allActors_RenderOrder_.end(); ++mapIt)
+		mapIt != allActors_RenderOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
-			listIt != mapIt->second.end(); ++listIt)
+			listIt != mapIt->second.end(); listIt++)
 		{
 			(*listIt)->Render();
 		}
 	}
-
-
-	//RenderLevel();
 }
 
 void GameEngineLevel::SortUpdateOrder()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_UpdateOrder_.begin();
-		mapIt != allActors_UpdateOrder_.end(); ++mapIt)
+		mapIt != allActors_UpdateOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
-			listIt != mapIt->second.end(); ++listIt)
+			listIt != mapIt->second.end(); listIt++)
 		{
 			if (mapIt->first == (*listIt)->updateOrder_)
 			{
@@ -107,7 +103,7 @@ void GameEngineLevel::SortUpdateOrder()
 	}
 
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_UpdateOrder_.begin();
-		mapIt != allActors_UpdateOrder_.end(); ++mapIt)
+		mapIt != allActors_UpdateOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
 			listIt != mapIt->second.end(); )
@@ -127,10 +123,10 @@ void GameEngineLevel::SortUpdateOrder()
 void GameEngineLevel::SortRenderOrder()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_RenderOrder_.begin();
-		mapIt != allActors_RenderOrder_.end(); ++mapIt)
+		mapIt != allActors_RenderOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
-			listIt != mapIt->second.end(); ++listIt)
+			listIt != mapIt->second.end(); listIt++)
 		{
 			if (mapIt->first == (*listIt)->renderOrder_)
 			{
@@ -153,7 +149,7 @@ void GameEngineLevel::SortRenderOrder()
 	}
 
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_RenderOrder_.begin();
-		mapIt != allActors_RenderOrder_.end(); ++mapIt)
+		mapIt != allActors_RenderOrder_.end(); mapIt++)
 	{
 		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
 			listIt != mapIt->second.end(); )
@@ -170,10 +166,55 @@ void GameEngineLevel::SortRenderOrder()
 	}
 }
 
-//void GameEngineLevel::RenderActors()
-//{
-//}
+void GameEngineLevel::RemoveDeadActor()
+{
+	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_UpdateOrder_.begin();
+		mapIt != allActors_UpdateOrder_.end(); mapIt++)
+	{
+		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
+			listIt != mapIt->second.end();)
+		{
+			if (true == (*listIt)->IsDead())
+			{
+				listIt = mapIt->second.erase(listIt);
+			}
+			else
+			{
+				++listIt;
+			}
+		}
+	}
 
-//void GameEngineLevel::RenderLevel()
-//{
-//}
+	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIt = allActors_RenderOrder_.begin();
+		mapIt != allActors_RenderOrder_.end(); mapIt++)
+	{
+		for (std::list<GameEngineActor*>::iterator listIt = mapIt->second.begin();
+			listIt != mapIt->second.end(); )
+		{
+			if (true == (*listIt)->IsDead())
+			{
+				listIt = mapIt->second.erase(listIt);
+			}
+			else
+			{
+				++listIt;
+			}
+		}
+	}
+
+	for (std::map<std::string, GameEngineActor*>::iterator it = allActors_.begin();
+		it != allActors_.end(); )
+	{
+		if (true == it->second->IsDead())
+		{
+			delete it->second;
+			it->second = nullptr;
+			it = allActors_.erase(it);
+		}
+		else
+		{
+			++it;
+		}
+	}
+}
+

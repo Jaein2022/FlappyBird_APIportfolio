@@ -73,9 +73,10 @@ protected:
 			return;
 		}
 
-		ActorType* newActor = new ActorType(this);
+		ActorType* newActor = new ActorType();
 		newActor->SetName(_actorName);
 		newActor->SetParent(this);
+		newActor->parentLevel_ = this;
 		newActor->Initialize();
 
 		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.
@@ -91,5 +92,6 @@ private:	//Member Function Headers.
 	void Render();
 	void SortUpdateOrder();			//업데이트 순서 정렬 함수.
 	void SortRenderOrder();			//렌더링 순서 정렬 함수.
+	void RemoveDeadActor();			//삭제된 액터를 제거하는 함수.
 };
 

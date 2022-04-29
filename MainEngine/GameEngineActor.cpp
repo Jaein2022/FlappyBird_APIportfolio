@@ -3,8 +3,8 @@
 #include "GameEngineRenderer.h"
 #include "GameEngineLevel.h"
 
-GameEngineActor::GameEngineActor(GameEngineLevel* _level)
-	: parentLevel_(_level),
+GameEngineActor::GameEngineActor()
+	: parentLevel_(nullptr),
 	pos_(float4::ZERO),
 	renderOrder_(0),
 	updateOrder_(0)

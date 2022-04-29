@@ -41,7 +41,7 @@ public:
 	}
 
 	template<typename LevelType>
-	void CreateLevel(const std::string& _levelName)
+	void Create(const std::string& _levelName)
 	{
 		if (true == _levelName.empty())	//_actorName이 없다면 폭파.
 		{
