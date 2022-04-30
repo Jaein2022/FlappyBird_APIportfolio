@@ -13,11 +13,11 @@ int APIENTRY wWinMain(
 
 #ifdef _DEBUG
     int* i = new int(1);	//릭 체크가 이루어지고 있는지를 확인하기 위한 의도적인 릭.
-#endif                      //릴리즈모드일 때는 하지 않는다.
+#endif                      //릴리즈모드에서는 하지 않는다.
 
     GameEngineSoundManager::GetInst().Initialize();
     GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
-    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 1280, 720 });
+    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 1200, 512 });
 
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent("FlappyBird_APIportfolio");

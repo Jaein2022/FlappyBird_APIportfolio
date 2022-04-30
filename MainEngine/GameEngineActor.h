@@ -45,9 +45,9 @@ public:	//Getter, Setter, Templated Member Functions
 	{
 		pos_ = _pos;
 	}
-	void Move(const float4& _direction)	//액터의 이동 방향과 속도 설정.
+	void Move(const float4& _distance)	//액터의 이동 방향과 속도 설정.
 	{
-		pos_ += _direction;
+		pos_ += _distance;
 	}
 
 

@@ -2,11 +2,17 @@
 
 class Background: public GameEngineActor
 {
-	//배경: 바닥, 뒷배경 렌더링 담당.
+	//배경: 뒷배경 이동 배치 및 렌더링 담당.
 
 
 	//Member Variables
-	GameEngineRenderer* background_Renderer_;
+	const int rendererCount_;
+	const int widthInt_;;
+	const float widthFloat_;
+	float backgroundSpeed_;
+	std::vector<GameEngineRenderer*> backgroundRenderers_;
+
+	//배경 이미지 크기: 288 X 512 픽셀.
 
 public:
 	Background();

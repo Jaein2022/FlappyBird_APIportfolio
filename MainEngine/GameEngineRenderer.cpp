@@ -30,6 +30,8 @@ void GameEngineRenderer::Animation::Update()
 }
 
 
+
+
 GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	: parentActor_(_actor),
 	renderingImage_(nullptr),
@@ -38,7 +40,7 @@ GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	renderingImagePivot_(float4::ZERO),
 	angle_(0.000f),
 	renderSize_(float4::ZERO),
-	rendererLocalPosition_(float4::ZERO),
+	localPos_(float4::ZERO),
 	maskImage_(nullptr),
 	curAnimation_(nullptr),
 	isCameraEffect_(false)
@@ -91,7 +93,7 @@ void GameEngineRenderer::Render()
 		return;
 	}
 
-	float4 renderPos = parentActor_->GetPos();
+	float4 renderPos = parentActor_->GetPos() + localPos_;
 	//카메라 체계 잡히면 아래 코드 추가.
 	//if (true == isCameraEffect_)
 	//{

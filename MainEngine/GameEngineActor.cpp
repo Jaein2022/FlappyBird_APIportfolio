@@ -26,9 +26,10 @@ GameEngineActor::~GameEngineActor()
 GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
 {
 	GameEngineRenderer* newRenderer = new GameEngineRenderer(this);
-	newRenderer->SetName(_rendererName);
+	//newRenderer->parentActor_ = this;
 	newRenderer->SetParent(this);
 	newRenderer->SetImage(_imageName);
+	newRenderer->SetName(_rendererName);
 	
 	std::pair<std::map<std::string, GameEngineRenderer*>::iterator, bool> insertResult = allRenderers_.insert(
 		std::map<std::string, GameEngineRenderer*>::value_type(

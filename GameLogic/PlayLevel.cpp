@@ -15,5 +15,5 @@ PlayLevel::~PlayLevel()
 
 void PlayLevel::Load()
 {
-	CreateActor<Background>("Background");
+	CreateActor<Background>("Background", 10, 0);
 }
