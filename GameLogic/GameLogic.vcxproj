@@ -187,10 +187,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Base.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Bird.h">
       <SubType>
       </SubType>
@@ -211,10 +207,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Background.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="Base.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -29,7 +29,7 @@ private:
 
 
 public:	//Member Function Headers
-	void CreateRenderer(
+	GameEngineRenderer* CreateRenderer(
 		const std::string& _imageName,
 		const std::string& _rendererName
 	);

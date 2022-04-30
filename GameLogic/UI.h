@@ -2,7 +2,7 @@
 
 class UI: public GameEngineActor
 {
-	//Friend Classes
+
 
 
 	//Member Variables
@@ -22,7 +22,9 @@ private:
 
 
 public:	//Member Function Headers
-
+	void Initialize() override;
+	void Update() override;
+	void Render() override;
 
 
 public:	//Getter, Setter, Templated Member Functions

@@ -8,3 +8,15 @@ Pipe::Pipe()
 Pipe::~Pipe()
 {
 }
+
+void Pipe::Initialize()
+{
+}
+
+void Pipe::Update()
+{
+}
+
+void Pipe::Render()
+{
+}

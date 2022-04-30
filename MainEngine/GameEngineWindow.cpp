@@ -110,14 +110,18 @@ void GameEngineWindow::CreateMainWindow(
 
     windowTitle_ = _windowTitle;
 
+    windowPos_ = _windowPos;
+    windowSize_ = _windowSize;
+
+
     windowHandle_ = CreateWindowA(
         windowClassName_.c_str(),       //윈도우 클래스 이름.
         windowTitle_.c_str(),           //윈도우 제목.
         WS_OVERLAPPEDWINDOW,            //윈도우 형태: 기본 윈도우.
-        _windowPos.IntX(),              //윈도우 위치의 x좌표. 
-        _windowPos.IntY(),              //윈도우 위치의 y좌표.
-        _windowSize.IntX(),             //윈도우 가로길이.
-        _windowSize.IntY(),             //윈도우 세로길이.
+        windowPos_.IntX(),              //윈도우 위치의 x좌표. 
+        windowPos_.IntY(),              //윈도우 위치의 y좌표.
+        windowSize_.IntX(),             //윈도우 가로길이.
+        windowSize_.IntY(),             //윈도우 세로길이.
         nullptr,                        //부모 윈도우가 있다면 여기 넣는다.
         nullptr,                        //메뉴 핸들이 따로 있다면 여기 넣는다.
         instanceHandle_,                //윈도우를 만든 주체인 인스턴스의 핸들을 넣는다.

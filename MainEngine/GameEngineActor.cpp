@@ -23,7 +23,7 @@ GameEngineActor::~GameEngineActor()
 	}
 }
 
-void GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
+GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
 {
 	GameEngineRenderer* newRenderer = new GameEngineRenderer(this);
 	newRenderer->SetName(_rendererName);
@@ -37,8 +37,10 @@ void GameEngineActor::CreateRenderer(const std::string& _imageName, const std::s
 	if (false == insertResult.second)
 	{
 		GameEngineDebug::MsgBoxError(insertResult.first->first + ": 같은 이름의 렌더러가 이미 존재합니다.");
-		return;
+		return nullptr;
 	}
+
+	return newRenderer;
 }
 
 float4 GameEngineActor::GetCamPos()

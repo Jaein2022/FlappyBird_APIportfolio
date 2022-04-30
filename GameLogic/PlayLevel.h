@@ -1,8 +1,12 @@
 #pragma once
 
+class BackGround;
+class Bird;
+class Pipe;
+class UI;
 class PlayLevel : public GameEngineLevel
 {
-	//Friend Classes
+
 
 
 	//Member Variables
@@ -22,7 +26,7 @@ private:
 
 
 public:	//Member Function Headers
-
+	void Load() override;
 
 
 public:	//Getter, Setter, Templated Member Functions

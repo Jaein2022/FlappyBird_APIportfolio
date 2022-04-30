@@ -2,11 +2,11 @@
 
 class Background: public GameEngineActor
 {
-	//Friend Classes
+	//¹è°æ: ¹Ù´Ú, µÞ¹è°æ ·»´õ¸µ ´ã´ç.
 
 
 	//Member Variables
-
+	GameEngineRenderer* background_Renderer_;
 
 public:
 	Background();
@@ -22,15 +22,12 @@ private:
 
 
 public:	//Member Function Headers
-
-
+	void Initialize() override;
+	void Update() override;
+	void Render() override;
 
 public:	//Getter, Setter, Templated Member Functions
 
-
-
 private://Member Function Headers
-
-
 };
 

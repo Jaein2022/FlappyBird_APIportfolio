@@ -65,12 +65,12 @@ protected:
 protected:
 
 	template<typename ActorType>
-	void CreateActor(const std::string& _actorName, int _updateOrder = 0, int _renderOrder = 0)
+	ActorType* CreateActor(const std::string& _actorName, int _updateOrder = 0, int _renderOrder = 0)
 	{
 		if (true == _actorName.empty())	//_actorName이 없다면 폭파.
 		{
 			GameEngineDebug::MsgBoxError("액터 이름이 없습니다.");
-			return;
+			return nullptr;
 		}
 
 		ActorType* newActor = new ActorType();
@@ -83,6 +83,7 @@ protected:
 		allActors_.insert(std::map<std::string, GameEngineActor*>::value_type(_actorName, newActor));
 		allActors_UpdateOrder_[_updateOrder].push_back(newActor);
 		allActors_RenderOrder_[_renderOrder].push_back(newActor);
+		return newActor;
 	}
 
 

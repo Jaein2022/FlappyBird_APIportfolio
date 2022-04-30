@@ -8,3 +8,15 @@ UI::UI()
 UI::~UI()
 {
 }
+
+void UI::Initialize()
+{
+}
+
+void UI::Update()
+{
+}
+
+void UI::Render()
+{
+}

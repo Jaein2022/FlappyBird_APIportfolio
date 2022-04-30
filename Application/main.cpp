@@ -44,8 +44,14 @@ int APIENTRY wWinMain(
         GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
     }
 
+
     GameEngineInput::GetInst().CreateKey("Space", ' ');
-    //GameEngineInput::GetInst().CreateKey("Click", MK_LBUTTON);
+    GameEngineInput::GetInst().CreateKey("Click", MK_LBUTTON);
+
+    GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
+    GameEngineLevelManager::GetInst().ChangeCurLevel("PlayLevel");
+
+
 
 
 
@@ -54,7 +60,7 @@ int APIENTRY wWinMain(
 
 
 
-
+    GameEngineLevelManager::Destroy();
     GameEngineImageManager::Destroy();
     GameEngineInput::Destroy();
     GameEngineWindow::Destroy();
@@ -68,7 +74,7 @@ void UpdateFunctions()
 
 
     GameEngineInput::GetInst().Update();
-
+    GameEngineLevelManager::GetInst().Update();
     
     GameEngineSoundManager::GetInst().Update();
 }

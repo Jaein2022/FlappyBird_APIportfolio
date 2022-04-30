@@ -43,7 +43,7 @@ public:
 	template<typename LevelType>
 	void Create(const std::string& _levelName)
 	{
-		if (true == _levelName.empty())	//_actorName이 없다면 폭파.
+		if (true == _levelName.empty())	//_levelName이 없다면 폭파.
 		{
 			GameEngineDebug::MsgBoxError("레벨 이름이 없습니다.");
 			return;

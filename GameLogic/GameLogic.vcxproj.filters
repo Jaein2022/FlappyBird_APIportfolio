@@ -4,7 +4,6 @@
     <ClInclude Include="PreCompile.h" />
     <ClInclude Include="Bird.h" />
     <ClInclude Include="PlayLevel.h" />
-    <ClInclude Include="Base.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="UI.h" />
@@ -13,7 +12,6 @@
     <ClCompile Include="PreCompile.cpp" />
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="PlayLevel.cpp" />
-    <ClCompile Include="Base.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="UI.cpp" />
