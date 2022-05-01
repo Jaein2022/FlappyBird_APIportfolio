@@ -37,8 +37,8 @@ public:
 	{
 		float4 NextVector;
 
-		NextVector.x_ = _originVector.x_ * cosf(_radian) - _originVector.y_ * sinf(_radian);
-		NextVector.y_ = _originVector.x_ * sinf(_radian) + _originVector.y_ * cosf(_radian);
+		NextVector.x = _originVector.x * cosf(_radian) - _originVector.y * sinf(_radian);
+		NextVector.y = _originVector.x * sinf(_radian) + _originVector.y * cosf(_radian);
 
 		return NextVector;
 	}
@@ -63,39 +63,39 @@ public:
 	{
 		struct
 		{
-			float x_;
-			float y_;
-			float z_;
-			float w_;	//연산시 w_값 증감 주의.
+			float x;
+			float y;
+			float z;
+			float w;	
 		};
 	};
 
-	float4() : x_(0.f), y_(0.f), z_(0.f), w_(1.f)
+	float4() : x(0.f), y(0.f), z(0.f), w(1.f)
 	{
 	}
 
-	float4(const float4& _other) : x_(_other.x_), y_(_other.y_), z_(_other.z_), w_(_other.w_)
+	float4(const float4& _other) : x(_other.x), y(_other.y), z(_other.z), w(_other.w)
 	{
 	}
 
-	float4(float4&& _value) noexcept : x_(_value.x_), y_(_value.y_), z_(_value.z_), w_(_value.w_)
+	float4(float4&& _value) noexcept : x(_value.x), y(_value.y), z(_value.z), w(_value.w)
 	{
 	}
 
-	float4(int _x, int _y) : x_(static_cast<float>(_x)), y_(static_cast<float>(_y)), z_(0.f), w_(1.f)
+	float4(int _x, int _y) : x(static_cast<float>(_x)), y(static_cast<float>(_y)), z(0.f), w(1.f)
 	{
 	}
 
-	float4(float _x, float _y) : x_(_x), y_(_y), z_(0.f), w_(1.f)
+	float4(float _x, float _y) : x(_x), y(_y), z(0.f), w(1.f)
 	{
 	}
 
 	float4(int _x, int _y, int _z)
-		: x_(static_cast<float>(_x)), y_(static_cast<float>(_y)), z_(static_cast<float>(_z)), w_(1.0f)
+		: x(static_cast<float>(_x)), y(static_cast<float>(_y)), z(static_cast<float>(_z)), w(1.0f)
 	{
 	}
 
-	float4(float _x, float _y, float _z, float _w = 1.f) : x_(_x), y_(_y), z_(_z), w_(_w)
+	float4(float _x, float _y, float _z, float _w = 1.f) : x(_x), y(_y), z(_z), w(_w)
 	{
 	}
 
@@ -106,20 +106,20 @@ public:
 
 	float4& operator=(const float4& _other)
 	{
-		this->x_ = _other.x_;
-		this->y_ = _other.y_;
-		this->z_ = _other.z_;
-		this->w_ = _other.w_;
+		this->x = _other.x;
+		this->y = _other.y;
+		this->z = _other.z;
+		this->w = _other.w;
 		return *this;
 	}
 
 	float4 operator+(const float4 _other) const
 	{
 		float4 ReturnValue;
-		ReturnValue.x_ = this->x_ + _other.x_;
-		ReturnValue.y_ = this->y_ + _other.y_;
-		ReturnValue.z_ = this->z_ + _other.z_;
-		ReturnValue.w_ = this->w_ + _other.w_;
+		ReturnValue.x = this->x + _other.x;
+		ReturnValue.y = this->y + _other.y;
+		ReturnValue.z = this->z + _other.z;
+		ReturnValue.w = this->w + _other.w;
 
 		return ReturnValue;
 	}
@@ -127,10 +127,10 @@ public:
 	float4 operator-(const float4 _other) const
 	{
 		float4 ReturnValue;
-		ReturnValue.x_ = this->x_ - _other.x_;
-		ReturnValue.y_ = this->y_ - _other.y_;
-		ReturnValue.z_ = this->z_ - _other.z_;
-		ReturnValue.w_ = this->w_ - _other.w_;
+		ReturnValue.x = this->x - _other.x;
+		ReturnValue.y = this->y - _other.y;
+		ReturnValue.z = this->z - _other.z;
+		ReturnValue.w = this->w - _other.w;
 
 		return ReturnValue;
 	}
@@ -138,10 +138,10 @@ public:
 	float4 operator*(const float4 _other) const
 	{
 		float4 ReturnValue;
-		ReturnValue.x_ = this->x_ * _other.x_;
-		ReturnValue.y_ = this->y_ * _other.y_;
-		ReturnValue.z_ = this->z_ * _other.z_;
-		ReturnValue.w_ = this->w_ * _other.w_;
+		ReturnValue.x = this->x * _other.x;
+		ReturnValue.y = this->y * _other.y;
+		ReturnValue.z = this->z * _other.z;
+		ReturnValue.w = this->w * _other.w;
 
 		return ReturnValue;
 	}
@@ -149,50 +149,50 @@ public:
 	float4 operator/(const float4 _other) const
 	{
 		float4 ReturnValue;
-		ReturnValue.x_ = this->x_ / _other.x_;
-		ReturnValue.y_ = this->y_ / _other.y_;
-		ReturnValue.z_ = this->z_ / _other.z_;
-		ReturnValue.w_ = this->w_ / _other.w_;
+		ReturnValue.x = this->x / _other.x;
+		ReturnValue.y = this->y / _other.y;
+		ReturnValue.z = this->z / _other.z;
+		ReturnValue.w = this->w / _other.w;
 
 		return ReturnValue;
 	}
 
 	float4& operator+=(const float4 _other)
 	{
-		this->x_ = this->x_ + _other.x_;
-		this->y_ = this->y_ + _other.y_;
-		this->z_ = this->z_ + _other.z_;
-		this->w_ = this->w_ + _other.w_;
+		this->x = this->x + _other.x;
+		this->y = this->y + _other.y;
+		this->z = this->z + _other.z;
+		this->w = this->w + _other.w;
 
 		return *this;
 	}
 
 	float4& operator-=(const float4 _other)
 	{
-		this->x_ = this->x_ - _other.x_;
-		this->y_ = this->y_ - _other.y_;
-		this->z_ = this->z_ - _other.z_;
-		this->w_ = this->w_ - _other.w_;
+		this->x = this->x - _other.x;
+		this->y = this->y - _other.y;
+		this->z = this->z - _other.z;
+		this->w = this->w - _other.w;
 
 		return *this;
 	}
 
 	float4& operator*=(const float4 _other)
 	{
-		this->x_ = this->x_ * _other.x_;
-		this->y_ = this->y_ * _other.y_;
-		this->z_ = this->z_ * _other.z_;
-		this->w_ = this->w_ * _other.w_;
+		this->x = this->x * _other.x;
+		this->y = this->y * _other.y;
+		this->z = this->z * _other.z;
+		this->w = this->w * _other.w;
 
 		return *this;
 	}
 
 	float4& operator/=(const float4 _other)
 	{
-		this->x_ = this->x_ / _other.x_;
-		this->y_ = this->y_ / _other.y_;
-		this->z_ = this->z_ / _other.z_;
-		this->w_ = this->w_ / _other.w_;
+		this->x = this->x / _other.x;
+		this->y = this->y / _other.y;
+		this->z = this->z / _other.z;
+		this->w = this->w / _other.w;
 
 		return *this;
 	}
@@ -200,10 +200,10 @@ public:
 	float4 operator*(const float _value) const
 	{
 		float4 ReturnValue;
-		ReturnValue.x_ = this->x_ * _value;
-		ReturnValue.y_ = this->y_ * _value;
-		ReturnValue.z_ = this->z_ * _value;
-		ReturnValue.w_ = this->w_ * _value;
+		ReturnValue.x = this->x * _value;
+		ReturnValue.y = this->y * _value;
+		ReturnValue.z = this->z * _value;
+		ReturnValue.w = this->w * _value;
 
 		return ReturnValue;
 	}
@@ -211,28 +211,28 @@ public:
 	//x, y만 비교.
 	bool operator==(const float4& _value) const	
 	{
-		return (this->x_ == _value.x_ && this->y_ == _value.y_);
+		return (this->x == _value.x && this->y == _value.y);
 	}
 
 	//x, y만 비교.
 	bool operator!=(const float4& _value) const	
 	{
-		return (this->x_ != _value.x_ || this->y_ != _value.y_);
+		return (this->x != _value.x || this->y != _value.y);
 	}
 
 	float Half_X()
 	{
-		return x_ * 0.5f;
+		return x * 0.5f;
 	}
 
 	float Half_Y()
 	{
-		return y_ * 0.5f;
+		return y * 0.5f;
 	}
 
 	float Half_Z()
 	{
-		return z_ * 0.5f;
+		return z * 0.5f;
 	}
 
 	float4 Half()
@@ -242,32 +242,32 @@ public:
 
 	int IntX() const
 	{
-		return static_cast<int>(x_);
+		return static_cast<int>(x);
 	}
 
 	int IntY() const
 	{
-		return static_cast<int>(y_);
+		return static_cast<int>(y);
 	}
 
 	int IntZ() const
 	{
-		return static_cast<int>(z_);
+		return static_cast<int>(z);
 	}
 
 	int Half_IntX()
 	{
-		return static_cast<int>(x_ * 0.5f);
+		return static_cast<int>(x * 0.5f);
 	}
 
 	int Half_IntY()
 	{
-		return static_cast<int>(y_ * 0.5f);
+		return static_cast<int>(y * 0.5f);
 	}
 
 	int Half_IntZ()
 	{
-		return static_cast<int>(z_ * 0.5f);
+		return static_cast<int>(z * 0.5f);
 	}
 
 };

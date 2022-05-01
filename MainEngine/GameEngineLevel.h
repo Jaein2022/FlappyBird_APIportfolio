@@ -58,12 +58,9 @@ public:	//Getter, Setter, Templated Member Functions.
 
 protected:
 	virtual void Load() = 0;		//아래 Initialize() 함수가 호출하는, 레벨 구성요소들을 불러오는 함수.
-	
-
 
 
 protected:
-
 	template<typename ActorType>
 	ActorType* CreateActor(const std::string& _actorName, int _updateOrder = 0, int _renderOrder = 0)
 	{
@@ -80,10 +77,33 @@ protected:
 		newActor->Initialize();
 
 		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.
-		allActors_.insert(std::map<std::string, GameEngineActor*>::value_type(_actorName, newActor));
 		allActors_UpdateOrder_[_updateOrder].push_back(newActor);
 		allActors_RenderOrder_[_renderOrder].push_back(newActor);
+
+		std::pair<std::map<std::string, GameEngineActor*>::iterator, bool> insertResult = allActors_.insert(
+				std::map<std::string, GameEngineActor*>::value_type(
+					_actorName, newActor));
+
+		if (false == insertResult.second)
+		{
+			GameEngineDebug::MsgBoxError(insertResult.first->first + ": 같은 이름의 액터가 이미 존재합니다.");
+			return nullptr;
+		}
+
 		return newActor;
+	}
+
+	GameEngineActor* FindActor(const std::string& _actorName)
+	{
+		std::map<std::string, GameEngineActor*>::iterator findIter = allActors_.find(_actorName);
+		if (allActors_.end() == findIter)
+		{
+			return nullptr;
+		}
+		else
+		{
+			return findIter->second;
+		}
 	}
 
 

@@ -17,7 +17,7 @@ int APIENTRY wWinMain(
 
     GameEngineSoundManager::GetInst().Initialize();
     GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
-    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 1200, 512 });
+    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 800, 512 });
 
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent("FlappyBird_APIportfolio");
@@ -44,12 +44,8 @@ int APIENTRY wWinMain(
         GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
     }
 
-
-    GameEngineInput::GetInst().CreateKey("Space", ' ');
-    GameEngineInput::GetInst().CreateKey("Click", MK_LBUTTON);
-
     GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
-    GameEngineLevelManager::GetInst().ChangeCurLevel("PlayLevel");
+    GameEngineLevelManager::GetInst().ChangeLevel("PlayLevel");
 
 
 

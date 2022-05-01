@@ -22,7 +22,7 @@ private:
 	GameEngineLevelManager& operator=(const GameEngineLevelManager&& _other) = delete;
 
 public:
-	void ChangeCurLevel(const std::string& _levelName);
+	void ChangeLevel(const std::string& _levelName);
 	void Update();
 
 public:

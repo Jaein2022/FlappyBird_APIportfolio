@@ -5,6 +5,7 @@
 
 #include <MainEngine\GameEngineWindow.h>
 #include <MainEngine\GameEngineInput.h>
+#include <MainEngine\GameEngineImage.h>
 #include <MainEngine\GameEngineImageManager.h>
 
 #include <MainEngine\GameEngineLevelManager.h>

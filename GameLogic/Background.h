@@ -7,9 +7,8 @@ class Background: public GameEngineActor
 
 	//Member Variables
 	const int rendererCount_;
-	const int widthInt_;;
-	const float widthFloat_;
-	float backgroundSpeed_;
+	const float width_;
+	float speed_;
 	std::vector<GameEngineRenderer*> backgroundRenderers_;
 
 	//배경 이미지 크기: 288 X 512 픽셀.
@@ -33,6 +32,10 @@ public:	//Member Function Headers
 	void Render() override;
 
 public:	//Getter, Setter, Templated Member Functions
+	void SetSpeed(float _speed)
+	{
+		speed_ = _speed;
+	}
 
 private://Member Function Headers
 };

@@ -19,7 +19,7 @@ GameEngineImage::~GameEngineImage()
 
 void GameEngineImage::Cut(const float4 _size)
 {
-	if (0.0f >= _size.x_ || 0.0f >= _size.y_)
+	if (0.0f >= _size.x || 0.0f >= _size.y)
 	{
 		GameEngineDebug::MsgBoxError("자르는 사이즈가 0입니다.");
 		return;
@@ -31,8 +31,8 @@ void GameEngineImage::Cut(const float4 _size)
 		return;
 	}
 
-	size_t xCount = static_cast<size_t>(this->GetSize().x_ / _size.x_);
-	size_t yCount = static_cast<size_t>(this->GetSize().y_ / _size.y_);
+	size_t xCount = static_cast<size_t>(this->GetSize().x / _size.x);
+	size_t yCount = static_cast<size_t>(this->GetSize().y / _size.y);
 
 	cuttingPos_.reserve(xCount * yCount);
 	cuttingSizes_.reserve(xCount * yCount);
@@ -46,10 +46,10 @@ void GameEngineImage::Cut(const float4 _size)
 		{
 			cuttingPos_.push_back(cuttingPos);
 			cuttingSizes_.push_back(cuttingSize);
-			cuttingPos.x_ += cuttingSize.x_;
+			cuttingPos.x += cuttingSize.x;
 		}
-		cuttingPos.x_ = 0.0f;
-		cuttingPos.y_ += cuttingSize.y_;
+		cuttingPos.x = 0.0f;
+		cuttingPos.y += cuttingSize.y;
 	}
 }
 
@@ -66,7 +66,7 @@ void GameEngineImage::BitCopy(
 		return;
 	}
 
-	if (0.0f >= _srcImageSize.x_ || 0.0f >= _srcImageSize.y_)
+	if (0.0f >= _srcImageSize.x || 0.0f >= _srcImageSize.y)
 	{
 		GameEngineDebug::MsgBoxError("그릴 이미지의 크기가 0입니다.");
 		return;
@@ -106,13 +106,13 @@ void GameEngineImage::TransparentCopy(
 		return;
 	}
 
-	if (0.0f >= _renderSize.x_ || 0.0f >= _renderSize.y_)
+	if (0.0f >= _renderSize.x || 0.0f >= _renderSize.y)
 	{
 		GameEngineDebug::MsgBoxError("렌더사이즈가 0입니다.");
 		return;
 	}
 
-	if (0.0f >= _srcImageSize.x_ || 0.0f >= _srcImageSize.y_)
+	if (0.0f >= _srcImageSize.x || 0.0f >= _srcImageSize.y)
 	{
 		GameEngineDebug::MsgBoxError("그릴 이미지의 크기가 0입니다.");
 		return;

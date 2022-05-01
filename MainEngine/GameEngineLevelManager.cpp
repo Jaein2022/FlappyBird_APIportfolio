@@ -23,7 +23,7 @@ GameEngineLevelManager::~GameEngineLevelManager()
     allLevels_.clear();
 }
 
-void GameEngineLevelManager::ChangeCurLevel(const std::string& _levelName)
+void GameEngineLevelManager::ChangeLevel(const std::string& _levelName)
 {
     nextLevel_ = Find(_levelName);
     

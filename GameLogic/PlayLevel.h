@@ -1,16 +1,19 @@
 #pragma once
 
-class BackGround;
+class Background;
 class Bird;
 class Pipe;
 class UI;
 class PlayLevel : public GameEngineLevel
 {
-
+	//플레이레벨.
 
 
 	//Member Variables
+	const float playSpeed_;
 
+	Bird* bird_;
+	Background* background_;
 
 public:
 	PlayLevel();

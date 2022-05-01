@@ -92,8 +92,8 @@ void GameEngineRenderer::Render()
 		GameEngineDebug::MsgBoxError("백버퍼 이미지가 없습니다.");
 		return;
 	}
-
-	float4 renderPos = parentActor_->GetPos() + localPos_;
+	
+	float4 renderPos = parentActor_->GetPos() + localPos_ - renderingImagePivot_;
 	//카메라 체계 잡히면 아래 코드 추가.
 	//if (true == isCameraEffect_)
 	//{
@@ -103,7 +103,6 @@ void GameEngineRenderer::Render()
 	//{
 	//	renderPos = GetParent()->GetActorPos() + pivotPos_ - actorImagePivot_;
 	//}
-
 	
 	if (0.000f == angle_)
 	{
@@ -137,7 +136,7 @@ void GameEngineRenderer::SetRenderingImagePivot(RenderPivot _pivot)
 		break;
 	case RenderPivot::BOT:
 		renderingImagePivot_ = renderingImage_->GetSize().Half();
-		renderingImagePivot_.y_ = renderingImage_->GetSize().y_;
+		renderingImagePivot_.y = renderingImage_->GetSize().y;
 		break;
 	case RenderPivot::LEFTTOP:
 		renderingImagePivot_ = float4::ZERO;
@@ -259,7 +258,7 @@ void GameEngineRenderer::SetFrameIndex(int _index, RenderPivot _pivot)
 		break;
 	case RenderPivot::BOT:
 		renderingImagePivot_ = renderSize_.Half();
-		renderingImagePivot_.y_ += renderSize_.Half().y_;
+		renderingImagePivot_.y += renderSize_.Half().y;
 		break;
 	case RenderPivot::LEFTTOP:
 		renderingImagePivot_ = float4::ZERO;
