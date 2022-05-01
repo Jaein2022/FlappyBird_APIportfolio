@@ -2,8 +2,8 @@
 
 class Background;
 class Bird;
-class Pipe;
-class UI;
+//class PipeAndBase;
+//class UI;
 class PlayLevel : public GameEngineLevel
 {
 	//플레이레벨.

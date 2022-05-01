@@ -4,7 +4,7 @@
     <ClInclude Include="PreCompile.h" />
     <ClInclude Include="Bird.h" />
     <ClInclude Include="PlayLevel.h" />
-    <ClInclude Include="Pipe.h" />
+    <ClInclude Include="PipeAndBase.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
@@ -12,7 +12,7 @@
     <ClCompile Include="PreCompile.cpp" />
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="PlayLevel.cpp" />
-    <ClCompile Include="Pipe.cpp" />
+    <ClCompile Include="PipeAndBase.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>

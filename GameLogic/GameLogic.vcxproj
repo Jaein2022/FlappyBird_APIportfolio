@@ -191,7 +191,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Pipe.h">
+    <ClInclude Include="PipeAndBase.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -214,7 +214,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="Pipe.cpp">
+    <ClCompile Include="PipeAndBase.cpp">
       <SubType>
       </SubType>
     </ClCompile>

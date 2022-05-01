@@ -17,15 +17,14 @@ int APIENTRY wWinMain(
 
     GameEngineSoundManager::GetInst().Initialize();
     GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
-    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", float4::ZERO, { 800, 512 });
+    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 800, 512 });
+
 
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent("FlappyBird_APIportfolio");
     soundResourcePath.MoveToChild("Resource");
     soundResourcePath.MoveToChild("Sound");
-    
     std::vector<std::string> allSoundFileNames = soundResourcePath.CollectAllFileNames();
-
     for (size_t i = 0; i < allSoundFileNames.size(); i++)
     {
         GameEngineSoundManager::GetInst().Load(allSoundFileNames.at(i));
@@ -36,13 +35,13 @@ int APIENTRY wWinMain(
     imageResourcePath.MoveToParent("FlappyBird_APIportfolio");
     imageResourcePath.MoveToChild("Resource");
     imageResourcePath.MoveToChild("Image");
-
     std::vector<std::string> allImageFileNames = imageResourcePath.CollectAllFileNames();
-
     for (size_t i = 0; i < allImageFileNames.size(); i++)
     {
         GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
     }
+
+
 
     GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
     GameEngineLevelManager::GetInst().ChangeLevel("PlayLevel");
@@ -53,6 +52,9 @@ int APIENTRY wWinMain(
 
 
     GameEngineWindow::GetInst().Update(UpdateFunctions);
+
+
+
 
 
 

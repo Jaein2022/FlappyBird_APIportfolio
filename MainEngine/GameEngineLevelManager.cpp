@@ -59,7 +59,9 @@ void GameEngineLevelManager::Update()
     //액터들 렌더(백버퍼에 각자 이미지들 추가).
     curLevel_->Render();
     GameEngineImageManager::GetInst().ExcuteDoubleBuffering();
-    curLevel_->RemoveDeadActor();
+
+    curLevel_->CheckCollision();
+    curLevel_->ReleaseDeadActor();
 }
 
 GameEngineLevel* GameEngineLevelManager::Find(const std::string& _name)

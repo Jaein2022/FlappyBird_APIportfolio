@@ -2,6 +2,7 @@
 #include "GameEngineActor.h"
 #include "GameEngineRenderer.h"
 #include "GameEngineLevel.h"
+#include "GameEngineCollisionBody.h"
 
 GameEngineActor::GameEngineActor()
 	: parentLevel_(nullptr),
@@ -13,12 +14,21 @@ GameEngineActor::GameEngineActor()
 
 GameEngineActor::~GameEngineActor()
 {
-	for (std::pair<std::string, GameEngineRenderer*> rendererPair: allRenderers_)
+	for (GameEngineRenderer* renderer : allRenderers_)
 	{
-		if (nullptr != rendererPair.second)
+		if (nullptr != renderer)
 		{
-			delete rendererPair.second;
-			rendererPair.second = nullptr;
+			delete renderer;
+			renderer = nullptr;
+		}
+	}
+
+	for (GameEngineCollisionBody* collisionBody : allCollisionBodies_)
+	{
+		if (nullptr != collisionBody)
+		{
+			delete collisionBody;
+			collisionBody = nullptr;
 		}
 	}
 }
@@ -31,20 +41,31 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageNam
 	newRenderer->SetImage(_imageName);
 	newRenderer->SetName(_rendererName);
 	
-	std::pair<std::map<std::string, GameEngineRenderer*>::iterator, bool> insertResult = allRenderers_.insert(
-		std::map<std::string, GameEngineRenderer*>::value_type(
-			_rendererName, newRenderer));
-
-	if (false == insertResult.second)
-	{
-		GameEngineDebug::MsgBoxError(insertResult.first->first + ": 같은 이름의 렌더러가 이미 존재합니다.");
-		return nullptr;
-	}
+	allRenderers_.push_back(newRenderer);
 
 	return newRenderer;
 }
 
-float4 GameEngineActor::GetCamPos()
+GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
+	const std::string& _collisionBodyName,
+	int _collisionGroupIndex,
+	CollisionBodyType _type
+)
+{
+	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
+	newCollisionBody->SetParent(this);
+	newCollisionBody->SetType(_type);
+	newCollisionBody->SetGroup(_collisionGroupIndex);
+	newCollisionBody->SetName(_collisionBodyName);
+	allCollisionBodies_.push_back(newCollisionBody);
+
+	parentLevel_->InsertCollsionBody(_collisionGroupIndex, newCollisionBody);	
+	//콜리전그룹 필요 없어지면 삭제.
+
+	return newCollisionBody;
+}
+
+float4 GameEngineActor::GetCameraPos()
 {
 	return this->pos_ - parentLevel_->GetCameraPos();
 }

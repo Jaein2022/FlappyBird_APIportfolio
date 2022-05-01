@@ -40,7 +40,7 @@ GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	renderingImagePivot_(float4::ZERO),
 	angle_(0.000f),
 	renderSize_(float4::ZERO),
-	localPos_(float4::ZERO),
+	rendererLocalPos_(float4::ZERO),
 	maskImage_(nullptr),
 	curAnimation_(nullptr),
 	isCameraEffect_(false)
@@ -93,16 +93,15 @@ void GameEngineRenderer::Render()
 		return;
 	}
 	
-	float4 renderPos = parentActor_->GetPos() + localPos_ - renderingImagePivot_;
-	//카메라 체계 잡히면 아래 코드 추가.
-	//if (true == isCameraEffect_)
-	//{
-	//	renderPos = GetParent()->GetCameraPos() + pivotPos_ - actorImagePivot_;
-	//}
-	//else
-	//{
-	//	renderPos = GetParent()->GetActorPos() + pivotPos_ - actorImagePivot_;
-	//}
+	float4 renderPos = float4::ZERO;
+	if (true == isCameraEffect_)
+	{
+		renderPos = parentActor_->GetCameraPos() + rendererLocalPos_ - renderingImagePivot_;
+	}
+	else
+	{
+		renderPos = parentActor_->GetPos() + rendererLocalPos_ - renderingImagePivot_;
+	}
 	
 	if (0.000f == angle_)
 	{
@@ -131,14 +130,14 @@ void GameEngineRenderer::SetRenderingImagePivot(RenderPivot _pivot)
 {
 	switch (_pivot)
 	{
-	case RenderPivot::CENTER:
+	case RenderPivot::Center:
 		renderingImagePivot_ = renderingImage_->GetSize().Half();
 		break;
-	case RenderPivot::BOT:
+	case RenderPivot::Bottom:
 		renderingImagePivot_ = renderingImage_->GetSize().Half();
 		renderingImagePivot_.y = renderingImage_->GetSize().y;
 		break;
-	case RenderPivot::LEFTTOP:
+	case RenderPivot::LeftTop:
 		renderingImagePivot_ = float4::ZERO;
 		break;
 
@@ -253,14 +252,14 @@ void GameEngineRenderer::SetFrameIndex(int _index, RenderPivot _pivot)
 
 	switch (_pivot)
 	{
-	case RenderPivot::CENTER:
+	case RenderPivot::Center:
 		renderingImagePivot_ = renderSize_.Half();
 		break;
-	case RenderPivot::BOT:
+	case RenderPivot::Bottom:
 		renderingImagePivot_ = renderSize_.Half();
 		renderingImagePivot_.y += renderSize_.Half().y;
 		break;
-	case RenderPivot::LEFTTOP:
+	case RenderPivot::LeftTop:
 		renderingImagePivot_ = float4::ZERO;
 		break;
 

@@ -10,6 +10,8 @@
     <ClInclude Include="GameEngineLevelManager.h" />
     <ClInclude Include="GameEngineActor.h" />
     <ClInclude Include="GameEngineRenderer.h" />
+    <ClInclude Include="GameEngineCollisionBody.h" />
+    <ClInclude Include="GameEngineEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />
@@ -21,5 +23,6 @@
     <ClCompile Include="GameEngineLevelManager.cpp" />
     <ClCompile Include="GameEngineActor.cpp" />
     <ClCompile Include="GameEngineRenderer.cpp" />
+    <ClCompile Include="GameEngineCollisionBody.cpp" />
   </ItemGroup>
 </Project>

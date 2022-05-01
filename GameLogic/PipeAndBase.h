@@ -1,24 +1,24 @@
 #pragma once
 
-class Bird: public GameEngineActor
+class PipeAndBase: public GameEngineActor
 {
 	//Friend Classes
 
 
 	//Member Variables
-	GameEngineRenderer* birdRenderer_;
+
 
 public:
-	Bird();
-	~Bird();
+	PipeAndBase();
+	~PipeAndBase();
 
 protected:
-	Bird(const Bird& _other) = delete;
-	Bird(Bird&& _other) noexcept = delete;
+	PipeAndBase(const PipeAndBase& _other) = delete;
+	PipeAndBase(PipeAndBase&& _other) noexcept = delete;
 
 private:
-	Bird& operator=(const Bird& _other) = delete;
-	Bird& operator=(const Bird&& _other) = delete;
+	PipeAndBase& operator=(const PipeAndBase& _other) = delete;
+	PipeAndBase& operator=(const PipeAndBase&& _other) = delete;
 
 
 public:	//Member Function Headers

@@ -2,8 +2,8 @@
 #include "PlayLevel.h"
 #include "Background.h"
 #include "Bird.h"
-#include "Pipe.h"
-#include "UI.h"
+//#include "PipeAndBase.h"
+//#include "UI.h"
 
 PlayLevel::PlayLevel() : playSpeed_(150.00f), bird_(nullptr), background_(nullptr)
 {

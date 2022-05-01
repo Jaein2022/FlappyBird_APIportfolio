@@ -1,5 +1,7 @@
 #pragma once
+#include "GameEngineEnum.h"
 
+class GameEngineCollisionBody;
 class GameEngineRenderer;
 class GameEngineLevel;
 class GameEngineActor: public GameEngineNameBase
@@ -10,7 +12,9 @@ class GameEngineActor: public GameEngineNameBase
 	//Member Variables
 	GameEngineLevel* parentLevel_;
 
-	std::map<std::string, GameEngineRenderer*> allRenderers_;
+	std::list<GameEngineRenderer*> allRenderers_;
+	std::list<GameEngineCollisionBody*> allCollisionBodies_;
+	
 	float4 pos_;
 	int renderOrder_;
 	int updateOrder_;
@@ -33,7 +37,13 @@ public:	//Member Function Headers
 		const std::string& _imageName,
 		const std::string& _rendererName
 	);
-	float4 GetCamPos();
+	GameEngineCollisionBody* CreateCollisionBody(
+		const std::string& _collisionBodyName,
+		int _collisionOrder,
+		CollisionBodyType _type
+	);
+
+	float4 GetCameraPos();
 
 
 public:	//Getter, Setter, Templated Member Functions
@@ -57,6 +67,7 @@ protected:
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
+	virtual void CheckCollision() = 0;
 
 protected:
 	void SetRenderOrder(int _renderOrder)

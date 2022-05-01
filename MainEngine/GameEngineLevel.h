@@ -1,9 +1,11 @@
 #pragma once
 
+class GameEngineCollisionBody;
 class GameEngineActor;
 class GameEngineLevel: public GameEngineNameBase
 {
 	//Friend Classes
+	friend GameEngineCollisionBody;
 	friend class GameEngineLevelManager;
 
 	//Member Variables
@@ -15,6 +17,8 @@ class GameEngineLevel: public GameEngineNameBase
 
 	std::map<int, std::list<GameEngineActor*>> allActors_RenderOrder_;	
 	//각 레벨별 액터들을 렌더링 순서대로 정리한 맵.
+
+	std::map<int, std::list<GameEngineCollisionBody*>> allCollisionBodies_;
 
 	float4 cameraPos_;			//카메라 위치. 
 	//따라다니는 플레이어의 이동량만큼 같이 변화하고, 그 변화량이 카메라의 영향을 받는 액터들의 윈도우 내 위치에 역산되서,
@@ -38,8 +42,7 @@ private:
 
 
 public:	//Member Function Headers.
-
-
+	
 
 public:	//Getter, Setter, Templated Member Functions.
 	float4 GetCameraPos()
@@ -54,6 +57,12 @@ public:	//Getter, Setter, Templated Member Functions.
 	void MoveCamera(const float4& _direction)
 	{
 		cameraPos_ += _direction;
+	}
+
+	void InsertCollsionBody(int _group, GameEngineCollisionBody* _collisionBody)
+		//콜리전그룹 필요없으면 삭제.
+	{
+		allCollisionBodies_[_group].push_back(_collisionBody);
 	}
 
 protected:
@@ -111,8 +120,10 @@ private:	//Member Function Headers.
 	void Initialize();
 	void Update();
 	void Render();
+	void CheckCollision();			//콜리전오더 필요없으면 삭제.
 	void SortUpdateOrder();			//업데이트 순서 정렬 함수.
 	void SortRenderOrder();			//렌더링 순서 정렬 함수.
-	void RemoveDeadActor();			//삭제된 액터를 제거하는 함수.
+	void SortCollisionOrder();		//콜리전그룹 필요없으면 삭제.
+	void ReleaseDeadActor();		//삭제된 액터를 제거하는 함수.
 };
 

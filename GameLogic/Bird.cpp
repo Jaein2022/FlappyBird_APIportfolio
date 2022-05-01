@@ -63,3 +63,7 @@ void Bird::Render()
 	//float4 rendererPos = birdRenderer_->GetLocalPos();
 	birdRenderer_->Render();
 }
+
+void Bird::CheckCollision()
+{
+}
