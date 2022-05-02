@@ -2,10 +2,13 @@
 #include "GameEngineEnum.h"
 
 class GameEngineActor;
-class GameEngineCollisionBody: public GameEngineNameBase
+class GameEngineCollisionBody : public GameEngineNameBase
 {
 	//Friend Classes
 	friend GameEngineActor;
+
+	static std::function<bool(GameEngineCollisionBody*, GameEngineCollisionBody*)>
+		checkCollisionFunctions_[static_cast<int>(CollisionBodyType::MAX)][static_cast<int>(CollisionBodyType::MAX)];
 
 	//Member Variables
 	GameEngineActor* parentActor_;
@@ -13,7 +16,9 @@ class GameEngineCollisionBody: public GameEngineNameBase
 	float4 size_;
 	
 	CollisionBodyType type_;
-	int groupIndex_;	//콜리전그룹 필요 없어지면 삭제.
+	int groupIndex_;	
+
+
 
 private:
 	GameEngineCollisionBody(GameEngineActor* _actor);
@@ -29,9 +34,16 @@ private:
 
 
 public:	//Member Function Headers
-	
+	static void Initialize();
+
+	static bool RectToLine(GameEngineCollisionBody* _left, GameEngineCollisionBody* _right);
+	static bool RectToRect(GameEngineCollisionBody* _left, GameEngineCollisionBody* _right);
+
+	static bool LineToLine(GameEngineCollisionBody* _left, GameEngineCollisionBody* _right);
+	static bool LineToRect(GameEngineCollisionBody* _left, GameEngineCollisionBody* _right);
 
 
+	float4 GetWorldPos();
 
 public:	//Getter, Setter, Templated Member Functions
 	void SetGroup(int _order)
@@ -64,10 +76,7 @@ public:	//Getter, Setter, Templated Member Functions
 		localPos_ = _pos;
 	}
 
-	float4 GetWorldPos()
-	{
-		return parentActor_->GetPos() + localPos_;
-	}
+
 
 private://Member Function Headers
 

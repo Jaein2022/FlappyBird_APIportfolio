@@ -188,8 +188,8 @@ void GameEngineLevel::SortRenderOrder()
 
 void GameEngineLevel::SortCollisionOrder()
 {
-	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBodies_.begin();
-		mapIter != allCollisionBodies_.end(); mapIter++)
+	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBody_.begin();
+		mapIter != allCollisionBody_.end(); mapIter++)
 	{
 		for (std::list<GameEngineCollisionBody*>::iterator listIter = mapIter->second.begin();
 			listIter != mapIter->second.end(); listIter++)
@@ -200,22 +200,22 @@ void GameEngineLevel::SortCollisionOrder()
 			}
 
 			//순서가 안맞아도 여기선 일단 삽입만.
-			if (allCollisionBodies_.end() == allCollisionBodies_.find((*listIter)->GetGroup()))
+			if (allCollisionBody_.end() == allCollisionBody_.find((*listIter)->GetGroup()))
 			{
-				allCollisionBodies_.insert(
+				allCollisionBody_.insert(
 					std::map<int, std::list<GameEngineCollisionBody*>>::value_type(
 						(*listIter)->GetGroup(), std::list<GameEngineCollisionBody*>()));
 			}
 			std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter_inserted =
-				allCollisionBodies_.find((*listIter)->GetGroup());
+				allCollisionBody_.find((*listIter)->GetGroup());
 
 			mapIter_inserted->second.push_back((*listIter));
 
 		}
 	}
 
-	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBodies_.begin();
-		mapIter != allCollisionBodies_.end(); mapIter++)
+	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBody_.begin();
+		mapIter != allCollisionBody_.end(); mapIter++)
 	{
 		for (std::list<GameEngineCollisionBody*>::iterator listIter = mapIter->second.begin();
 			listIter != mapIter->second.end(); )

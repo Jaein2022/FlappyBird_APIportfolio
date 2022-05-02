@@ -18,7 +18,7 @@ class GameEngineLevel: public GameEngineNameBase
 	std::map<int, std::list<GameEngineActor*>> allActors_RenderOrder_;	
 	//각 레벨별 액터들을 렌더링 순서대로 정리한 맵.
 
-	std::map<int, std::list<GameEngineCollisionBody*>> allCollisionBodies_;
+	std::map<int, std::list<GameEngineCollisionBody*>> allCollisionBody_;
 
 	float4 cameraPos_;			//카메라 위치. 
 	//따라다니는 플레이어의 이동량만큼 같이 변화하고, 그 변화량이 카메라의 영향을 받는 액터들의 윈도우 내 위치에 역산되서,
@@ -60,9 +60,8 @@ public:	//Getter, Setter, Templated Member Functions.
 	}
 
 	void InsertCollsionBody(int _group, GameEngineCollisionBody* _collisionBody)
-		//콜리전그룹 필요없으면 삭제.
 	{
-		allCollisionBodies_[_group].push_back(_collisionBody);
+		allCollisionBody_[_group].push_back(_collisionBody);
 	}
 
 protected:

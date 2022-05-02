@@ -30,6 +30,7 @@ public:	//Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
+	void CheckCollision() override;
 
 public:	//Getter, Setter, Templated Member Functions
 	void SetSpeed(float _speed)

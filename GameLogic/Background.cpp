@@ -45,3 +45,7 @@ void Background::Render()
 		renderer->Render();
 	}
 }
+
+void Background::CheckCollision()
+{
+}
