@@ -33,6 +33,11 @@ GameEngineActor::~GameEngineActor()
 	}
 }
 
+float4 GameEngineActor::GetCameraPos()
+{
+	return this->pos_ - parentLevel_->GetCameraPos();
+}
+
 GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
 {
 	GameEngineRenderer* newRenderer = new GameEngineRenderer(this);
@@ -48,24 +53,18 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageNam
 
 GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	const std::string& _collisionBodyName,
-	int _collisionGroupIndex,
+	const float4& _color,
 	CollisionBodyType _type
 )
 {
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
 	newCollisionBody->SetParent(this);
 	newCollisionBody->SetType(_type);
-	newCollisionBody->SetGroup(_collisionGroupIndex);
 	newCollisionBody->SetName(_collisionBodyName);
+	newCollisionBody->SetColor(_color);
 	allCollisionBodies_.push_back(newCollisionBody);
-
-	parentLevel_->InsertCollsionBody(_collisionGroupIndex, newCollisionBody);	
-	//콜리전그룹 필요 없어지면 삭제.
 
 	return newCollisionBody;
 }
 
-float4 GameEngineActor::GetCameraPos()
-{
-	return this->pos_ - parentLevel_->GetCameraPos();
-}
+

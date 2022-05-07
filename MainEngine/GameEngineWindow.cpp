@@ -138,7 +138,7 @@ void GameEngineWindow::CreateMainWindow(
     ShowWindow(windowHandle_, SW_SHOW);
     UpdateWindow(windowHandle_);
 
-    HDC windowHDC = ::GetDC(windowHandle_);
+    HDC windowHDC = GetDC(windowHandle_);
     if (nullptr == windowHDC)
     {
         GameEngineDebug::MsgBoxError("HDC 생성 실패.");
@@ -146,7 +146,6 @@ void GameEngineWindow::CreateMainWindow(
     }
 
     GameEngineImageManager::GetInst().InitializeWindowImage(windowHDC);
-
 }
 
 void GameEngineWindow::SetWindowPosAndSize(const float4& _windowPos, const float4& _windowSize)
@@ -249,6 +248,8 @@ LRESULT WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
         //GetDC()함수는 WM_PAINT 메시지를 처리해주지 못하므로 의미 없다. 반드시 BeginPaint()여야 한다.
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint(_hWnd, &ps);
+
+
         EndPaint(_hWnd, &ps);
         break;
     }

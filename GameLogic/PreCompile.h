@@ -12,3 +12,4 @@
 #include <MainEngine\GameEngineLevel.h>
 #include <MainEngine\GameEngineActor.h>
 #include <MainEngine\GameEngineRenderer.h>
+#include <MainEngine\GameEngineCollisionBody.h>

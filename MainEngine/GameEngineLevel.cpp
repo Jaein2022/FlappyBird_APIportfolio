@@ -81,19 +81,6 @@ void GameEngineLevel::Render()
 	}
 }
 
-void GameEngineLevel::CheckCollision()
-{
-	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIter = allActors_UpdateOrder_.begin();
-		mapIter != allActors_UpdateOrder_.end(); mapIter++)
-	{
-		for (std::list<GameEngineActor*>::iterator listIter = mapIter->second.begin();
-			listIter != mapIter->second.end(); listIter++)
-		{
-			(*listIter)->CheckCollision();
-		}
-	}
-}
-
 void GameEngineLevel::SortUpdateOrder()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIter = allActors_UpdateOrder_.begin();
@@ -175,52 +162,6 @@ void GameEngineLevel::SortRenderOrder()
 			listIter != mapIter->second.end(); )
 		{
 			if (mapIter->first == (*listIter)->renderOrder_)
-			{
-				++listIter;
-				continue;	//순서가 맞다면 listIt를 뒤로 넘기고 통과.
-			}
-
-			//순서가 틀린 것은 지운다.
-			listIter = mapIter->second.erase(listIter);
-		}
-	}
-}
-
-void GameEngineLevel::SortCollisionOrder()
-{
-	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBody_.begin();
-		mapIter != allCollisionBody_.end(); mapIter++)
-	{
-		for (std::list<GameEngineCollisionBody*>::iterator listIter = mapIter->second.begin();
-			listIter != mapIter->second.end(); listIter++)
-		{
-			if (mapIter->first == (*listIter)->GetGroup())
-			{
-				continue;	//순서가 맞다면 통과.
-			}
-
-			//순서가 안맞아도 여기선 일단 삽입만.
-			if (allCollisionBody_.end() == allCollisionBody_.find((*listIter)->GetGroup()))
-			{
-				allCollisionBody_.insert(
-					std::map<int, std::list<GameEngineCollisionBody*>>::value_type(
-						(*listIter)->GetGroup(), std::list<GameEngineCollisionBody*>()));
-			}
-			std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter_inserted =
-				allCollisionBody_.find((*listIter)->GetGroup());
-
-			mapIter_inserted->second.push_back((*listIter));
-
-		}
-	}
-
-	for (std::map<int, std::list<GameEngineCollisionBody*>>::iterator mapIter = allCollisionBody_.begin();
-		mapIter != allCollisionBody_.end(); mapIter++)
-	{
-		for (std::list<GameEngineCollisionBody*>::iterator listIter = mapIter->second.begin();
-			listIter != mapIter->second.end(); )
-		{
-			if (mapIter->first == (*listIter)->GetGroup())
 			{
 				++listIter;
 				continue;	//순서가 맞다면 listIt를 뒤로 넘기고 통과.

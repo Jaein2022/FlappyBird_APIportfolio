@@ -60,7 +60,6 @@ void GameEngineLevelManager::Update()
     curLevel_->Render();
     GameEngineImageManager::GetInst().ExcuteDoubleBuffering();
 
-    curLevel_->CheckCollision();
     curLevel_->ReleaseDeadActor();
 }
 

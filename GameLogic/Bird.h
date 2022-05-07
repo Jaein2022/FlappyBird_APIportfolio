@@ -7,6 +7,7 @@ class Bird: public GameEngineActor
 
 	//Member Variables
 	GameEngineRenderer* birdRenderer_;
+	GameEngineCollisionBody* birdCollisionBody_;
 
 public:
 	Bird();

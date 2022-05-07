@@ -3,6 +3,8 @@
 enum class CollisionBodyType
 {
 	Rect,
-	Line,
+	HLine,	//가로선.
+	//VLine,	//세로선.
+	//Point,
 	MAX
 };

@@ -2,7 +2,7 @@
 #include "PlayLevel.h"
 #include "Background.h"
 #include "Bird.h"
-//#include "PipeAndBase.h"
+#include "Base.h"
 //#include "UI.h"
 
 PlayLevel::PlayLevel() : playSpeed_(150.00f), bird_(nullptr), background_(nullptr)
@@ -19,9 +19,9 @@ void PlayLevel::Load()
 	background_->SetSpeed(playSpeed_ * -0.50f);
 
 	bird_ = CreateActor<Bird>("Bird", 0, 9);
-	bird_->SetPos({ 100, 100 });
+	bird_->SetWorldPos({ 100, 100 });
 
-
+	
 
 
 }

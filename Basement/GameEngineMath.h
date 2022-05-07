@@ -68,6 +68,14 @@ public:
 			float z;
 			float w;	
 		};
+
+		struct
+		{
+			float r;
+			float g;
+			float b;
+			float a;	
+		};
 	};
 
 	float4() : x(0.f), y(0.f), z(0.f), w(1.f)
@@ -269,5 +277,76 @@ public:
 	{
 		return static_cast<int>(z * 0.5f);
 	}
+
+};
+
+class Figure
+{
+public:
+	float4 pos_;
+	float4 size_;
+
+public:
+	Figure(const float4& _pos, const float4& _size): pos_(_pos), size_(_size)
+	{
+	}
+
+	~Figure()
+	{
+	}
+
+public:
+	float Left()
+	{
+		return pos_.x - size_.Half_X();
+	}	
+	float Right()
+	{
+		return pos_.x + size_.Half_X();
+	}	
+	float Top()
+	{
+		return pos_.y - size_.Half_Y();
+	}	
+	float Bot()
+	{
+		return pos_.y - size_.Half_Y();
+	}
+
+	int ILeft()
+	{
+		return pos_.IntX() - size_.Half_IntX();
+	}	
+	int IRight()
+	{
+		return pos_.IntX() + size_.Half_IntX();
+	}	
+	int ITop()
+	{
+		return pos_.IntY() - size_.Half_IntY();
+	}	
+	int IBot()
+	{
+		return pos_.IntY() - size_.Half_IntY();
+	}
+
+	float4 LeftTopfloat4()
+	{
+		return { Left(), Top() };
+	}
+	float4 RightTopfloat4()
+	{
+		return { Right(), Top() };
+	}
+	float4 LeftBotfloat4()
+	{
+		return { Left(), Bot() };
+	}
+	float4 RightBotfloat4()
+	{
+		return { Right(), Bot() };
+	}
+
+private:
 
 };

@@ -1,6 +1,6 @@
 #pragma once
 
-class PipeAndBase: public GameEngineActor
+class Pipe: public GameEngineActor
 {
 	//Friend Classes
 
@@ -9,16 +9,16 @@ class PipeAndBase: public GameEngineActor
 
 
 public:
-	PipeAndBase();
-	~PipeAndBase();
+	Pipe();
+	~Pipe();
 
 protected:
-	PipeAndBase(const PipeAndBase& _other) = delete;
-	PipeAndBase(PipeAndBase&& _other) noexcept = delete;
+	Pipe(const Pipe& _other) = delete;
+	Pipe(Pipe&& _other) noexcept = delete;
 
 private:
-	PipeAndBase& operator=(const PipeAndBase& _other) = delete;
-	PipeAndBase& operator=(const PipeAndBase&& _other) = delete;
+	Pipe& operator=(const Pipe& _other) = delete;
+	Pipe& operator=(const Pipe&& _other) = delete;
 
 
 public:	//Member Function Headers

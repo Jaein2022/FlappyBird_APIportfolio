@@ -33,25 +33,17 @@ private:
 
 
 public:	//Member Function Headers
-	GameEngineRenderer* CreateRenderer(
-		const std::string& _imageName,
-		const std::string& _rendererName
-	);
-	GameEngineCollisionBody* CreateCollisionBody(
-		const std::string& _collisionBodyName,
-		int _collisionOrder,
-		CollisionBodyType _type
-	);
+
 
 	float4 GetCameraPos();
 
 
 public:	//Getter, Setter, Templated Member Functions
-	const float4 GetPos() const
+	const float4 GetWorldPos() const
 	{
 		return pos_;
 	}
-	void SetPos(const float4& _pos)		//액터의 위치를 특정 지점으로 재설정.
+	void SetWorldPos(const float4& _pos)		//액터의 위치를 특정 지점으로 재설정.
 	{
 		pos_ = _pos;
 	}
@@ -68,6 +60,16 @@ protected:
 	virtual void Update() = 0;
 	virtual void Render() = 0;
 	virtual void CheckCollision() = 0;
+
+	GameEngineRenderer* CreateRenderer(
+		const std::string& _imageName,
+		const std::string& _rendererName
+	);
+	GameEngineCollisionBody* CreateCollisionBody(
+		const std::string& _collisionBodyName,
+		const float4& _color,
+		CollisionBodyType _type
+	);
 
 protected:
 	void SetRenderOrder(int _renderOrder)

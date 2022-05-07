@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 #include "Bird.h"
 
-Bird::Bird(): birdRenderer_(nullptr)
+Bird::Bird(): birdRenderer_(nullptr), birdCollisionBody_(nullptr)
 {
 }
 
@@ -28,7 +28,11 @@ void Bird::Initialize()
 
 	//GameEngineInput::GetInst().CreateKey("Space", ' ');
 	//GameEngineInput::GetInst().CreateKey("Click", MK_LBUTTON);
-		
+	
+	birdCollisionBody_ = CreateCollisionBody("birdCollisionBody", float4::RED, CollisionBodyType::Rect);
+	birdCollisionBody_->SetSize({ 34, 24 });
+
+
 }
 
 void Bird::Update()
@@ -37,7 +41,7 @@ void Bird::Update()
 	birdRenderer_->UpdateAnimation();
 	float deltaTime = GameEngineTime::GetInst().GetDeltaTimeF();
 
-	//임시 이동체계. 스우시, 콜리전 시스템 자리 잡히면 폐기.
+	//임시 이동체계.
 	if (true == GameEngineInput::GetInst().IsPressed("W"))
 	{
 		Move(float4::DOWN * deltaTime * 100.f);
@@ -55,13 +59,15 @@ void Bird::Update()
 		Move(float4::RIGHT * deltaTime * 100.f);
 	}
 
+	//birdCollisionBody_->CheckCollision();
+
 
 }
 
 void Bird::Render()
 {
-	//float4 rendererPos = birdRenderer_->GetLocalPos();
 	birdRenderer_->Render();
+	birdCollisionBody_->Render();
 }
 
 void Bird::CheckCollision()

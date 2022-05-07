@@ -100,7 +100,7 @@ void GameEngineRenderer::Render()
 	}
 	else
 	{
-		renderPos = parentActor_->GetPos() + rendererLocalPos_ - renderingImagePivot_;
+		renderPos = parentActor_->GetWorldPos() + rendererLocalPos_ - renderingImagePivot_;
 	}
 	
 	if (0.000f == angle_)

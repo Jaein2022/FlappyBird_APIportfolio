@@ -4,16 +4,18 @@
     <ClInclude Include="PreCompile.h" />
     <ClInclude Include="Bird.h" />
     <ClInclude Include="PlayLevel.h" />
-    <ClInclude Include="PipeAndBase.h" />
+    <ClInclude Include="Pipe.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="UI.h" />
+    <ClInclude Include="Base.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />
     <ClCompile Include="Bird.cpp" />
     <ClCompile Include="PlayLevel.cpp" />
-    <ClCompile Include="PipeAndBase.cpp" />
+    <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Base.cpp" />
   </ItemGroup>
 </Project>

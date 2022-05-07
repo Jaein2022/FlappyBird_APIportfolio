@@ -41,7 +41,7 @@ int APIENTRY wWinMain(
         GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
     }
 
-
+    GameEngineCollisionBody::Initialize();
 
     GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
     GameEngineLevelManager::GetInst().ChangeLevel("PlayLevel");

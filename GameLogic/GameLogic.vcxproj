@@ -187,11 +187,15 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Base.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Bird.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="PipeAndBase.h">
+    <ClInclude Include="Pipe.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -210,11 +214,15 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Base.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="Bird.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="PipeAndBase.cpp">
+    <ClCompile Include="Pipe.cpp">
       <SubType>
       </SubType>
     </ClCompile>
