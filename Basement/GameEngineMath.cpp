@@ -19,4 +19,3 @@ const float4 float4::GREEN = { 0, 1, 0, 1 };
 const float4 float4::BLUE = { 0, 0, 1, 1 };
 const float4 float4::BLACK = { 0, 0, 0, 1 };
 const float4 float4::WHITE = { 1, 1, 1, 1 };
-const float4 float4::NONE = { 0, 0, 0, 0 };

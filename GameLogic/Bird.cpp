@@ -19,6 +19,7 @@ void Bird::Initialize()
 	birdRenderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.1f);
 	birdRenderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
 	birdRenderer_->ChangeAnimation("Play");
+	birdRenderer_->SetCameraEffectOn();
 
 
 	GameEngineInput::GetInst().CreateKey("W", 'W');

@@ -7,13 +7,15 @@ class GameEngineWindow
 	//Member Variables
 	static GameEngineWindow* inst_;
 
+	bool isWindowOn_;
+
 	HINSTANCE instanceHandle_;
 	HWND windowHandle_;
 	std::string windowClassName_;
 	std::string windowTitle_;
 	float4 windowPos_;
 	float4 windowSize_;
-
+	HDC hdc_;
 
 private:
 	// 윈도우를 아무나 생성할수 없게 하기 위해 기본생성자를 private으로 막는다.
@@ -30,14 +32,14 @@ private:
 
 
 public:	//Member Function Headers
-	void CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName);
+	void RegisterWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName);
 	void CreateMainWindow(
 		const std::string& _windowTitle,
 		const float4& _windowPos,
 		const float4& _windowSize
 	);
 	void SetWindowPosAndSize(const float4& _windowPos, const float4& _windowSize);
-	void Update(void (*UpdateFunctions)());
+	void Update(std::function<void()> _updateFunctions);
 	void TurnOffWindow();
 
 
@@ -56,12 +58,12 @@ public:	//Getter, Setter, Templated Member Functions
 		}
 	}
 
-	float4 GetWindowPos()
+	const float4& GetWindowPos() const
 	{
 		return windowPos_;
 	}
 
-	float4 GetWindowSize()
+	const float4& GetWindowSize() const
 	{
 		return windowSize_;
 	}

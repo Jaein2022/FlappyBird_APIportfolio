@@ -80,6 +80,10 @@ protected:
 	{
 		updateOrder_ = _updateOrder;
 	}
+	std::list<GameEngineCollisionBody*> GetCollisionBodies()
+	{
+		return allCollisionBodies_;
+	}
 
 
 private://Member Function Headers

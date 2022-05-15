@@ -28,9 +28,19 @@ public:	//Getter, Setter, Templated Member Functions
 		name_ = _name;
 	}
 
-	std::string GetName()
+	std::string CopyName()
 	{
 		return name_;
+	}
+
+	const std::string& GetName()
+	{
+		return name_;
+	}
+
+	const char* GetNameChar()
+	{
+		return name_.c_str();
 	}
 };
 

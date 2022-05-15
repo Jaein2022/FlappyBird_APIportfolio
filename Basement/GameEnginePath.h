@@ -14,9 +14,11 @@ public:
 	~GameEnginePath();
 
 protected:
-	GameEnginePath(std::filesystem::path _path);
+	GameEnginePath(const std::filesystem::path& _path);
 	GameEnginePath(const GameEnginePath& _other);
 	GameEnginePath(GameEnginePath&& _other) noexcept;
+	GameEnginePath(const std::string& _path);
+	GameEnginePath(const char* _path);
 
 private:
 	GameEnginePath& operator=(const GameEnginePath& _other) = delete;

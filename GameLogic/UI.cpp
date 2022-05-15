@@ -20,3 +20,7 @@ void UI::Update()
 void UI::Render()
 {
 }
+
+void UI::CheckCollision()
+{
+}

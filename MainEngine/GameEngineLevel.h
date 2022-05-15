@@ -59,7 +59,7 @@ public:	//Getter, Setter, Templated Member Functions.
 
 protected:
 	virtual void Load() = 0;		//아래 Initialize() 함수가 호출하는, 레벨 구성요소들을 불러오는 함수.
-
+	virtual void UpdateLevel() = 0;
 
 protected:
 	template<typename ActorType>
@@ -83,7 +83,9 @@ protected:
 
 		std::pair<std::map<std::string, GameEngineActor*>::iterator, bool> insertResult = allActors_.insert(
 				std::map<std::string, GameEngineActor*>::value_type(
-					_actorName, newActor));
+					_actorName, newActor
+				)
+		);
 
 		if (false == insertResult.second)
 		{

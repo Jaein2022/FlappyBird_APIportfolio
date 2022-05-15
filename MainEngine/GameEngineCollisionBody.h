@@ -41,12 +41,11 @@ public:	//Member Function Headers
 	static bool RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
 	static bool RectToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b);
 
-	static bool HLineToHLine(GameEngineCollisionBody* _hLineA, GameEngineCollisionBody* _hLineB);
-	static bool HLineToRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _rect);
+	static bool PointToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);
 
 	bool CheckCollision(GameEngineCollisionBody* _other);
 	float4 GetWorldPos();
-	Figure GetFigure();
+	GameEngineRect GetRect();
 
 	void Render();
 
@@ -57,14 +56,29 @@ public:	//Getter, Setter, Templated Member Functions
 		type_ = _type;
 	}
 
-	int GetType()
+	int GetTypeInt()
 	{
 		return static_cast<int>(type_);
+	}
+
+	CollisionBodyType GetType()
+	{
+		return type_;
 	}
 
 	void SetSize(const float4& _size)
 	{
 		size_ = _size;
+
+		if (CollisionBodyType::HLine == type_ && 0.f < size_.y )
+		{
+			GameEngineDebug::MsgBoxError("HLine 충돌체는 세로길이를 가질 수 없습니다.");
+		}
+	}
+
+	float4 GetSize()
+	{
+		return size_;
 	}
 
 	void SetLocalPos(const float4& _pos)

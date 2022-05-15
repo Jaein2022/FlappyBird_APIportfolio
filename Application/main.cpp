@@ -1,6 +1,9 @@
 #include "PreCompile.h"
 
-void UpdateFunctions();
+void InitializeGame();
+void LoadResources();
+void UpdateGame();
+void DestroyGame();
 
 int APIENTRY wWinMain(
     _In_ HINSTANCE hInstance,
@@ -15,11 +18,34 @@ int APIENTRY wWinMain(
     int* i = new int(1);	//릭 체크가 이루어지고 있는지를 확인하기 위한 의도적인 릭.
 #endif                      //릴리즈모드에서는 하지 않는다.
 
+    GameEngineWindow::GetInst().RegisterWindowClass(hInstance, "FlappyBird_APIportfolio");
+    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 560, 512 });
+
+    InitializeGame();
+
+    LoadResources();
+
+
+    GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
+    GameEngineLevelManager::GetInst().ChangeLevel("PlayLevel");
+
+
+
+    GameEngineWindow::GetInst().Update(UpdateGame);
+
+
+    DestroyGame();
+}
+
+void InitializeGame()
+{
+
     GameEngineSoundManager::GetInst().Initialize();
-    GameEngineWindow::GetInst().CreateMainWindowClass(hInstance, "FlappyBird_APIportfolio");
-    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 800, 512 });
+    GameEngineCollisionBody::Initialize();
+}
 
-
+void LoadResources()
+{
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent("FlappyBird_APIportfolio");
     soundResourcePath.MoveToChild("Resource");
@@ -40,34 +66,9 @@ int APIENTRY wWinMain(
     {
         GameEngineImageManager::GetInst().Load(allImageFileNames.at(i));
     }
-
-    GameEngineCollisionBody::Initialize();
-
-    GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
-    GameEngineLevelManager::GetInst().ChangeLevel("PlayLevel");
-
-
-
-
-
-
-    GameEngineWindow::GetInst().Update(UpdateFunctions);
-
-
-
-
-
-
-    GameEngineLevelManager::Destroy();
-    GameEngineImageManager::Destroy();
-    GameEngineInput::Destroy();
-    GameEngineWindow::Destroy();
-    GameEngineSoundManager::Destroy();
-    GameEngineTime::Destroy();
-
 }
 
-void UpdateFunctions()
+void UpdateGame()
 {
 
 
@@ -75,4 +76,14 @@ void UpdateFunctions()
     GameEngineLevelManager::GetInst().Update();
     
     GameEngineSoundManager::GetInst().Update();
+}
+
+void DestroyGame()
+{
+    GameEngineLevelManager::Destroy();
+    GameEngineImageManager::Destroy();
+    GameEngineInput::Destroy();
+    GameEngineWindow::Destroy();
+    GameEngineSoundManager::Destroy();
+    GameEngineTime::Destroy();
 }

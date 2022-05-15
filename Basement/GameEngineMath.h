@@ -4,7 +4,7 @@ class GameEngineMath
 {
 public:
 	static const float PI;
-	static const float TAU;	//Tau
+	static const float TAU;	
 	static const float DegreeToRadian;	//60분법->호도법(0.017453...)
 	static const float RadianToDegree;	//호도법->60분법(57.29577...)
 };
@@ -25,38 +25,7 @@ public:
 	static const float4 BLUE;
 	static const float4 BLACK;
 	static const float4 WHITE;
-	static const float4 NONE;
 
-public:
-	static float4 RotateByDegree(float4 _originVector, float _degree)
-	{
-		return RotateByRadian(_originVector, _degree * GameEngineMath::DegreeToRadian);
-	}
-
-	static float4 RotateByRadian(float4 _originVector, float _radian)
-	{
-		float4 NextVector;
-
-		NextVector.x = _originVector.x * cosf(_radian) - _originVector.y * sinf(_radian);
-		NextVector.y = _originVector.x * sinf(_radian) + _originVector.y * cosf(_radian);
-
-		return NextVector;
-	}
-
-	static float4 ConvertToDegree(float _degree)
-	{
-		return ConvertToRadian(_degree * GameEngineMath::DegreeToRadian);
-	}
-	static float4 ConvertToRadian(float _radian)		//벡터가 0도일때 벡터를 회전시키는 공식.
-	{
-		return float4(cosf(_radian), sinf(_radian));
-	}
-	static float4 ConvertToRadian(float4 vector, float _radian)
-	{
-		return float4(cosf(_radian), sinf(_radian));
-	}
-
-public:
 	//익명으로 유니온을 선언하고 그 안에 구조체를 두면, 
 	//유니온처럼 메모리를 공용으로 활용할 수 있는 클래스 멤버 구조체를 사용할 수 있다.
 	union
@@ -66,7 +35,7 @@ public:
 			float x;
 			float y;
 			float z;
-			float w;	
+			float w;
 		};
 
 		struct
@@ -74,7 +43,7 @@ public:
 			float r;
 			float g;
 			float b;
-			float a;	
+			float a;
 		};
 	};
 
@@ -112,7 +81,7 @@ public:
 	}
 
 
-	float4& operator=(const float4& _other)
+	const float4& operator=(const float4& _other)
 	{
 		this->x = _other.x;
 		this->y = _other.y;
@@ -121,51 +90,51 @@ public:
 		return *this;
 	}
 
-	float4 operator+(const float4 _other) const
+	float4 operator+(const float4& _other) const
 	{
-		float4 ReturnValue;
-		ReturnValue.x = this->x + _other.x;
-		ReturnValue.y = this->y + _other.y;
-		ReturnValue.z = this->z + _other.z;
-		ReturnValue.w = this->w + _other.w;
+		float4 returnValue;
+		returnValue.x = this->x + _other.x;
+		returnValue.y = this->y + _other.y;
+		returnValue.z = this->z + _other.z;
+		returnValue.w = this->w + _other.w;
 
-		return ReturnValue;
+		return returnValue;
 	}
 
-	float4 operator-(const float4 _other) const
+	float4 operator-(const float4& _other) const
 	{
-		float4 ReturnValue;
-		ReturnValue.x = this->x - _other.x;
-		ReturnValue.y = this->y - _other.y;
-		ReturnValue.z = this->z - _other.z;
-		ReturnValue.w = this->w - _other.w;
+		float4 returnValue;
+		returnValue.x = this->x - _other.x;
+		returnValue.y = this->y - _other.y;
+		returnValue.z = this->z - _other.z;
+		returnValue.w = this->w - _other.w;
 
-		return ReturnValue;
+		return returnValue;
 	}
 
-	float4 operator*(const float4 _other) const
+	float4 operator*(const float4& _other) const
 	{
-		float4 ReturnValue;
-		ReturnValue.x = this->x * _other.x;
-		ReturnValue.y = this->y * _other.y;
-		ReturnValue.z = this->z * _other.z;
-		ReturnValue.w = this->w * _other.w;
+		float4 returnValue;
+		returnValue.x = this->x * _other.x;
+		returnValue.y = this->y * _other.y;
+		returnValue.z = this->z * _other.z;
+		returnValue.w = this->w * _other.w;
 
-		return ReturnValue;
+		return returnValue;
 	}
 
-	float4 operator/(const float4 _other) const
+	float4 operator/(const float4& _other) const
 	{
-		float4 ReturnValue;
-		ReturnValue.x = this->x / _other.x;
-		ReturnValue.y = this->y / _other.y;
-		ReturnValue.z = this->z / _other.z;
-		ReturnValue.w = this->w / _other.w;
+		float4 returnValue;
+		returnValue.x = this->x / _other.x;
+		returnValue.y = this->y / _other.y;
+		returnValue.z = this->z / _other.z;
+		returnValue.w = this->w / _other.w;
 
-		return ReturnValue;
+		return returnValue;
 	}
 
-	float4& operator+=(const float4 _other)
+	const float4& operator+=(const float4& _other)
 	{
 		this->x = this->x + _other.x;
 		this->y = this->y + _other.y;
@@ -175,7 +144,7 @@ public:
 		return *this;
 	}
 
-	float4& operator-=(const float4 _other)
+	const float4& operator-=(const float4& _other)
 	{
 		this->x = this->x - _other.x;
 		this->y = this->y - _other.y;
@@ -185,7 +154,7 @@ public:
 		return *this;
 	}
 
-	float4& operator*=(const float4 _other)
+	const float4& operator*=(const float4& _other)
 	{
 		this->x = this->x * _other.x;
 		this->y = this->y * _other.y;
@@ -195,7 +164,7 @@ public:
 		return *this;
 	}
 
-	float4& operator/=(const float4 _other)
+	const float4& operator/=(const float4& _other)
 	{
 		this->x = this->x / _other.x;
 		this->y = this->y / _other.y;
@@ -207,23 +176,23 @@ public:
 
 	float4 operator*(const float _value) const
 	{
-		float4 ReturnValue;
-		ReturnValue.x = this->x * _value;
-		ReturnValue.y = this->y * _value;
-		ReturnValue.z = this->z * _value;
-		ReturnValue.w = this->w * _value;
+		float4 returnValue;
+		returnValue.x = this->x * _value;
+		returnValue.y = this->y * _value;
+		returnValue.z = this->z * _value;
+		returnValue.w = this->w * _value;
 
-		return ReturnValue;
+		return returnValue;
 	}
 
 	//x, y만 비교.
-	bool operator==(const float4& _value) const	
+	bool operator==(const float4& _value) const
 	{
 		return (this->x == _value.x && this->y == _value.y);
 	}
 
 	//x, y만 비교.
-	bool operator!=(const float4& _value) const	
+	bool operator!=(const float4& _value) const
 	{
 		return (this->x != _value.x || this->y != _value.y);
 	}
@@ -278,20 +247,51 @@ public:
 		return static_cast<int>(z * 0.5f);
 	}
 
+public:
+	static float4 RotateByDegree(float4 _originVector, float _degree)
+	{
+		return RotateByRadian(_originVector, _degree * GameEngineMath::DegreeToRadian);
+	}
+
+	static float4 RotateByRadian(float4 _originVector, float _radian)
+	{
+		float4 nextVector;
+
+		nextVector.x = _originVector.x * cosf(_radian) - _originVector.y * sinf(_radian);
+		nextVector.y = _originVector.x * sinf(_radian) + _originVector.y * cosf(_radian);
+
+		return nextVector;
+	}
+
+	static float4 ConvertToDegree(float _degree)
+	{
+		return ConvertToRadian(_degree * GameEngineMath::DegreeToRadian);
+	}
+	static float4 ConvertToRadian(float _radian)		//벡터가 0도일때 벡터를 회전시키는 공식.
+	{
+		return float4(cosf(_radian), sinf(_radian));
+	}
+	static float4 ConvertToRadian(float4 vector, float _radian)
+	{
+		return float4(cosf(_radian), sinf(_radian));
+	}
+
+
+
 };
 
-class Figure
+struct GameEngineRect
 {
-public:
+
 	float4 pos_;
 	float4 size_;
 
 public:
-	Figure(const float4& _pos, const float4& _size): pos_(_pos), size_(_size)
+	GameEngineRect(const float4& _pos, const float4& _size): pos_(_pos), size_(_size)
 	{
 	}
 
-	~Figure()
+	~GameEngineRect()
 	{
 	}
 

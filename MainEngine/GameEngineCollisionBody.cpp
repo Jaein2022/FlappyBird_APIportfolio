@@ -6,8 +6,8 @@
 #include "GameEngineWindow.h"
 
 std::function<bool(GameEngineCollisionBody*, GameEngineCollisionBody*)>
-GameEngineCollisionBody::collisionFunctions_[static_cast<int>(CollisionBodyType::MAX)][static_cast<int>(CollisionBodyType::MAX)]
-= { nullptr };
+	GameEngineCollisionBody::collisionFunctions_
+	[static_cast<int>(CollisionBodyType::MAX)][static_cast<int>(CollisionBodyType::MAX)] = { nullptr };
 
 GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	: parentActor_(_actor),
@@ -44,49 +44,21 @@ void GameEngineCollisionBody::Initialize()
 		}
 	}
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::HLine)]
-		= std::bind(&GameEngineCollisionBody::RectToHLine, std::placeholders::_1, std::placeholders::_2);
-
 	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::Rect)]
 		= std::bind(&GameEngineCollisionBody::RectToRect, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::HLine)]
-		= std::bind(&GameEngineCollisionBody::HLineToHLine, std::placeholders::_1, std::placeholders::_2);
+	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::HLine)]
+		= std::bind(&GameEngineCollisionBody::RectToHLine, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::Rect)]
-		= std::bind(&GameEngineCollisionBody::HLineToRect, std::placeholders::_1, std::placeholders::_2);
 
-}
-
-bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
-{
-	Figure rect = _rect->GetFigure();
-	Figure hLine = _hLine->GetFigure();
-
-	if (rect.IRight() < hLine.ILeft())
-	{
-		return false;
-	}
-	if (rect.ILeft() > hLine.IRight())
-	{
-		return false;
-	}
-	if (rect.ITop() > hLine.pos_.y)
-	{
-		return false;
-	}
-	if (rect.IBot() < hLine.pos_.y)
-	{
-		return false;
-	}
-
-	return true;
+	collisionFunctions_[static_cast<int>(CollisionBodyType::Point)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::PointToVLine, std::placeholders::_1, std::placeholders::_2);
 }
 
 bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEngineCollisionBody* _rectB)
 {
-	Figure rectA = _rectA->GetFigure();
-	Figure rectB = _rectB->GetFigure();
+	GameEngineRect rectA = _rectA->GetRect();
+	GameEngineRect rectB = _rectB->GetRect();
 
 	if (rectA.IRight() < rectB.ILeft())
 	{
@@ -108,15 +80,29 @@ bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEn
 	return true;
 }
 
-bool GameEngineCollisionBody::HLineToHLine(GameEngineCollisionBody* _hLineA, GameEngineCollisionBody* _hLineB)
+bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
 {
-	GameEngineDebug::MsgBoxError("아직 구현하지 않은 충돌체크함수를 이용하려고 합니다.");
+	//HLine은 화면상 왼쪽에서 시작해 오른쪽으로 뻗어 있다는것을 전제로 구성된 코드.
+	GameEngineRect rect = _rect->GetRect();
+
+	float4 leftEnd = _hLine->GetWorldPos();
+	float4 rightEnd = _hLine->GetWorldPos() + _hLine->GetSize();
+
+	if (rect.IRight() < leftEnd.IntX() || rect.ILeft() > rightEnd.IntX())
+	{
+		return false;
+	}
+
+	if (rect.IBot() < leftEnd.IntY() && rect.ITop() > leftEnd.IntY())
+	{
+		return true;
+	}
+
 	return false;
 }
 
-bool GameEngineCollisionBody::HLineToRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _rect)
+bool GameEngineCollisionBody::PointToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
 {
-	GameEngineDebug::MsgBoxError("아직 구현하지 않은 충돌체크함수를 이용하려고 합니다.");
 	return false;
 }
 
@@ -155,14 +141,14 @@ void GameEngineCollisionBody::Render()
 
 		MoveToEx(
 			backBufferImage->GetHDC(),
-			renderPos.IntX() - size_.Half_IntX(),
+			renderPos.IntX(),
 			renderPos.IntY(),
 			nullptr
 		);
 
 		LineTo(
 			backBufferImage->GetHDC(),
-			renderPos.IntX() + size_.Half_IntX(),
+			renderPos.IntX() + size_.IntX(),
 			renderPos.IntY()
 		);
 
@@ -173,6 +159,12 @@ void GameEngineCollisionBody::Render()
 
 		break;
 	}
+
+	case CollisionBodyType::VLine:
+		break;
+
+	case CollisionBodyType::Point:
+		break;
 
 
 	default:
@@ -197,7 +189,7 @@ bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
 		return false;
 	}
 
-	return collisionFunctions_[this->GetType()][_other->GetType()](this, _other);
+	return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
 }
 
 float4 GameEngineCollisionBody::GetWorldPos()
@@ -205,7 +197,7 @@ float4 GameEngineCollisionBody::GetWorldPos()
 	return parentActor_->GetWorldPos() + localPos_;
 }
 
-Figure GameEngineCollisionBody::GetFigure()
+GameEngineRect GameEngineCollisionBody::GetRect()
 {
 	return { parentActor_->GetWorldPos() + localPos_, size_ };
 }

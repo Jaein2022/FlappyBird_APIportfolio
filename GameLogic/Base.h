@@ -3,12 +3,15 @@
 class Base: public GameEngineActor
 {
 	//Friend Classes
-
+	friend class GameEngineLevel;
 
 	//Member Variables
+	const int baseWidth_;
+	const int baseHeight_;
+	GameEngineRenderer* baseRenderer_;
+	GameEngineCollisionBody* baseCollisionBody_;
 
-
-public:
+private:
 	Base();
 	~Base();
 
@@ -26,13 +29,13 @@ public:	//Member Function Headers
 
 
 public:	//Getter, Setter, Templated Member Functions
+
+
+private://Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
 	void CheckCollision() override;
-
-
-private://Member Function Headers
 
 
 };

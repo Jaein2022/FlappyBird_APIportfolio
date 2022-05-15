@@ -194,14 +194,8 @@
     <ClInclude Include="PreCompile.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Basement\Basement.vcxproj">
-      <Project>{bbda2e82-1185-4327-b8db-7ac95591f338}</Project>
-    </ProjectReference>
     <ProjectReference Include="..\GameLogic\GameLogic.vcxproj">
       <Project>{e8425d9e-8622-40ff-b50b-5f82bc5ce744}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\MainEngine\MainEngine.vcxproj">
-      <Project>{2bafee42-84ce-4bc2-922a-5d8133222436}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

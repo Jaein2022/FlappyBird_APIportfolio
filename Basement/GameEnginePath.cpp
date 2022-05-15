@@ -3,13 +3,12 @@
 #include "GameEngineDebug.h"
 #include "GameEngineSoundManager.h"
 
-GameEnginePath::GameEnginePath(): path_("")
+GameEnginePath::GameEnginePath(): path_(std::filesystem::current_path())
 {
-	path_ = std::filesystem::current_path();
 	//생성과 동시에 현재 경로를 받아온다.
 }
 
-GameEnginePath::GameEnginePath(std::filesystem::path _path): path_(_path)
+GameEnginePath::GameEnginePath(const std::filesystem::path& _path): path_(_path)
 {
 	if (false == std::filesystem::exists(path_))
 	{
@@ -28,6 +27,24 @@ GameEnginePath::GameEnginePath(const GameEnginePath& _other): path_(_other.path_
 }
 
 GameEnginePath::GameEnginePath(GameEnginePath&& _other) noexcept: path_(_other.path_)
+{
+	if (false == std::filesystem::exists(path_))
+	{
+		GameEngineDebug::MsgBoxError("존재하지 않는 경로입니다.");
+		return;
+	}
+}
+
+GameEnginePath::GameEnginePath(const std::string& _path): path_(_path)
+{
+	if (false == std::filesystem::exists(path_))
+	{
+		GameEngineDebug::MsgBoxError("존재하지 않는 경로입니다.");
+		return;
+	}
+}
+
+GameEnginePath::GameEnginePath(const char* _path): path_(_path)
 {
 	if (false == std::filesystem::exists(path_))
 	{
@@ -59,10 +76,10 @@ std::string GameEnginePath::GetFileName()
 std::string GameEnginePath::GetStem()
 {
 	return path_.stem().string();
-	//std::filesystem::path::stem()	확장자 제외한 파일명만 반환하는 함수.
+	//std::filesystem::path::stem()-> 확장자 제외한 파일명만 반환하는 함수.
 	//filename() - extension() = stem()
 
-	//std::filesystem::path::replace_extension() 확장자를 교체하는 함수.
+	//std::filesystem::path::replace_extension()-> 확장자를 교체하는 함수.
 	//교체할 확장자를 넣어주지 않으면 확장자가 제거된다.
 }
 
@@ -73,7 +90,8 @@ std::string GameEnginePath::GetExtension()
 
 void GameEnginePath::MoveToParent(const std::string& _directoryName)
 {
-	while (path_.root_directory() != path_)
+	while (path_.root_path() != path_)
+	//std::filesystem::path::root_path()-> 현재 주어진 경로의 루트 경로를 반환하는 함수.
 	{
 		if (_directoryName == path_.filename().string())
 		{

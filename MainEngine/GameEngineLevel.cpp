@@ -61,9 +61,6 @@ void GameEngineLevel::Update()
 			listIter != mapIter->second.end(); listIter++)
 		{
 			(*listIter)->Update();
-
-			//콜리전오더 지우면 부활.
-			//(*listIter)->CheckCollision();
 		}
 	}
 }
@@ -118,7 +115,7 @@ void GameEngineLevel::SortUpdateOrder()
 			if (mapIter->first == (*listIter)->updateOrder_)
 			{
 				++listIter;
-				continue;	//순서가 맞다면 listIt를 다음으로 넘기고 통과.
+				continue;	//순서가 맞다면 listIter를 다음으로 넘기고 통과.
 			}
 
 			//순서가 틀린 것은 지운다.
@@ -164,7 +161,7 @@ void GameEngineLevel::SortRenderOrder()
 			if (mapIter->first == (*listIter)->renderOrder_)
 			{
 				++listIter;
-				continue;	//순서가 맞다면 listIt를 뒤로 넘기고 통과.
+				continue;	//순서가 맞다면 listIter를 뒤로 넘기고 통과.
 			}
 
 			//순서가 틀린 것은 지운다.

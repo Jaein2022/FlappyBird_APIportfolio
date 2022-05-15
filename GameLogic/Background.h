@@ -4,16 +4,11 @@ class Background: public GameEngineActor
 {
 	//배경: 뒷배경 이동 배치 및 렌더링 담당.
 
+	friend class GameEngineLevel;
 
-	//Member Variables
-	const int rendererCount_;
-	const float width_;
-	float speed_;
-	std::vector<GameEngineRenderer*> backgroundRenderers_;
+	GameEngineRenderer* backgroundRenderer_;
 
-	//배경 이미지 크기: 288 X 512 픽셀.
-
-public:
+private:
 	Background();
 	~Background();
 
@@ -27,17 +22,15 @@ private:
 
 
 public:	//Member Function Headers
+
+
+public:	//Getter, Setter, Templated Member Functions
+
+
+private://Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
 	void CheckCollision() override;
-
-public:	//Getter, Setter, Templated Member Functions
-	void SetSpeed(float _speed)
-	{
-		speed_ = _speed;
-	}
-
-private://Member Function Headers
 };
 

@@ -4,21 +4,29 @@
 #include "GameEngineImageManager.h"
 
 GameEngineWindow* GameEngineWindow::inst_ = new GameEngineWindow();
-bool isWindowOn = true;
+
 LRESULT CALLBACK WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam);
 
 GameEngineWindow::GameEngineWindow()
-    : instanceHandle_(NULL),
+    : isWindowOn_(true),
+    instanceHandle_(NULL),
     windowHandle_(NULL),
     windowClassName_(""),
     windowTitle_(""),
     windowSize_(float4::ZERO),
-    windowPos_(float4::ZERO)
+    windowPos_(float4::ZERO),
+    hdc_(nullptr)
 {
 }
 
 GameEngineWindow::~GameEngineWindow()
 {
+    if (nullptr != hdc_)
+    {
+        ReleaseDC(windowHandle_, hdc_);
+        hdc_ = nullptr;
+    }
+
     if (nullptr != windowHandle_)
     {
         DestroyWindow(windowHandle_);
@@ -26,7 +34,7 @@ GameEngineWindow::~GameEngineWindow()
     }
 }
 
-void GameEngineWindow::CreateMainWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName)
+void GameEngineWindow::RegisterWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName)
 {
     if (NULL == _hInstance)
     {
@@ -138,14 +146,14 @@ void GameEngineWindow::CreateMainWindow(
     ShowWindow(windowHandle_, SW_SHOW);
     UpdateWindow(windowHandle_);
 
-    HDC windowHDC = GetDC(windowHandle_);
-    if (nullptr == windowHDC)
+    hdc_ = GetDC(windowHandle_);
+    if (nullptr == hdc_)
     {
         GameEngineDebug::MsgBoxError("HDC 생성 실패.");
         return;
     }
 
-    GameEngineImageManager::GetInst().InitializeWindowImage(windowHDC);
+    GameEngineImageManager::GetInst().InitializeWindowImage(hdc_);
 }
 
 void GameEngineWindow::SetWindowPosAndSize(const float4& _windowPos, const float4& _windowSize)
@@ -175,7 +183,7 @@ void GameEngineWindow::SetWindowPosAndSize(const float4& _windowPos, const float
     }
 }
 
-void GameEngineWindow::Update(void(*UpdateFunctions)())
+void GameEngineWindow::Update(std::function<void()> _updateGame)
 {
     //MSG: 아래 tagMSG 구조체타입 변수 생성용 typedef. 사용자가 입력한 정보를 저장한다.
     //    typedef struct tagMSG {
@@ -192,21 +200,8 @@ void GameEngineWindow::Update(void(*UpdateFunctions)())
 
     MSG msg = { 0 };
 
-    while (isWindowOn)
+    while (isWindowOn_)
     {
-        if (nullptr == UpdateFunctions) //업데이트 함수포인터가 연결이 안되어있다면 폭파.
-        {
-            GameEngineDebug::MsgBoxError("업데이트 함수포인터가 없습니다.");
-            return;
-        }
-        else
-        {
-            GameEngineTime::GetInst().Update();
-            UpdateFunctions();
-            //함수포인터도 변수처럼 쓰는 '함수'이므로 반드시 ()로 끝내줘야 한다.
-            //GameEngineInput::GetInst().Update();
-            //GameEngineSoundManager::GetInst().Update();
-        }
 
         //GetMessageW(): 입력이 들어왔을때 다른 입력내용들은 첫번째 매개변수인 msg를 통해서 전달하고,
         //종료 명령일때만 false를 반환해서 루프를 끝내고 윈도우를 닫는다.
@@ -218,8 +213,8 @@ void GameEngineWindow::Update(void(*UpdateFunctions)())
             0,                  //필터 최대??
             PM_REMOVE           //지연되는 메시지 처리 방식 결정.
             //PM_REMOVE: 지연되는 메시지 지움. PM_NOREMOVE: 지연되는 메시지도 남김없이 처리함. PM_NOYIELD: ??
-        ))      
-           
+            )
+        )         
         {
             if (!TranslateAccelerator(msg.hwnd, nullptr, &msg))
             {
@@ -227,12 +222,26 @@ void GameEngineWindow::Update(void(*UpdateFunctions)())
                 DispatchMessage(&msg);  //DispatchMessage(): WndProc()함수로 메시지를 보낸다.
             }
         }
+
+        if (nullptr == _updateGame) //업데이트 함수포인터가 연결이 안되어있다면 폭파.
+        {
+            GameEngineDebug::MsgBoxError("업데이트 함수포인터가 없습니다.");
+            return;
+        }
+        else
+        {
+            GameEngineTime::GetInst().Update();
+            _updateGame();
+
+            //GameEngineInput::GetInst().Update();
+            //GameEngineSoundManager::GetInst().Update();
+        }
     }
 }
 
 void GameEngineWindow::TurnOffWindow()
 {
-    isWindowOn = false;
+    isWindowOn_ = false;
 }
 
 LRESULT WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
@@ -254,8 +263,9 @@ LRESULT WndProc(HWND _hWnd, UINT _message, WPARAM _wParam, LPARAM _lParam)
         break;
     }
     case WM_DESTROY:
+    case WM_CLOSE:
     {
-        isWindowOn = false;
+        GameEngineWindow::GetInst().TurnOffWindow();
         break;
     }
     default:

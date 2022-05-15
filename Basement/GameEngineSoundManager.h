@@ -1,5 +1,5 @@
 #pragma once
-#include "../ThirdParty/Include/FMOD/fmod.hpp"
+#include <ThirdParty\Include\FMOD\fmod.hpp>
 
 #ifdef _DEBUG
 #pragma comment(lib, "fmodL_vc.lib")	

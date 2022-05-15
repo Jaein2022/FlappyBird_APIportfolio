@@ -6,9 +6,17 @@ class Pipe: public GameEngineActor
 
 
 	//Member Variables
+	const int pipeWidth_;
+	const int pipeHeight_;
+	int pipeDistance_;
 
+	GameEngineRenderer* topPipe_Renderer_;
+	GameEngineCollisionBody* topPipe_CollisionBody_;
 
-public:
+	GameEngineRenderer* botPipe_Renderer_;
+	GameEngineCollisionBody* botPipe_CollisionBody_;
+
+private:
 	Pipe();
 	~Pipe();
 

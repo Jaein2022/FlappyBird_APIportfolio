@@ -2,20 +2,27 @@
 
 class Background;
 class Bird;
-//class PipeAndBase;
-//class UI;
+class Pipe;
+class Base;
+class UI;
 class PlayLevel : public GameEngineLevel
 {
 	//플레이레벨.
 
+	friend class GameEngineLevelManager;
 
 	//Member Variables
-	const float playSpeed_;
-
 	Bird* bird_;
-	Background* background_;
 
-public:
+	std::vector<Background*> backgrounds_;
+	const int backgroundWidth_;
+	const int backgroundCount_;
+
+	std::vector<Base*> bases_;
+	const int baseWidth_;
+	const int baseCount_;
+
+private:
 	PlayLevel();
 	~PlayLevel();
 
@@ -29,7 +36,6 @@ private:
 
 
 public:	//Member Function Headers
-	void Load() override;
 
 
 public:	//Getter, Setter, Templated Member Functions
@@ -37,7 +43,8 @@ public:	//Getter, Setter, Templated Member Functions
 
 
 private://Member Function Headers
-
+	void Load() override;
+	void UpdateLevel() override;
 
 };
 
