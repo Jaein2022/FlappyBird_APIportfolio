@@ -32,7 +32,7 @@ private://Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
-	void CheckCollision() override;
+	void ReactCollision() override;
 
 
 };

@@ -50,9 +50,9 @@ void GameEngineCollisionBody::Initialize()
 	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::HLine)]
 		= std::bind(&GameEngineCollisionBody::RectToHLine, std::placeholders::_1, std::placeholders::_2);
 
+	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::RectToVLine, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::Point)][static_cast<int>(CollisionBodyType::VLine)]
-		= std::bind(&GameEngineCollisionBody::PointToVLine, std::placeholders::_1, std::placeholders::_2);
 }
 
 bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEngineCollisionBody* _rectB)
@@ -101,8 +101,23 @@ bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEn
 	return false;
 }
 
-bool GameEngineCollisionBody::PointToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
 {
+	//VLine은 화면상 위에서 아래로 뻗어 있다는것을 전제로 구성돈 코드.
+	GameEngineRect rect = _rect->GetRect();
+	float4 highEnd = _vLine->GetWorldPos();
+	float4 lowEnd = _vLine->GetWorldPos() + _vLine->GetSize();
+
+	if (rect.IBot() > highEnd.IntY() || rect.ITop() < lowEnd.IntY())
+	{
+		return false;
+	}
+	
+	if (rect.IRight() > highEnd.IntX() && rect.ILeft() < highEnd.IntX())
+	{
+		return true;
+	}
+
 	return false;
 }
 
@@ -161,9 +176,34 @@ void GameEngineCollisionBody::Render()
 	}
 
 	case CollisionBodyType::VLine:
+	{
+		HPEN prevPen = static_cast<HPEN>(SelectObject(
+			backBufferImage->GetHDC(),
+			static_cast<HGDIOBJ>(pen_)
+		));
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderPos.IntX(),
+			renderPos.IntY(),
+			nullptr
+		);
+
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderPos.IntX(),
+			renderPos.IntY() + size_.IntY()
+		);
+
+		pen_ = static_cast<HPEN>(SelectObject(
+			backBufferImage->GetHDC(),
+			static_cast<HGDIOBJ>(prevPen)
+		));
 		break;
+	}
 
 	case CollisionBodyType::Point:
+		//점은 선 두개 크로스해서 표시.
 		break;
 
 
@@ -189,7 +229,15 @@ bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
 		return false;
 	}
 
-	return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
+	if (nullptr != collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()])
+	{
+		return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
+	}
+	else
+	{
+		GameEngineDebug::MsgBoxError("구현되지 않은 형식의 충돌입니다.");
+		return false;
+	}
 }
 
 float4 GameEngineCollisionBody::GetWorldPos()

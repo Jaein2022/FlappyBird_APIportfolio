@@ -38,10 +38,11 @@ private:
 public:	//Member Function Headers
 	static void Initialize();
 
+	//true가 충돌판정 발생.
+
 	static bool RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
 	static bool RectToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b);
-
-	static bool PointToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);
+	static bool RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);
 
 	bool CheckCollision(GameEngineCollisionBody* _other);
 	float4 GetWorldPos();
@@ -74,6 +75,11 @@ public:	//Getter, Setter, Templated Member Functions
 		{
 			GameEngineDebug::MsgBoxError("HLine 충돌체는 세로길이를 가질 수 없습니다.");
 		}
+
+		if (CollisionBodyType::VLine == type_ && 0.f < size_.x )
+		{
+			GameEngineDebug::MsgBoxError("VLine 충돌체는 가로길이를 가질 수 없습니다.");
+		}
 	}
 
 	float4 GetSize()
@@ -101,6 +107,7 @@ public:	//Getter, Setter, Templated Member Functions
 			break;
 
 		case CollisionBodyType::HLine:
+		case CollisionBodyType::VLine:
 			pen_ = CreatePen(PS_SOLID, 1, color_);
 			break;
 		

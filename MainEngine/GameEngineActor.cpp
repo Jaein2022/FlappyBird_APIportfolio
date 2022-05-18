@@ -66,4 +66,23 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	return newCollisionBody;
 }
 
+void GameEngineActor::CheckCollision(GameEngineActor* _other)
+{
+	for (GameEngineCollisionBody* const otherCollisionBody : _other->GetCollisionBodies())
+	{
+		for (GameEngineCollisionBody* const thisCollisionBody : this->GetCollisionBodies())
+		{
+			bool collisionResult =
+				GameEngineCollisionBody::collisionFunctions_
+				[thisCollisionBody->GetTypeInt()][otherCollisionBody->GetTypeInt()]
+				(thisCollisionBody, otherCollisionBody);
+
+			if (true == collisionResult)
+			{
+				ReactCollision();
+			}
+		}
+	}
+}
+
 

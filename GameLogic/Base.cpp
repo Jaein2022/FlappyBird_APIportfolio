@@ -29,6 +29,6 @@ void Base::Render()
 	baseCollisionBody_->Render();
 }
 
-void Base::CheckCollision()
+void Base::ReactCollision()
 {
 }

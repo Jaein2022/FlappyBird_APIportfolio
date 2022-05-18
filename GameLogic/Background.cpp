@@ -40,6 +40,6 @@ void Background::Render()
 	backgroundRenderer_->Render();
 }
 
-void Background::CheckCollision()
+void Background::ReactCollision()
 {
 }

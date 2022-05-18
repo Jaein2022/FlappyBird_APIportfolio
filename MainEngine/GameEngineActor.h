@@ -59,7 +59,8 @@ protected:
 	virtual void Initialize() = 0;
 	virtual void Update() = 0;
 	virtual void Render() = 0;
-	virtual void CheckCollision() = 0;
+	virtual void ReactCollision() = 0;
+
 
 	GameEngineRenderer* CreateRenderer(
 		const std::string& _imageName,
@@ -87,7 +88,7 @@ protected:
 
 
 private://Member Function Headers
-
+	void CheckCollision(GameEngineActor* _other);
 
 };
 

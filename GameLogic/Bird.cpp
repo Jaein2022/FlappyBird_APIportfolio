@@ -71,6 +71,6 @@ void Bird::Render()
 	birdCollisionBody_->Render();
 }
 
-void Bird::CheckCollision()
+void Bird::ReactCollision()
 {
 }

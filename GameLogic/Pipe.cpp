@@ -36,6 +36,6 @@ void Pipe::Render()
 
 }
 
-void Pipe::CheckCollision()
+void Pipe::ReactCollision()
 {
 }

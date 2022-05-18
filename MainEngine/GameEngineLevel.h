@@ -114,6 +114,7 @@ private:	//Member Function Headers.
 	void Initialize();
 	void Update();
 	void Render();
+	void CheckCollision();
 	void SortUpdateOrder();			//업데이트 순서 정렬 함수.
 	void SortRenderOrder();			//렌더링 순서 정렬 함수.
 	void ReleaseDeadActor();		//삭제된 액터를 제거하는 함수.

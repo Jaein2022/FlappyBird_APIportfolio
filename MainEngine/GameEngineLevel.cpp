@@ -78,6 +78,18 @@ void GameEngineLevel::Render()
 	}
 }
 
+void GameEngineLevel::CheckCollision()
+{
+	for (std::pair<std::string, GameEngineActor*> actorPair : allActors_)
+	{
+
+		for (std::pair<std::string, GameEngineActor*> actorPair : allActors_)
+		{
+
+		}
+	}
+}
+
 void GameEngineLevel::SortUpdateOrder()
 {
 	for (std::map<int, std::list<GameEngineActor*>>::iterator mapIter = allActors_UpdateOrder_.begin();

@@ -29,11 +29,11 @@ private:
 	Pipe& operator=(const Pipe&& _other) = delete;
 
 
-public:	//Member Function Headers
+private:	//Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
-	void CheckCollision() override;
+	void ReactCollision() override;
 
 
 public:	//Getter, Setter, Templated Member Functions
