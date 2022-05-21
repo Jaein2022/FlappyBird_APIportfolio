@@ -327,7 +327,7 @@ public:
 	}	
 	int IBot()
 	{
-		return pos_.IntY() - size_.Half_IntY();
+		return pos_.IntY() + size_.Half_IntY();
 	}
 
 	float4 LeftTopfloat4()

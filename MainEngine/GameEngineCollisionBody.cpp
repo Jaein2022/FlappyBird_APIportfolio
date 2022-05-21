@@ -36,13 +36,13 @@ GameEngineCollisionBody::~GameEngineCollisionBody()
 
 void GameEngineCollisionBody::Initialize()
 {
-	for (int i = 0; i < static_cast<int>(CollisionBodyType::MAX); i++)
-	{
-		for (int j = 0; j < static_cast<int>(CollisionBodyType::MAX); j++)
-		{
-			collisionFunctions_[i][j] = nullptr;
-		}
-	}
+	//for (int i = 0; i < static_cast<int>(CollisionBodyType::MAX); i++)
+	//{
+	//	for (int j = 0; j < static_cast<int>(CollisionBodyType::MAX); j++)
+	//	{
+	//		collisionFunctions_[i][j] = nullptr;
+	//	}
+	//}
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::Rect)]
 		= std::bind(&GameEngineCollisionBody::RectToRect, std::placeholders::_1, std::placeholders::_2);
@@ -52,6 +52,26 @@ void GameEngineCollisionBody::Initialize()
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::VLine)]
 		= std::bind(&GameEngineCollisionBody::RectToVLine, std::placeholders::_1, std::placeholders::_2);
+
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::Rect)]
+		= std::bind(&GameEngineCollisionBody::HLineToRect, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::HLine)]
+		= std::bind(&GameEngineCollisionBody::HLineToHLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::HLineToVLine, std::placeholders::_1, std::placeholders::_2);
+
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::Rect)]
+		= std::bind(&GameEngineCollisionBody::VLineToRect, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::HLine)]
+		= std::bind(&GameEngineCollisionBody::VLineToHLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::VLineToVLine, std::placeholders::_1, std::placeholders::_2);
 
 }
 
@@ -93,7 +113,7 @@ bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEn
 		return false;
 	}
 
-	if (rect.IBot() < leftEnd.IntY() && rect.ITop() > leftEnd.IntY())
+	if (rect.IBot() > leftEnd.IntY() && rect.ITop() < leftEnd.IntY())
 	{
 		return true;
 	}
@@ -103,7 +123,7 @@ bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEn
 
 bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
 {
-	//VLine은 화면상 위에서 아래로 뻗어 있다는것을 전제로 구성돈 코드.
+	//VLine은 화면상 위에서 아래로 뻗어 있다는것을 전제로 구성된 코드.
 	GameEngineRect rect = _rect->GetRect();
 	float4 highEnd = _vLine->GetWorldPos();
 	float4 lowEnd = _vLine->GetWorldPos() + _vLine->GetSize();
@@ -118,6 +138,36 @@ bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEn
 		return true;
 	}
 
+	return false;
+}
+
+bool GameEngineCollisionBody::HLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b)
+{
+	return false;
+}
+
+bool GameEngineCollisionBody::HLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
+{
+	return false;
+}
+
+bool GameEngineCollisionBody::HLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+{
+	return false;
+}
+
+bool GameEngineCollisionBody::VLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b)
+{
+	return false;
+}
+
+bool GameEngineCollisionBody::VLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
+{
+	return false;
+}
+
+bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+{
 	return false;
 }
 
@@ -202,9 +252,9 @@ void GameEngineCollisionBody::Render()
 		break;
 	}
 
-	case CollisionBodyType::Point:
-		//점은 선 두개 크로스해서 표시.
-		break;
+	//case CollisionBodyType::Point:
+	//	//점은 선 두개 크로스해서 표시.
+	//	break;
 
 
 	default:
@@ -229,15 +279,15 @@ bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
 		return false;
 	}
 
-	if (nullptr != collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()])
-	{
+	//if (nullptr != collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()])
+	//{
 		return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
-	}
-	else
-	{
-		GameEngineDebug::MsgBoxError("구현되지 않은 형식의 충돌입니다.");
-		return false;
-	}
+	//}
+	//else
+	//{
+	//	GameEngineDebug::MsgBoxError("구현되지 않은 형식의 충돌입니다.");
+	//	return false;
+	//}
 }
 
 float4 GameEngineCollisionBody::GetWorldPos()

@@ -40,9 +40,17 @@ public:	//Member Function Headers
 
 	//true가 충돌판정 발생.
 
-	static bool RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
 	static bool RectToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b);
-	static bool RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);
+	static bool RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
+	static bool RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);	
+	
+	static bool HLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b);
+	static bool HLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
+	static bool HLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);	
+	
+	static bool VLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b);
+	static bool VLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine);
+	static bool VLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine);
 
 	bool CheckCollision(GameEngineCollisionBody* _other);
 	float4 GetWorldPos();

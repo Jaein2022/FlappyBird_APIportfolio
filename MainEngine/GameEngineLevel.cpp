@@ -80,12 +80,15 @@ void GameEngineLevel::Render()
 
 void GameEngineLevel::CheckCollision()
 {
-	for (std::pair<std::string, GameEngineActor*> actorPair : allActors_)
+	for (std::pair<std::string, GameEngineActor*> subjActorPair : allActors_)
 	{
-
-		for (std::pair<std::string, GameEngineActor*> actorPair : allActors_)
+		GameEngineActor* collisionSubject = subjActorPair.second;
+		for (std::pair<std::string, GameEngineActor*> objActorPair : allActors_)
 		{
-
+			if (collisionSubject->GetName() != objActorPair.second->GetName())
+			{
+				collisionSubject->CheckCollision(objActorPair.second);
+			}
 		}
 	}
 }

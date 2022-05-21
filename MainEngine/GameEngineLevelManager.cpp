@@ -59,6 +59,7 @@ void GameEngineLevelManager::Update()
 
     //액터들 렌더(백버퍼에 각자 이미지들 추가).
     curLevel_->Render();
+    curLevel_->CheckCollision();
     GameEngineImageManager::GetInst().ExcuteDoubleBuffering();
 
     curLevel_->ReleaseDeadActor();

@@ -21,6 +21,6 @@ void UI::Render()
 {
 }
 
-void UI::CheckCollision()
+void UI::ReactCollision()
 {
 }

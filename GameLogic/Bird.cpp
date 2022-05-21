@@ -73,4 +73,5 @@ void Bird::Render()
 
 void Bird::ReactCollision()
 {
+	int i = 0;
 }
