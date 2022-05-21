@@ -22,6 +22,12 @@ class PlayLevel : public GameEngineLevel
 	const int baseWidth_;
 	const int baseCount_;
 
+	std::vector<Pipe*> pipes_;
+	const int pipeStartPosX_;
+	const int pipeInterval_;
+	const int pipeCount_;
+
+
 private:
 	PlayLevel();
 	~PlayLevel();

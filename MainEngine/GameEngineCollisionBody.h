@@ -18,9 +18,11 @@ class GameEngineCollisionBody : public GameEngineNameBase
 	CollisionBodyType type_;
 	bool isCameraEffect_;
 
+	static bool isRenderingOn_;
+
 	HPEN pen_;
 	HBRUSH brush_;
-	COLORREF color_;
+
 
 private:
 	GameEngineCollisionBody(GameEngineActor* _actor);
@@ -102,7 +104,7 @@ public:	//Getter, Setter, Templated Member Functions
 
 	void SetColor(const float4& _color)
 	{
-		color_ = RGB(
+		COLORREF color = RGB(
 			static_cast<int>(_color.r * 255.f),
 			static_cast<int>(_color.g * 255.f),
 			static_cast<int>(_color.b * 255.f)
@@ -111,17 +113,22 @@ public:	//Getter, Setter, Templated Member Functions
 		switch (type_)
 		{
 		case CollisionBodyType::Rect:
-			brush_ = CreateSolidBrush(color_);
+			brush_ = CreateSolidBrush(color);
 			break;
 
 		case CollisionBodyType::HLine:
 		case CollisionBodyType::VLine:
-			pen_ = CreatePen(PS_SOLID, 1, color_);
+			pen_ = CreatePen(PS_SOLID, 2, color);
 			break;
 		
 		default:
 			break;
 		}
+	}
+
+	static void SwitchRendering()
+	{
+		isRenderingOn_ = !isRenderingOn_;
 	}
 
 private://Member Function Headers

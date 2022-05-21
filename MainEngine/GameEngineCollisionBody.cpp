@@ -9,6 +9,8 @@ std::function<bool(GameEngineCollisionBody*, GameEngineCollisionBody*)>
 	GameEngineCollisionBody::collisionFunctions_
 	[static_cast<int>(CollisionBodyType::MAX)][static_cast<int>(CollisionBodyType::MAX)] = { nullptr };
 
+bool GameEngineCollisionBody::isRenderingOn_ = true;
+
 GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	: parentActor_(_actor),
 	localPos_(float4::ZERO),
@@ -16,8 +18,7 @@ GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	type_(CollisionBodyType::MAX),
 	isCameraEffect_(false),
 	pen_(nullptr),
-	brush_(nullptr),
-	color_(0)
+	brush_(nullptr)
 {
 }
 
@@ -96,17 +97,15 @@ bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEn
 	{
 		return false;
 	}
-
 	return true;
 }
 
 bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
 {
-	//HLine은 화면상 왼쪽에서 시작해 오른쪽으로 뻗어 있다는것을 전제로 구성된 코드.
 	GameEngineRect rect = _rect->GetRect();
 
-	float4 leftEnd = _hLine->GetWorldPos();
-	float4 rightEnd = _hLine->GetWorldPos() + _hLine->GetSize();
+	float4 leftEnd = _hLine->GetWorldPos() - _hLine->GetSize().Half();
+	float4 rightEnd = _hLine->GetWorldPos() + _hLine->GetSize().Half();
 
 	if (rect.IRight() < leftEnd.IntX() || rect.ILeft() > rightEnd.IntX())
 	{
@@ -123,12 +122,11 @@ bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEn
 
 bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
 {
-	//VLine은 화면상 위에서 아래로 뻗어 있다는것을 전제로 구성된 코드.
 	GameEngineRect rect = _rect->GetRect();
-	float4 highEnd = _vLine->GetWorldPos();
-	float4 lowEnd = _vLine->GetWorldPos() + _vLine->GetSize();
+	float4 highEnd = _vLine->GetWorldPos() - _vLine->GetSize().Half();
+	float4 lowEnd = _vLine->GetWorldPos() + _vLine->GetSize().Half();
 
-	if (rect.IBot() > highEnd.IntY() || rect.ITop() < lowEnd.IntY())
+	if (rect.IBot() < highEnd.IntY() || rect.ITop() > lowEnd.IntY())
 	{
 		return false;
 	}
@@ -173,6 +171,11 @@ bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _rect, GameE
 
 void GameEngineCollisionBody::Render()
 {
+	if (false == isRenderingOn_)
+	{
+		return;
+	}
+
 	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
 	
 	float4 renderPos = this->GetWorldPos();
@@ -206,14 +209,14 @@ void GameEngineCollisionBody::Render()
 
 		MoveToEx(
 			backBufferImage->GetHDC(),
-			renderPos.IntX(),
+			renderPos.IntX() - size_.Half_IntX(),
 			renderPos.IntY(),
 			nullptr
 		);
 
 		LineTo(
 			backBufferImage->GetHDC(),
-			renderPos.IntX() + size_.IntX(),
+			renderPos.IntX() + size_.Half_IntX(),
 			renderPos.IntY()
 		);
 
@@ -235,14 +238,14 @@ void GameEngineCollisionBody::Render()
 		MoveToEx(
 			backBufferImage->GetHDC(),
 			renderPos.IntX(),
-			renderPos.IntY(),
+			renderPos.IntY() - size_.Half_IntY(),
 			nullptr
 		);
 
 		LineTo(
 			backBufferImage->GetHDC(),
 			renderPos.IntX(),
-			renderPos.IntY() + size_.IntY()
+			renderPos.IntY() + size_.Half_IntY()
 		);
 
 		pen_ = static_cast<HPEN>(SelectObject(
@@ -279,15 +282,7 @@ bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
 		return false;
 	}
 
-	//if (nullptr != collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()])
-	//{
-		return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
-	//}
-	//else
-	//{
-	//	GameEngineDebug::MsgBoxError("구현되지 않은 형식의 충돌입니다.");
-	//	return false;
-	//}
+	return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
 }
 
 float4 GameEngineCollisionBody::GetWorldPos()

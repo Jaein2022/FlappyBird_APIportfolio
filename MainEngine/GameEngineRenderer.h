@@ -68,7 +68,7 @@ class GameEngineRenderer: public GameEngineNameBase
 
 	float angle_;				//렌더러의 기울기.
 	float4 renderSize_;			//자른 렌더링이미지를 백버퍼 위에 렌더링할 크기. 웬만하면 renderingImageSize_와 동일하게 할 것.
-	float4 rendererLocalPos_;
+	float4 localPos_;
 	//액터 위치를 벗어난 곳에서 액터를 따라다니는 렌더러를 배치할때, 어느 방향으로 얼마나 떨어진 지점에 배치할지 정하는 지점.
 	//액터 위치에서 전혀 벗어나지 않는다면 {0, 0}.
 
@@ -128,17 +128,17 @@ public:	//Getter, Setter, Templated Member Functions
 
 	void SetLocalPos(const float4& _pos)
 	{
-		rendererLocalPos_ = _pos;
+		localPos_ = _pos;
 	}
 
 	float4 GetLocalPos()
 	{
-		return rendererLocalPos_;
+		return localPos_;
 	}
 
 	void Move(const float4& _distance)
 	{
-		rendererLocalPos_ += _distance;
+		localPos_ += _distance;
 	}
 
 	void SetRenderingImagePos(const float4& _pos = float4::ZERO)

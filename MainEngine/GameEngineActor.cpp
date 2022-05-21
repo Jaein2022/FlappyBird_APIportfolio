@@ -53,7 +53,8 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageNam
 GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	const std::string& _collisionBodyName,
 	const float4& _color,
-	CollisionBodyType _type
+	CollisionBodyType _type,
+	const float4& _size
 )
 {
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
@@ -61,6 +62,7 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	newCollisionBody->SetType(_type);
 	newCollisionBody->SetName(_collisionBodyName);
 	newCollisionBody->SetColor(_color);
+	newCollisionBody->SetSize(_size);
 	allCollisionBodies_.push_back(newCollisionBody);
 
 	return newCollisionBody;

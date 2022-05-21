@@ -69,7 +69,8 @@ protected:
 	GameEngineCollisionBody* CreateCollisionBody(
 		const std::string& _collisionBodyName,
 		const float4& _color,
-		CollisionBodyType _type
+		CollisionBodyType _type,
+		const float4& _size
 	);
 
 protected:

@@ -13,7 +13,7 @@ Background::~Background()
 void Background::Initialize()
 {
 	backgroundRenderer_ = CreateRenderer("background.bmp", "backgroundRenderer");
-	//backgroundRenderer_->SetCameraEffectOn();
+	backgroundRenderer_->SetRenderingImagePivot(RenderPivot::Center);
 }
 
 void Background::Update()

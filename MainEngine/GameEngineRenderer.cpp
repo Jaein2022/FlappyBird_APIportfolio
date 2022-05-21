@@ -40,7 +40,7 @@ GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	renderingImagePivot_(float4::ZERO),
 	angle_(0.000f),
 	renderSize_(float4::ZERO),
-	rendererLocalPos_(float4::ZERO),
+	localPos_(float4::ZERO),
 	maskImage_(nullptr),
 	curAnimation_(nullptr),
 	isCameraEffect_(false)
@@ -96,11 +96,11 @@ void GameEngineRenderer::Render()
 	float4 renderPos = float4::ZERO;
 	if (true == isCameraEffect_)
 	{
-		renderPos = parentActor_->GetCameraPos() + rendererLocalPos_ - renderingImagePivot_;
+		renderPos = parentActor_->GetCameraPos() + localPos_ - renderingImagePivot_;
 	}
 	else
 	{
-		renderPos = parentActor_->GetWorldPos() + rendererLocalPos_ - renderingImagePivot_;
+		renderPos = parentActor_->GetWorldPos() + localPos_ - renderingImagePivot_;
 	}
 	
 	if (0.000f == angle_)

@@ -70,7 +70,7 @@ public:	//Getter, Setter, Templated Member Functions
 
 	bool IsCut() const
 	{
-		return !(cuttingSizes_.empty());
+		return false == cuttingSizes_.empty();
 	}
 
 

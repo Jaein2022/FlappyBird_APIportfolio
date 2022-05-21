@@ -3,12 +3,12 @@
 class Pipe: public GameEngineActor
 {
 	//Friend Classes
-
+	friend class GameEngineLevel;
 
 	//Member Variables
 	const int pipeWidth_;
 	const int pipeHeight_;
-	int pipeDistance_;
+	const int pipeDistance_;	//파이프 위아래 간격.
 
 	GameEngineRenderer* topPipe_Renderer_;
 	GameEngineCollisionBody* topPipe_CollisionBody_;
