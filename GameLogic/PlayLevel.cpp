@@ -31,7 +31,10 @@ PlayLevel::~PlayLevel()
 
 void PlayLevel::Load()
 {
-
+	GameEngineInput::GetInst().CreateKey("W", 'W');
+	GameEngineInput::GetInst().CreateKey("A", 'A');
+	GameEngineInput::GetInst().CreateKey("S", 'S');
+	GameEngineInput::GetInst().CreateKey("D", 'D');
 	GameEngineInput::GetInst().CreateKey("M", 'M');
 
 	bird_ = CreateActor<Bird>("bird", 0, 9);
@@ -66,11 +69,12 @@ void PlayLevel::UpdateLevel()
 {
 	if (true == GameEngineInput::GetInst().IsDown("M"))
 	{
-		GameEngineCollisionBody::SwitchRendering();
+		this->SwitchMode();
 	}
+}
 
-	//GameEngineRandom::GetInst().mt_;
+void PlayLevel::SwitchMode()
+{
+	GameEngineCollisionBody::SwitchRendering();
 
-
-	//std::mt19937_64 mt = 100;
 }

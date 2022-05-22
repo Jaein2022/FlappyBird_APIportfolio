@@ -40,6 +40,10 @@ void Background::Render()
 	backgroundRenderer_->Render();
 }
 
-void Background::ReactCollision()
+void Background::ReactCollision(
+	GameEngineCollisionBody* _thisCollisionBody,
+	GameEngineActor* _other,
+	GameEngineCollisionBody* _otherCollisionBody
+)
 {
 }

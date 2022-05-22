@@ -31,6 +31,10 @@ private://Member Function Headers
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
-	void ReactCollision() override;
+	void ReactCollision(
+		GameEngineCollisionBody* _thisCollisionBody,
+		GameEngineActor* _other,
+		GameEngineCollisionBody* _otherCollisionBody
+	) override;
 };
 

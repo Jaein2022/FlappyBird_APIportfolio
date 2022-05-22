@@ -24,8 +24,9 @@ class PlayLevel : public GameEngineLevel
 
 	std::vector<Pipe*> pipes_;
 	const int pipeStartPosX_;
-	const int pipeInterval_;
+	const int pipeInterval_;	//파이프 좌우 간격.
 	const int pipeCount_;
+
 
 
 private:
@@ -51,6 +52,7 @@ public:	//Getter, Setter, Templated Member Functions
 private://Member Function Headers
 	void Load() override;
 	void UpdateLevel() override;
+	void SwitchMode();
 
 };
 

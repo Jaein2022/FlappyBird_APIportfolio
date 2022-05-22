@@ -37,6 +37,14 @@ void Base::Render()
 	baseCollisionBody_->Render();
 }
 
-void Base::ReactCollision()
+void Base::ReactCollision(
+	GameEngineCollisionBody* _thisCollisionBody,
+	GameEngineActor* _other,
+	GameEngineCollisionBody* _otherCollisionBody
+)
 {
+	if (_other->GetName() == "bird" && CollisionBodyType::Rect == _otherCollisionBody->GetType())
+	{
+		baseCollisionBody_->SetColor(float4::BLACK);
+	}
 }

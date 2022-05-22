@@ -21,6 +21,10 @@ void UI::Render()
 {
 }
 
-void UI::ReactCollision()
+void UI::ReactCollision(
+	GameEngineCollisionBody* _thisCollisionBody,
+	GameEngineActor* _other,
+	GameEngineCollisionBody* _otherCollisionBody
+)
 {
 }

@@ -41,6 +41,7 @@ void GameEngineLevelManager::Update()
         curLevel_ = nextLevel_;
         nextLevel_ = nullptr;
         GameEngineTime::GetInst().Reset();
+        GameEngineRandom::GetInst().Renewal();
     }
 
     if (nullptr == curLevel_)

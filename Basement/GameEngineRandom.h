@@ -58,5 +58,12 @@ public:
 		std::uniform_real_distribution<float> floatDistribution(_min, _max);
 		return floatDistribution(mt_);
 	}
+
+	void Renewal()
+	{
+		mt_ = std::mt19937_64(std::chrono::system_clock::to_time_t(
+			std::chrono::system_clock::now()	
+		));
+	}
 };
 

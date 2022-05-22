@@ -17,5 +17,9 @@ const float4 float4::DOWN = { 0.0f, -1.0f };
 const float4 float4::RED = { 1, 0, 0, 1 };
 const float4 float4::GREEN = { 0, 1, 0, 1 };
 const float4 float4::BLUE = { 0, 0, 1, 1 };
+const float4 float4::YELLOW = { 1, 1, 0, 1 };
+const float4 float4::MAGENTA = { 1, 0, 1, 1 };
+const float4 float4::CYAN = { 0, 1, 1, 1 };
+
 const float4 float4::BLACK = { 0, 0, 0, 1 };
 const float4 float4::WHITE = { 1, 1, 1, 1 };

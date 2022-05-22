@@ -6,7 +6,7 @@ class GameEngineObjectBase
 	 
 	//Member Variables
 	bool isDead_;					//true == 사망 판정. 사망처리가 아닌 사망 판정임에 주의.
-	bool isUpdateOn_;				//false == 업데이트 제외 판정.
+	bool isInUpdate_;				//false == 업데이트 제외 판정.
 	bool isDebugChecked_;			//true == 해당 오브젝트만 디버그 체크를 함.
 
 	GameEngineObjectBase* parentObject_;	//부모 오브젝트.
@@ -47,18 +47,18 @@ public:	//Getter, Setter, Templated Member Functions
 		}
 	}
 
-	bool IsUpdateOn()
+	bool IsInUpdate()
 	{
 		if (nullptr == parentObject_)
 		{
-			return isUpdateOn_ && (false == isDead_);
+			return isInUpdate_ && (false == isDead_);
 			//부모 오브젝트가 없다면 자기 자신이 살아있으면서 업데이트에서 제외되지 않았다면 true 반환.
 		}
 		else
 		{
 			return (false == isDead_) &&		//자기 자신이 살아있으면서,
-				(true == this->isUpdateOn_) && 	//업데이트에서 제외되지 않고,
-				(true == parentObject_->isUpdateOn_);
+				(true == this->isInUpdate_) && 	//업데이트에서 제외되지 않고,
+				(true == parentObject_->isInUpdate_);
 			//부모도 업데이트에서 제외되지 않았다는 조건들을 모두 달성해야 true 반환.
 		}
 	}
@@ -78,9 +78,9 @@ public:	//Getter, Setter, Templated Member Functions
 		isDead_ = true;
 	}
 
-	void SwitchUpdateOnOff()
+	void SwitchUpdateInOut()
 	{
-		isUpdateOn_ = !isUpdateOn_;
+		isInUpdate_ = !isInUpdate_;
 	}
 
 	void CheckDebug()

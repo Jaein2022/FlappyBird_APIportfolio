@@ -118,7 +118,7 @@ public:	//Getter, Setter, Templated Member Functions
 
 		case CollisionBodyType::HLine:
 		case CollisionBodyType::VLine:
-			pen_ = CreatePen(PS_SOLID, 2, color);
+			pen_ = CreatePen(PS_SOLID, 1, color);
 			break;
 		
 		default:

@@ -139,32 +139,32 @@ bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEn
 	return false;
 }
 
-bool GameEngineCollisionBody::HLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b)
+bool GameEngineCollisionBody::HLineToRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _rect)
+{
+	return RectToHLine(_rect, _hLine);
+}
+
+bool GameEngineCollisionBody::HLineToHLine(GameEngineCollisionBody* _hLineA, GameEngineCollisionBody* _hLineB)
 {
 	return false;
 }
 
-bool GameEngineCollisionBody::HLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
+bool GameEngineCollisionBody::HLineToVLine(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _vLine)
 {
 	return false;
 }
 
-bool GameEngineCollisionBody::HLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+bool GameEngineCollisionBody::VLineToRect(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _rect)
+{
+	return RectToVLine(_rect, _vLine);
+}
+
+bool GameEngineCollisionBody::VLineToHLine(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _hLine)
 {
 	return false;
 }
 
-bool GameEngineCollisionBody::VLineToRect(GameEngineCollisionBody* _a, GameEngineCollisionBody* _b)
-{
-	return false;
-}
-
-bool GameEngineCollisionBody::VLineToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
-{
-	return false;
-}
-
-bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _vLineA, GameEngineCollisionBody* _vLineB)
 {
 	return false;
 }

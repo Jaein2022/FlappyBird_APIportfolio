@@ -1,5 +1,6 @@
 #include "PreCompile.h"
 #include "Bird.h"
+#include "Pipe.h"
 
 Bird::Bird(): birdRenderer_(nullptr), birdCollisionBody_(nullptr)
 {
@@ -25,17 +26,13 @@ void Bird::Initialize()
 	//birdRenderer_->SetCameraEffectOn();
 
 
-	GameEngineInput::GetInst().CreateKey("W", 'W');
-	GameEngineInput::GetInst().CreateKey("A", 'A');
-	GameEngineInput::GetInst().CreateKey("S", 'S');
-	GameEngineInput::GetInst().CreateKey("D", 'D');
+
 
 	//GameEngineInput::GetInst().CreateKey("Space", ' ');
 
 	
 	birdCollisionBody_ = CreateCollisionBody(
 		"birdCollisionBody", float4::RED, CollisionBodyType::Rect, { 34, 24 });
-	//birdCollisionBody_->SetLocalPos({ 17, 12 });
 
 }
 
@@ -74,7 +71,14 @@ void Bird::Render()
 	birdCollisionBody_->Render();
 }
 
-void Bird::ReactCollision()
+void Bird::ReactCollision(
+	GameEngineCollisionBody* _thisCollisionBody,
+	GameEngineActor* _other,
+	GameEngineCollisionBody* _otherCollisionBody
+)
 {
-	int i = 0;
+	if (CollisionBodyType::Rect == _otherCollisionBody->GetType())
+	{
+		birdCollisionBody_->SetColor(float4::BLACK);
+	}
 }
