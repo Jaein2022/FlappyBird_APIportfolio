@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 #include "Base.h"
 
-Base::Base(): baseWidth_(336), baseHeight_(112), baseRenderer_(nullptr), baseCollisionBody_(nullptr)
+Base::Base(): baseWidth_(336), baseHeight_(112), base_Renderer_(nullptr), base_CollisionBody_(nullptr)
 {
 }
 
@@ -11,17 +11,17 @@ Base::~Base()
 
 void Base::Initialize()
 {
-	baseRenderer_ = CreateRenderer("base.bmp", "baseRenderer");
-	baseRenderer_->SetRenderingImagePivot(RenderPivot::Center);
+	base_Renderer_ = CreateRenderer("base.bmp", "base_Renderer");
+	base_Renderer_->SetRenderPivot(RenderPivot::Center);
 
 
-	baseCollisionBody_ = CreateCollisionBody(
+	base_CollisionBody_ = CreateCollisionBody(
 		"baseCollsionBody",
 		float4::RED,
 		CollisionBodyType::HLine,
 		{ baseWidth_, 0 }
 	);
-	baseCollisionBody_->SetLocalPos({ 0, -56 });
+	base_CollisionBody_->SetLocalPos({ 0, -56 });
 
 
 
@@ -33,8 +33,8 @@ void Base::Update()
 
 void Base::Render()
 {
-	baseRenderer_->Render();
-	baseCollisionBody_->Render();
+	base_Renderer_->Render();
+	base_CollisionBody_->Render();
 }
 
 void Base::ReactCollision(
@@ -45,6 +45,6 @@ void Base::ReactCollision(
 {
 	if (_other->GetName() == "bird" && CollisionBodyType::Rect == _otherCollisionBody->GetType())
 	{
-		baseCollisionBody_->SetColor(float4::BLACK);
+		base_CollisionBody_->SetColor(float4::BLACK);
 	}
 }

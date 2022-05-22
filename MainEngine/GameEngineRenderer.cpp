@@ -36,15 +36,16 @@ GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	: parentActor_(_actor),
 	renderingImage_(nullptr),
 	renderingImagePos_(float4::ZERO),
-	renderingImageSize_(float4::ZERO),
-	renderingImagePivot_(float4::ZERO),
+	renderingImageSize_(float4::ONE),
+	renderPivot_(float4::ZERO),
 	angle_(0.000f),
-	renderSize_(float4::ZERO),
+	renderSize_(float4::ONE),
 	localPos_(float4::ZERO),
 	maskImage_(nullptr),
 	curAnimation_(nullptr),
 	isCameraEffect_(false)
 {
+	SetParent(_actor);
 }
 
 GameEngineRenderer::~GameEngineRenderer()
@@ -96,11 +97,11 @@ void GameEngineRenderer::Render()
 	float4 renderPos = float4::ZERO;
 	if (true == isCameraEffect_)
 	{
-		renderPos = parentActor_->GetCameraPos() + localPos_ - renderingImagePivot_;
+		renderPos = parentActor_->GetCameraPos() + localPos_ - renderPivot_;
 	}
 	else
 	{
-		renderPos = parentActor_->GetWorldPos() + localPos_ - renderingImagePivot_;
+		renderPos = parentActor_->GetWorldPos() + localPos_ - renderPivot_;
 	}
 	
 	if (0.000f == angle_)
@@ -126,19 +127,19 @@ void GameEngineRenderer::Render()
 	}
 }
 
-void GameEngineRenderer::SetRenderingImagePivot(RenderPivot _pivot)
+void GameEngineRenderer::SetRenderPivot(RenderPivot _pivot)
 {
 	switch (_pivot)
 	{
 	case RenderPivot::Center:
-		renderingImagePivot_ = renderingImage_->GetSize().Half();
+		renderPivot_ = renderingImage_->GetSize().Half();
 		break;
 	case RenderPivot::Bottom:
-		renderingImagePivot_ = renderingImage_->GetSize().Half();
-		renderingImagePivot_.y = renderingImage_->GetSize().y;
+		renderPivot_ = renderingImage_->GetSize().Half();
+		renderPivot_.y = renderingImage_->GetSize().y;
 		break;
 	case RenderPivot::LeftTop:
-		renderingImagePivot_ = float4::ZERO;
+		renderPivot_ = float4::ZERO;
 		break;
 
 	default:
@@ -253,14 +254,14 @@ void GameEngineRenderer::SetFrameIndex(int _index, RenderPivot _pivot)
 	switch (_pivot)
 	{
 	case RenderPivot::Center:
-		renderingImagePivot_ = renderSize_.Half();
+		renderPivot_ = renderSize_.Half();
 		break;
 	case RenderPivot::Bottom:
-		renderingImagePivot_ = renderSize_.Half();
-		renderingImagePivot_.y += renderSize_.Half().y;
+		renderPivot_ = renderSize_.Half();
+		renderPivot_.y += renderSize_.Half().y;
 		break;
 	case RenderPivot::LeftTop:
-		renderingImagePivot_ = float4::ZERO;
+		renderPivot_ = float4::ZERO;
 		break;
 
 	default:

@@ -1,5 +1,5 @@
 #pragma once
-#include "GameEngineEnum.h"
+#include "EngineEnum.h"
 
 class GameEngineActor;
 class GameEngineCollisionBody : public GameEngineNameBase
@@ -76,6 +76,11 @@ public:	//Getter, Setter, Templated Member Functions
 	{
 		return type_;
 	}
+	GameEngineActor* const GetActor()
+	{
+		return parentActor_;
+	}
+
 
 	void SetSize(const float4& _size)
 	{
@@ -118,7 +123,8 @@ public:	//Getter, Setter, Templated Member Functions
 
 		case CollisionBodyType::HLine:
 		case CollisionBodyType::VLine:
-			pen_ = CreatePen(PS_SOLID, 1, color);
+			pen_ = CreatePen(PS_SOLID, 1, color);	
+			//FrameRect()함수로 그리는 사각형과 시각적 일관성을 유지하기 위해 펜 굵기 1 고정.
 			break;
 		
 		default:
@@ -132,7 +138,5 @@ public:	//Getter, Setter, Templated Member Functions
 	}
 
 private://Member Function Headers
-
-
 };
 

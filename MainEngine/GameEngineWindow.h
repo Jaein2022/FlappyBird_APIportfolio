@@ -63,7 +63,7 @@ public:	//Getter, Setter, Templated Member Functions
 		return windowPos_;
 	}
 
-	const float4& GetWindowSize() const
+	float4 GetWindowSize() const
 	{
 		return windowSize_;
 	}

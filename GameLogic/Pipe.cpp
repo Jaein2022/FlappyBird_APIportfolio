@@ -1,5 +1,6 @@
 #include "PreCompile.h"
 #include "Pipe.h"
+#include "PlayLevel.h"
 
 Pipe::Pipe()
 	: pipeWidth_(52),
@@ -20,7 +21,7 @@ Pipe::~Pipe()
 void Pipe::Initialize()
 {
 	topPipe_Renderer_ = CreateRenderer("pipe_top.bmp", "topPipe_Renderer");
-	topPipe_Renderer_->SetRenderingImagePivot(RenderPivot::Center);
+	topPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
 	topPipe_Renderer_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
 
 	topPipe_CollisionBody_ = CreateCollisionBody(
@@ -33,7 +34,7 @@ void Pipe::Initialize()
 
 
 	botPipe_Renderer_ = CreateRenderer("pipe_bot.bmp", "botPipe_Renderer");
-	botPipe_Renderer_->SetRenderingImagePivot(RenderPivot::Center);
+	botPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
 	botPipe_Renderer_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
 
 	botPipe_CollisionBody_ = CreateCollisionBody(
@@ -89,7 +90,10 @@ void Pipe::ReactCollision(
 		else if (_thisCollisionBody == scoreCount_CollsionBody_)
 		{
 			scoreCount_CollsionBody_->SetColor(float4::GREEN);
-			scoreCount_CollsionBody_->SwitchUpdateInOut();
+			scoreCount_CollsionBody_->ExcludeUpdate();
+
+			PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
+			tempPlayLevel->AddScore();
 		}
 	}
 }

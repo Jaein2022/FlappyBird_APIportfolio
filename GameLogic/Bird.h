@@ -1,13 +1,15 @@
 #pragma once
 
+class PlayLevel;
 class Bird: public GameEngineActor
 {
 	//Friend Classes
 	friend class GameEngineLevel;
+	friend PlayLevel;
 
 	//Member Variables
-	GameEngineRenderer* birdRenderer_;
-	GameEngineCollisionBody* birdCollisionBody_;
+	GameEngineRenderer* bird_Renderer_;
+	GameEngineCollisionBody* bird_CollisionBody_;
 
 private:
 	Bird();
@@ -21,14 +23,14 @@ private:
 	Bird& operator=(const Bird& _other) = delete;
 	Bird& operator=(const Bird&& _other) = delete;
 
-private:	//Member Function Headers
+public:
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 
 
 
-private://Member Function Headers
+private:
 	void Initialize() override;
 	void Update() override;
 	void Render() override;

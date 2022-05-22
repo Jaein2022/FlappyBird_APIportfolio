@@ -11,7 +11,7 @@
     <ClInclude Include="GameEngineActor.h" />
     <ClInclude Include="GameEngineRenderer.h" />
     <ClInclude Include="GameEngineCollisionBody.h" />
-    <ClInclude Include="GameEngineEnum.h" />
+    <ClInclude Include="EngineEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />

@@ -6,7 +6,7 @@ class Background: public GameEngineActor
 
 	friend class GameEngineLevel;
 
-	GameEngineRenderer* backgroundRenderer_;
+	GameEngineRenderer* background_Renderer_;
 
 private:
 	Background();
@@ -21,13 +21,13 @@ private:
 	Background& operator=(const Background&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 
 
-private://Member Function Headers
+private:
 	void Initialize() override;
 	void Update() override;
 	void Render() override;

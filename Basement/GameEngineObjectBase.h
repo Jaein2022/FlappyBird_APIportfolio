@@ -78,9 +78,14 @@ public:	//Getter, Setter, Templated Member Functions
 		isDead_ = true;
 	}
 
-	void SwitchUpdateInOut()
+	void ExcludeUpdate()
 	{
-		isInUpdate_ = !isInUpdate_;
+		isInUpdate_ = false;
+	}
+
+	void IncludeUpdate()
+	{
+		isInUpdate_ = true;
 	}
 
 	void CheckDebug()

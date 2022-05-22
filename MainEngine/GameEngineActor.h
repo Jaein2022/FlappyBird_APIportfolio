@@ -1,5 +1,5 @@
 #pragma once
-#include "GameEngineEnum.h"
+#include "EngineEnum.h"
 
 class GameEngineCollisionBody;
 class GameEngineRenderer;
@@ -51,7 +51,10 @@ public:	//Getter, Setter, Templated Member Functions
 	{
 		pos_ += _distance;
 	}
-
+	GameEngineLevel* const GetLevel()
+	{
+		return parentLevel_;
+	}
 
 
 
@@ -95,5 +98,10 @@ protected:
 private://Member Function Headers
 	void CheckCollision(GameEngineActor* _other);
 
+private:
+	void SetLevel(GameEngineLevel* _parentLevel)
+	{
+		parentLevel_ = _parentLevel;
+	}
 };
 

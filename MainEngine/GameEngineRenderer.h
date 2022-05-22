@@ -22,7 +22,6 @@ class GameEngineRenderer: public GameEngineNameBase
 		int curIndex_;					//현재 프레임의 인덱스.
 		float delayPerFrame_;			//각 프레임별 넘어가는 시간.
 		float curDelay_;				//현재 프레임이 넘어가기까지 남은 시간.
-		//const GameEngineImage* animationImage_;		//애니메이션이 렌더하는 잘려진 이미지.
 		RenderPivot pivot_;				//현재 프레임의 이미지 피봇.
 		bool isRepetitive_;				//애니메이션이 무한반복/1회로 종료.
 		bool isFinished_;				//애니메이션이 끝났는지 여부.
@@ -40,6 +39,7 @@ class GameEngineRenderer: public GameEngineNameBase
 			isRepetitive_(true),
 			isFinished_(true)
 		{
+			SetParent(_renderer);
 		}
 
 		void Reset()
@@ -63,7 +63,7 @@ class GameEngineRenderer: public GameEngineNameBase
 	GameEngineImage* renderingImage_;	//Render() 함수 내에서 최종적으로 렌더할 이미지.
 	float4 renderingImagePos_;		//이미지 내에서 렌더링을 시작할 시작점(왼쪽 상단).
 	float4 renderingImageSize_;		//이미지에서 렌더링을 할 크기.
-	float4 renderingImagePivot_;	//렌더링하는 이미지의 기준점. 
+	float4 renderPivot_;	//렌더링하는 이미지의 기준점. 
 	//이 점을 기준으로 액터포스나 피벗포스에 이미지를 배치한다.
 
 	float angle_;				//렌더러의 기울기.
@@ -97,7 +97,7 @@ public:	//Member Function Headers
 	void SetMaskImage(const std::string& _imageName);
 	void Render();
 
-	void SetRenderingImagePivot(RenderPivot _pivot);
+	void SetRenderPivot(RenderPivot _pivot);
 
 
 	void CreateAnimation(
@@ -151,9 +151,9 @@ public:	//Getter, Setter, Templated Member Functions
 		renderingImageSize_ = _size;
 	}
 
-	void SetRenderingImagePivot(const float4& _pos)
+	void SetRenderPivot(const float4& _pos)
 	{
-		renderingImagePivot_ = _pos;
+		renderPivot_ = _pos;
 	}
 
 	void SetCameraEffectOn()
@@ -166,11 +166,13 @@ public:	//Getter, Setter, Templated Member Functions
 		isCameraEffect_ = false;
 	}
 
+	GameEngineActor* const GetActor()
+	{
+		return parentActor_;
+	}
 
 
 private://Member Function Headers
-	
-
 
 };
 

@@ -1,9 +1,11 @@
 #pragma once
 
+class PlayLevel;
 class Pipe: public GameEngineActor
 {
 	//Friend Classes
 	friend class GameEngineLevel;
+	friend PlayLevel;
 
 	//Member Variables
 	const int pipeWidth_;
@@ -16,7 +18,6 @@ class Pipe: public GameEngineActor
 	GameEngineRenderer* botPipe_Renderer_;
 	GameEngineCollisionBody* botPipe_CollisionBody_;
 
-	//카메라 구조 제대로 적용되면 UI로 옮길 것.
 	GameEngineCollisionBody* scoreCount_CollsionBody_;	
 
 private:
@@ -32,7 +33,9 @@ private:
 	Pipe& operator=(const Pipe&& _other) = delete;
 
 
-private:	//Member Function Headers
+public:
+
+private:	
 	void Initialize() override;
 	void Update() override;
 	void Render() override;
@@ -41,13 +44,11 @@ private:	//Member Function Headers
 		GameEngineActor* _other,
 		GameEngineCollisionBody* _otherCollisionBody
 	) override;
-
-
-public:	//Getter, Setter, Templated Member Functions
+	
 
 
 
-private://Member Function Headers
+private:
 
 
 };

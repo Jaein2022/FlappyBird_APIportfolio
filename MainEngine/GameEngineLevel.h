@@ -71,10 +71,11 @@ protected:
 			return nullptr;
 		}
 
-		ActorType* newActor = new ActorType();
+		ActorType* newActor = new ActorType();	
+		//ActorType은 빌드 과정에서 GameEngineActor의 자식 클래스로 대체된다.
 		newActor->SetName(_actorName);
 		newActor->SetParent(this);
-		newActor->parentLevel_ = this;
+		newActor->SetLevel(this);
 		newActor->Initialize();
 
 		//생성한 NewActor를 allActors 컨테이너들에 넣어서 관리 대상으로 등록한다.

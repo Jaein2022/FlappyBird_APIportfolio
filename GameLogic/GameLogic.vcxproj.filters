@@ -8,6 +8,7 @@
     <ClInclude Include="Background.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Base.h" />
+    <ClInclude Include="LogicEnum.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PreCompile.cpp" />

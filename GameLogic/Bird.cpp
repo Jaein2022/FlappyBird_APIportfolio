@@ -1,8 +1,9 @@
 #include "PreCompile.h"
 #include "Bird.h"
 #include "Pipe.h"
+#include "PlayLevel.h"
 
-Bird::Bird(): birdRenderer_(nullptr), birdCollisionBody_(nullptr)
+Bird::Bird(): bird_Renderer_(nullptr), bird_CollisionBody_(nullptr)
 {
 }
 
@@ -12,26 +13,21 @@ Bird::~Bird()
 
 void Bird::Initialize()
 {
-	birdRenderer_ = CreateRenderer("bird.bmp", "birdRenderer");
-	if (false == birdRenderer_->GetRenderingImage()->IsCut())
+	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
+	if (false == bird_Renderer_->GetRenderingImage()->IsCut())
 	{
-		birdRenderer_->GetRenderingImage()->Cut({ 34, 24 });
+		bird_Renderer_->GetRenderingImage()->Cut({ 34, 24 });
 	}
-	birdRenderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.1f);
-	birdRenderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
-	birdRenderer_->ChangeAnimation("Play");
-	//birdRenderer_->SetLocalPos({ 17, 12 });
+	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.1f);
+	bird_Renderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
+	bird_Renderer_->ChangeAnimation("Play");
 
 
 	//birdRenderer_->SetCameraEffectOn();
 
 
-
-
-	//GameEngineInput::GetInst().CreateKey("Space", ' ');
-
 	
-	birdCollisionBody_ = CreateCollisionBody(
+	bird_CollisionBody_ = CreateCollisionBody(
 		"birdCollisionBody", float4::RED, CollisionBodyType::Rect, { 34, 24 });
 
 }
@@ -39,7 +35,7 @@ void Bird::Initialize()
 void Bird::Update()
 {
 	//float4 thispos = this->GetPos();
-	birdRenderer_->UpdateAnimation();
+	bird_Renderer_->UpdateAnimation();
 	float deltaTime = GameEngineTime::GetInst().GetDeltaTimeF();
 
 	//충돌테스트용 임시 이동체계.
@@ -61,14 +57,12 @@ void Bird::Update()
 	}
 
 	//birdCollisionBody_->CheckCollision();
-
-
 }
 
 void Bird::Render()
 {
-	birdRenderer_->Render();
-	birdCollisionBody_->Render();
+	bird_Renderer_->Render();
+	bird_CollisionBody_->Render();
 }
 
 void Bird::ReactCollision(
@@ -77,8 +71,11 @@ void Bird::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (CollisionBodyType::Rect == _otherCollisionBody->GetType())
+	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() ||
+		CollisionBodyType::HLine == _otherCollisionBody->GetType())
 	{
-		birdCollisionBody_->SetColor(float4::BLACK);
+		bird_CollisionBody_->SetColor(float4::BLACK);
+		PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
+		tempPlayLevel->SetState(GameState::GameOver);
 	}
 }

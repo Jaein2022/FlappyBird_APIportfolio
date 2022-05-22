@@ -1,7 +1,9 @@
 #pragma once
+#include "LogicEnum.h"
+#include "Bird.h"
+#include "Pipe.h"
 
 class Background;
-class Bird;
 class Pipe;
 class Base;
 class UI;
@@ -9,10 +11,25 @@ class PlayLevel : public GameEngineLevel
 {
 	//플레이레벨.
 
-	friend class GameEngineLevelManager;
 
-	//Member Variables
+	friend class GameEngineLevelManager;
+	friend void Pipe::ReactCollision(
+		GameEngineCollisionBody* _thisCollisionBody,
+		GameEngineActor* _other,
+		GameEngineCollisionBody* _otherCollisionBody
+	);	
+	friend void Bird::ReactCollision(
+		GameEngineCollisionBody* _thisCollisionBody,
+		GameEngineActor* _other,
+		GameEngineCollisionBody* _otherCollisionBody
+	);
+
+	//Member Variables.
+	GameState currentState_;
+	int score_;
+
 	Bird* bird_;
+	UI* UI_;
 
 	std::vector<Background*> backgrounds_;
 	const int backgroundWidth_;
@@ -24,7 +41,7 @@ class PlayLevel : public GameEngineLevel
 
 	std::vector<Pipe*> pipes_;
 	const int pipeStartPosX_;
-	const int pipeInterval_;	//파이프 좌우 간격.
+	const int pipeInterval_;	//파이프 액터의 좌우 간격.
 	const int pipeCount_;
 
 
@@ -42,17 +59,32 @@ private:
 	PlayLevel& operator=(const PlayLevel&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
+	GameState GetState()
+	{
+		return currentState_;
+	}
+	int GetScore()
+	{
+		return score_;
+	}
 
-
-
-private://Member Function Headers
+private:
 	void Load() override;
 	void UpdateLevel() override;
 	void SwitchMode();
 
+private:
+	void SetState(GameState _state)
+	{
+		currentState_ = _state;
+	}
+	void AddScore()
+	{
+		++score_;
+	}
 };
 

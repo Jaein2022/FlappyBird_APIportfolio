@@ -203,7 +203,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="GameEngineEnum.h" />
+    <ClInclude Include="EngineEnum.h" />
     <ClInclude Include="GameEngineImage.h">
       <SubType>
       </SubType>

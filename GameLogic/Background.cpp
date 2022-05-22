@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 #include "Background.h"
 
-Background::Background(): backgroundRenderer_(nullptr)
+Background::Background(): background_Renderer_(nullptr)
 {
 
 }
@@ -12,8 +12,8 @@ Background::~Background()
 
 void Background::Initialize()
 {
-	backgroundRenderer_ = CreateRenderer("background.bmp", "backgroundRenderer");
-	backgroundRenderer_->SetRenderingImagePivot(RenderPivot::Center);
+	background_Renderer_ = CreateRenderer("background.bmp", "background_Renderer");
+	background_Renderer_->SetRenderPivot(RenderPivot::Center);
 }
 
 void Background::Update()
@@ -37,7 +37,7 @@ void Background::Update()
 
 void Background::Render()
 {
-	backgroundRenderer_->Render();
+	background_Renderer_->Render();
 }
 
 void Background::ReactCollision(

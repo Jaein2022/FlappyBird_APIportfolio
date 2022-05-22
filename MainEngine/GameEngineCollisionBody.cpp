@@ -20,6 +20,7 @@ GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	pen_(nullptr),
 	brush_(nullptr)
 {
+	SetParent(_actor);
 }
 
 GameEngineCollisionBody::~GameEngineCollisionBody()
@@ -37,13 +38,6 @@ GameEngineCollisionBody::~GameEngineCollisionBody()
 
 void GameEngineCollisionBody::Initialize()
 {
-	//for (int i = 0; i < static_cast<int>(CollisionBodyType::MAX); i++)
-	//{
-	//	for (int j = 0; j < static_cast<int>(CollisionBodyType::MAX); j++)
-	//	{
-	//		collisionFunctions_[i][j] = nullptr;
-	//	}
-	//}
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::Rect)]
 		= std::bind(&GameEngineCollisionBody::RectToRect, std::placeholders::_1, std::placeholders::_2);
@@ -192,7 +186,7 @@ void GameEngineCollisionBody::Render()
 			renderPos.IntY() + size_.Half_IntY()
 		};
 
-		FrameRect(
+		FrameRect(	//선 굵기는 1로 고정 되어있음.
 			backBufferImage->GetHDC(),
 			&rect,
 			brush_

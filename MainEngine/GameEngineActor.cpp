@@ -41,7 +41,6 @@ float4 GameEngineActor::GetCameraPos()
 GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
 {
 	GameEngineRenderer* newRenderer = new GameEngineRenderer(this);
-	newRenderer->SetParent(this);
 	newRenderer->SetImage(_imageName);
 	newRenderer->SetName(_rendererName);
 	
@@ -58,7 +57,6 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 )
 {
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
-	newCollisionBody->SetParent(this);
 	newCollisionBody->SetType(_type);
 	newCollisionBody->SetName(_collisionBodyName);
 	newCollisionBody->SetColor(_color);

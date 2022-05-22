@@ -8,8 +8,8 @@ class Base: public GameEngineActor
 	//Member Variables
 	const int baseWidth_;
 	const int baseHeight_;
-	GameEngineRenderer* baseRenderer_;
-	GameEngineCollisionBody* baseCollisionBody_;
+	GameEngineRenderer* base_Renderer_;
+	GameEngineCollisionBody* base_CollisionBody_;
 
 private:
 	Base();
@@ -24,14 +24,14 @@ private:
 	Base& operator=(const Base&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:
 
 
-private://Member Function Headers
+private:
 	void Initialize() override;
 	void Update() override;
 	void Render() override;

@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 
 void InitializeGame();
-void LoadResource();
+void LoadResources();
 void UpdateGame();
 void DestroyGame();
 
@@ -23,7 +23,7 @@ int APIENTRY wWinMain(
 
     InitializeGame();
 
-    LoadResource();
+    LoadResources();
 
 
     GameEngineLevelManager::GetInst().Create<PlayLevel>("PlayLevel");
@@ -44,7 +44,7 @@ void InitializeGame()
     GameEngineCollisionBody::Initialize();
 }
 
-void LoadResource()
+void LoadResources()
 {
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent("FlappyBird_APIportfolio");

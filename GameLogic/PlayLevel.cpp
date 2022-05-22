@@ -8,7 +8,10 @@
 #include <Basement\GameEngineRandom.h>
 
 PlayLevel::PlayLevel()
-	: bird_(nullptr),
+	: score_(0),
+	currentState_(GameState::Ready),
+	bird_(nullptr),
+	UI_(nullptr),
 	backgrounds_(),
 	backgroundWidth_(281),
 	backgroundCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / backgroundWidth_) + 2),
@@ -36,9 +39,13 @@ void PlayLevel::Load()
 	GameEngineInput::GetInst().CreateKey("S", 'S');
 	GameEngineInput::GetInst().CreateKey("D", 'D');
 	GameEngineInput::GetInst().CreateKey("M", 'M');
+	GameEngineInput::GetInst().CreateKey("Space", ' ');
 
-	bird_ = CreateActor<Bird>("bird", 0, 9);
+	bird_ = CreateActor<Bird>("bird", 0, 8);
 	bird_->SetWorldPos({ 100, 200 });
+
+	UI_ = CreateActor<UI>("UI", 9, 9);
+	UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
 
 
 	for (int i = 0; i < backgroundCount_; i++)
@@ -70,6 +77,22 @@ void PlayLevel::UpdateLevel()
 	if (true == GameEngineInput::GetInst().IsDown("M"))
 	{
 		this->SwitchMode();
+	}
+
+	if (true == GameEngineInput::GetInst().IsDown("Space"))
+	{
+		if (GameState::Ready == currentState_) 
+		{
+			currentState_ = GameState::Playing;
+		}			
+		else if (GameState::Playing == currentState_)
+		{
+			
+		}
+		else if (GameState::GameOver == currentState_)
+		{
+			currentState_ = GameState::Ready;
+		}
 	}
 }
 
