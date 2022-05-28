@@ -6,7 +6,8 @@
 UI::UI()
 	: parentPlayLevel_(nullptr),
 	readyMessage_Renderer_(nullptr),
-	score_Renderer_(nullptr),
+	score_FirstDigit_Renderer_(nullptr),
+	score_SecondDigit_Renderer_(nullptr),
 	gameover_Renderer_(nullptr)
 {
 }
@@ -22,12 +23,14 @@ void UI::Initialize()
 	readyMessage_Renderer_ = CreateRenderer("message.bmp", "readyMessage_Renderer");
 	readyMessage_Renderer_->SetRenderPivot(RenderPivot::Bottom);	//이 게임에서 유일하게 얘만 렌더피봇이 바닥.
 
-	score_Renderer_ = CreateRenderer("number.bmp", "score_Renderer");
-	if (false == score_Renderer_->GetRenderingImage()->IsCut())
+	score_FirstDigit_Renderer_ = CreateRenderer("number.bmp", "score_FirstDigit_Renderer");
+	if (false == score_FirstDigit_Renderer_->GetRenderingImage()->IsCut())
 	{
-		score_Renderer_->GetRenderingImage()->Cut({24, 36});
+		score_FirstDigit_Renderer_->GetRenderingImage()->Cut({24, 36});
 	}
-	score_Renderer_->SetLocalPos({ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+		
+	score_SecondDigit_Renderer_ = CreateRenderer("number.bmp", "score_SecondDigit_Renderer");
+	score_SecondDigit_Renderer_->SetLocalPos({ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
 
 
 	gameover_Renderer_ = CreateRenderer("gameover.bmp", "gameover_Renderer");
@@ -41,10 +44,48 @@ void UI::Update()
 	if (GameState::Playing == parentPlayLevel_->GetState() ||
 		GameState::GameOver == parentPlayLevel_->GetState())
 	{
-		score_Renderer_->SetFrameIndex(
-			parentPlayLevel_->GetScore(),
-			RenderPivot::Center
-		);
+		int currentScore = parentPlayLevel_->GetScore();
+
+		if (currentScore < 10)
+		{
+			score_FirstDigit_Renderer_->SetLocalPos(
+				{ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+
+			score_FirstDigit_Renderer_->SetFrameIndex(
+				currentScore,
+				RenderPivot::Center
+			);
+		}
+		else if (currentScore >= 10 && currentScore < 100)
+		{
+			score_FirstDigit_Renderer_->SetLocalPos(
+				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+			score_SecondDigit_Renderer_->SetLocalPos(
+				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+
+			score_FirstDigit_Renderer_->SetFrameIndex(
+				currentScore % 10,
+				RenderPivot::Center
+			);
+			score_SecondDigit_Renderer_->SetFrameIndex(
+				currentScore / 10,
+				RenderPivot::Center
+			);
+
+		}
+		else
+		{
+			score_FirstDigit_Renderer_->SetLocalPos(
+				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+			score_SecondDigit_Renderer_->SetLocalPos(
+				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+
+			score_FirstDigit_Renderer_->SetFrameIndex(9, RenderPivot::Center);
+			score_SecondDigit_Renderer_->SetFrameIndex(9, RenderPivot::Center);
+		}
+
+
+
 	}
 }
 
@@ -56,16 +97,37 @@ void UI::Render()
 		readyMessage_Renderer_->Render();
 		break;
 	case GameState::Playing:
-		score_Renderer_->Render();
+	{
+		if (parentPlayLevel_->GetScore() < 10)
+		{
+			score_FirstDigit_Renderer_->Render();
+		}
+		else if(parentPlayLevel_->GetScore() >= 10)
+		{
+			score_FirstDigit_Renderer_->Render();
+			score_SecondDigit_Renderer_->Render();
+		}
 		break;
+	}
 	case GameState::GameOver:
-		score_Renderer_->Render();
+	{
 		gameover_Renderer_->Render();
+
+		if (parentPlayLevel_->GetScore() < 10)
+		{
+			score_FirstDigit_Renderer_->Render();
+		}
+		else if (parentPlayLevel_->GetScore() >= 10)
+		{
+			score_FirstDigit_Renderer_->Render();
+			score_SecondDigit_Renderer_->Render();
+		}
 		break;
+	}
 
 	default:
 		GameEngineDebug::MsgBoxError("존재할 수 없는 게임 스테이트입니다.");
-		break;
+		return;
 	}
 }
 

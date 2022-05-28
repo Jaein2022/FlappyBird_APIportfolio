@@ -10,7 +10,8 @@ class UI: public GameEngineActor
 	//Member Variables.
 	PlayLevel* parentPlayLevel_;
 	GameEngineRenderer* readyMessage_Renderer_;	//ÀÌ °ÔÀÓ¿¡¼­ À¯ÀÏÇÏ°Ô ¾ê¸¸ ·»´õÇÇº¿ÀÌ ¹Ù´Ú.
-	GameEngineRenderer* score_Renderer_;
+	GameEngineRenderer* score_FirstDigit_Renderer_;
+	GameEngineRenderer* score_SecondDigit_Renderer_;
 	GameEngineRenderer* gameover_Renderer_;
 
 private: 
