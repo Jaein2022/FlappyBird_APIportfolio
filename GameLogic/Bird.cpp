@@ -23,13 +23,13 @@ void Bird::Initialize()
 	bird_Renderer_->ChangeAnimation("Play");
 
 
-	//birdRenderer_->SetCameraEffectOn();
+	bird_Renderer_->SetCameraEffectOn();
 
 
 	
 	bird_CollisionBody_ = CreateCollisionBody(
 		"birdCollisionBody", float4::RED, CollisionBodyType::Rect, { 34, 24 });
-
+	bird_CollisionBody_->SetCameraEffectOn();
 }
 
 void Bird::Update()
@@ -46,6 +46,7 @@ void Bird::Update()
 	else if (true == GameEngineInput::GetInst().IsPressed("A"))
 	{
 		Move(float4::LEFT * deltaTime * 100.f);
+		GetLevel()->MoveCamera(float4::LEFT * deltaTime * 100.f);
 	}
 	else if (true == GameEngineInput::GetInst().IsPressed("S"))
 	{
@@ -54,6 +55,7 @@ void Bird::Update()
 	else if (true == GameEngineInput::GetInst().IsPressed("D"))
 	{
 		Move(float4::RIGHT * deltaTime * 100.f);
+		GetLevel()->MoveCamera(float4::RIGHT * deltaTime * 100.f);
 	}
 
 	//birdCollisionBody_->CheckCollision();
@@ -76,6 +78,11 @@ void Bird::ReactCollision(
 	{
 		bird_CollisionBody_->SetColor(float4::BLACK);
 		PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
+		if (nullptr == tempPlayLevel)
+		{
+			GameEngineDebug::MsgBoxError("tempPlayLevel이 없습니다.");
+			return;
+		}
 		tempPlayLevel->SetState(GameState::GameOver);
 	}
 }

@@ -81,6 +81,16 @@ public:	//Getter, Setter, Templated Member Functions
 		return parentActor_;
 	}
 
+	void SetCameraEffectOn()
+	{
+		isCameraEffect_ = true;
+	}
+
+	void SetCameraEffectOff()
+	{
+		isCameraEffect_ = false;
+	}
+
 
 	void SetSize(const float4& _size)
 	{

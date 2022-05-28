@@ -46,7 +46,7 @@ private:
 	) override;
 	
 
-
+	void Relocate();
 
 private:
 

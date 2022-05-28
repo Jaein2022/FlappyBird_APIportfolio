@@ -31,15 +31,15 @@ class PlayLevel : public GameEngineLevel
 	Bird* bird_;
 	UI* UI_;
 
-	std::vector<Background*> backgrounds_;
+	std::vector<Background*> allBackgrounds_;
 	const int backgroundWidth_;
 	const int backgroundCount_;
 
-	std::vector<Base*> bases_;
+	std::vector<Base*> allBases_;
 	const int baseWidth_;
 	const int baseCount_;
 
-	std::vector<Pipe*> pipes_;
+	std::vector<Pipe*> allPipes_;
 	const int pipeStartPosX_;
 	const int pipeInterval_;	//파이프 액터의 좌우 간격.
 	const int pipeCount_;

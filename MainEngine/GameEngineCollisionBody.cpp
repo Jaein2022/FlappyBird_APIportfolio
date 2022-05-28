@@ -172,7 +172,18 @@ void GameEngineCollisionBody::Render()
 
 	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
 	
-	float4 renderPos = this->GetWorldPos();
+
+	float4 renderPos = float4::ZERO;
+	if (true == isCameraEffect_)
+	{
+		renderPos = parentActor_->GetCameraPos() + localPos_;
+	}
+	else
+	{
+		renderPos = parentActor_->GetWorldPos() + localPos_;
+	}
+
+
 
 	switch (type_)
 	{

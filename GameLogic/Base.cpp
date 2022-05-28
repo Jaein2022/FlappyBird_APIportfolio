@@ -13,7 +13,7 @@ void Base::Initialize()
 {
 	base_Renderer_ = CreateRenderer("base.bmp", "base_Renderer");
 	base_Renderer_->SetRenderPivot(RenderPivot::Center);
-
+	base_Renderer_->SetCameraEffectOn();
 
 	base_CollisionBody_ = CreateCollisionBody(
 		"baseCollsionBody",
@@ -22,9 +22,7 @@ void Base::Initialize()
 		{ baseWidth_, 0 }
 	);
 	base_CollisionBody_->SetLocalPos({ 0, -56 });
-
-
-
+	base_CollisionBody_->SetCameraEffectOn();
 }
 
 void Base::Update()

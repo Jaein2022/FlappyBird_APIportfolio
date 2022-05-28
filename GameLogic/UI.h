@@ -13,7 +13,7 @@ class UI: public GameEngineActor
 	GameEngineRenderer* score_Renderer_;
 	GameEngineRenderer* gameover_Renderer_;
 
-private:
+private: 
 	UI();
 	~UI();
 

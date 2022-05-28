@@ -23,6 +23,7 @@ void Pipe::Initialize()
 	topPipe_Renderer_ = CreateRenderer("pipe_top.bmp", "topPipe_Renderer");
 	topPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
 	topPipe_Renderer_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
+	topPipe_Renderer_->SetCameraEffectOn();
 
 	topPipe_CollisionBody_ = CreateCollisionBody(
 		"topPipe_CollisionBody",
@@ -31,11 +32,14 @@ void Pipe::Initialize()
 		{ pipeWidth_, pipeHeight_ }
 	);
 	topPipe_CollisionBody_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
+	topPipe_CollisionBody_->SetCameraEffectOn();
+
 
 
 	botPipe_Renderer_ = CreateRenderer("pipe_bot.bmp", "botPipe_Renderer");
 	botPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
 	botPipe_Renderer_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
+	botPipe_Renderer_->SetCameraEffectOn();
 
 	botPipe_CollisionBody_ = CreateCollisionBody(
 		"botPipe_CollisionBody",
@@ -44,7 +48,7 @@ void Pipe::Initialize()
 		{ pipeWidth_, pipeHeight_ }
 	);
 	botPipe_CollisionBody_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
-
+	botPipe_CollisionBody_->SetCameraEffectOn();
 
 	scoreCount_CollsionBody_ = CreateCollisionBody(
 		"scoreCount_CollsionBody",
@@ -53,7 +57,7 @@ void Pipe::Initialize()
 		{ 0, GameEngineWindow::GetInst().GetWindowSize().IntY() * 2 }
 	);
 	scoreCount_CollsionBody_->SetLocalPos({ pipeWidth_ / 2 + 34, 0 });
-
+	scoreCount_CollsionBody_->SetCameraEffectOn();
 }
 
 void Pipe::Update()
@@ -93,7 +97,18 @@ void Pipe::ReactCollision(
 			scoreCount_CollsionBody_->ExcludeUpdate();
 
 			PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
+			if (nullptr == tempPlayLevel)
+			{
+				GameEngineDebug::MsgBoxError("tempPlayLevel이 없습니다.");
+				return;
+			}
 			tempPlayLevel->AddScore();
 		}
 	}
+}
+
+void Pipe::Relocate()
+{
+	scoreCount_CollsionBody_->SetColor(float4::YELLOW);
+	scoreCount_CollsionBody_->IncludeUpdate();
 }

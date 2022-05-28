@@ -12,20 +12,20 @@ PlayLevel::PlayLevel()
 	currentState_(GameState::Ready),
 	bird_(nullptr),
 	UI_(nullptr),
-	backgrounds_(),
+	allBackgrounds_(),
 	backgroundWidth_(281),
 	backgroundCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / backgroundWidth_) + 2),
-	bases_(),
+	allBases_(),
 	baseWidth_(336),
 	baseCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / baseWidth_) + 2),
-	pipes_(),
+	allPipes_(),
 	pipeStartPosX_(300),
 	pipeInterval_(200),
 	pipeCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / pipeInterval_) + 2)
 {
-	backgrounds_.reserve(backgroundCount_);
-	bases_.reserve(baseCount_);
-	pipes_.reserve(pipeCount_);
+	allBackgrounds_.reserve(backgroundCount_);
+	allBases_.reserve(baseCount_);
+	allPipes_.reserve(pipeCount_);
 }
 
 PlayLevel::~PlayLevel()
@@ -41,8 +41,11 @@ void PlayLevel::Load()
 	GameEngineInput::GetInst().CreateKey("M", 'M');
 	GameEngineInput::GetInst().CreateKey("Space", ' ');
 
+	SetCameraPos(float4::ZERO);
+
+
 	bird_ = CreateActor<Bird>("bird", 0, 8);
-	bird_->SetWorldPos({ 100, 200 });
+	bird_->SetWorldPos({ 50, 160 });
 
 	UI_ = CreateActor<UI>("UI", 9, 9);
 	UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
@@ -52,28 +55,63 @@ void PlayLevel::Load()
 	{
 		Background* newBackground = CreateActor<Background>("background" + std::to_string(i), 10, -1);
 		newBackground->SetWorldPos({ backgroundWidth_ * i - (backgroundWidth_ / 2), 512 / 2 });
-		backgrounds_.push_back(newBackground);
+		allBackgrounds_.push_back(newBackground);
 	}
 
 	for (int i = 0; i < baseCount_; i++)
 	{
 		Base* newBase = CreateActor<Base>("base" + std::to_string(i), 1, 4);
 		newBase->SetWorldPos({ baseWidth_ * i - (baseWidth_ / 2), 400 + 56 });
-		bases_.push_back(newBase);
+		allBases_.push_back(newBase);
 	}
 
 	for (int i = 0; i < pipeCount_; i++)
 	{
-		int pipeActorHeight = GameEngineRandom::GetInst().GetRandomInt(100, 350);
+		int pipeActorHeight = GameEngineRandom::GetInst().GetRandomInt(100, 325);
 		Pipe* newPipe = CreateActor<Pipe>("pipe" + std::to_string(i), 2, 3);
 		newPipe->SetWorldPos({ pipeInterval_ * i + pipeStartPosX_, pipeActorHeight });
-		pipes_.push_back(newPipe);
+		allPipes_.push_back(newPipe);
 	}
 
 }
 
 void PlayLevel::UpdateLevel()
 {
+	for (Background* const background : allBackgrounds_)
+	{
+		if (background->GetCameraPos().IntX() < -(backgroundWidth_ / 2))
+		{
+			background->SetWorldPos(
+				{ background->GetWorldPos().IntX() + backgroundWidth_ * backgroundCount_,
+				512 / 2/*배경길이 절반*/});
+		}
+	}
+
+	for (Base* const base : allBases_)
+	{
+		if (base->GetCameraPos().IntX() < -(baseWidth_ / 2))
+		{
+			base->SetWorldPos(
+				{ base->GetWorldPos().IntX() + baseWidth_ * baseCount_,
+				400 + 56/*원하는 배치높이 + 베이스높이 절반*/});
+		}
+	}	
+
+	for (Pipe* const pipe : allPipes_)
+	{
+		if (pipe->GetCameraPos().IntX() < -(52 / 2))
+		{
+			pipe->SetWorldPos(
+				{ pipe->GetWorldPos().IntX() + pipeInterval_ * pipeCount_,
+				GameEngineRandom::GetInst().GetRandomInt(100, 325) });
+			pipe->Relocate();
+		}
+	}
+	
+
+
+
+
 	if (true == GameEngineInput::GetInst().IsDown("M"))
 	{
 		this->SwitchMode();

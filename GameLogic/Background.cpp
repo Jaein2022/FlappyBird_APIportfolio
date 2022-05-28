@@ -14,6 +14,7 @@ void Background::Initialize()
 {
 	background_Renderer_ = CreateRenderer("background.bmp", "background_Renderer");
 	background_Renderer_->SetRenderPivot(RenderPivot::Center);
+	background_Renderer_->SetCameraEffectOn();
 }
 
 void Background::Update()
