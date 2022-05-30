@@ -15,25 +15,22 @@ GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	: parentActor_(_actor),
 	localPos_(float4::ZERO),
 	size_(float4::ZERO),
+	isCollided_(false),
 	type_(CollisionBodyType::MAX),
 	isCameraEffect_(false),
-	pen_(nullptr),
-	brush_(nullptr)
+	mainPen_(NULL),
+	prevPen_(NULL),
+	normalColor_(NULL),
+	collisionColor_(NULL),
+	thickness_(0)
 {
 	SetParent(_actor);
 }
 
 GameEngineCollisionBody::~GameEngineCollisionBody()
 {
-	if (pen_ != nullptr)
-	{
-		DeleteObject(pen_);
-	}	
-	
-	if (brush_ != nullptr)
-	{
-		DeleteObject(brush_);
-	}	
+	DeleteObject(mainPen_);
+	DeleteObject(prevPen_);
 }
 
 void GameEngineCollisionBody::Initialize()
@@ -68,6 +65,195 @@ void GameEngineCollisionBody::Initialize()
 	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::VLine)]
 		= std::bind(&GameEngineCollisionBody::VLineToVLine, std::placeholders::_1, std::placeholders::_2);
 
+}
+
+void GameEngineCollisionBody::Render()
+{
+	if (false == isRenderingOn_)
+	{
+		return;
+	}
+
+	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
+	
+	float4 renderPos = float4::ZERO;
+	if (true == isCameraEffect_)
+	{
+		renderPos = parentActor_->GetCameraPos() + localPos_;
+	}
+	else
+	{
+		renderPos = parentActor_->GetWorldPos() + localPos_;
+	}
+
+	prevPen_ = static_cast<HPEN>(SelectObject(
+		backBufferImage->GetHDC(),
+		static_cast<HGDIOBJ>(mainPen_))
+		);
+
+	switch (type_)
+	{
+	case CollisionBodyType::Rect:
+	{
+		GameEngineRect renderRect = GameEngineRect(renderPos, size_);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.ITop(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.ITop()
+		);		
+		
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.ITop(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot()
+		);		
+		
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot()
+		);		
+		
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.ITop()
+		);
+
+
+		break;
+	}
+	
+	case CollisionBodyType::HLine:
+	{
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderPos.IntX() - size_.Half_IntX(),
+			renderPos.IntY(),
+			nullptr
+		);
+
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderPos.IntX() + size_.Half_IntX(),
+			renderPos.IntY()
+		);
+
+		break;
+	}
+
+	case CollisionBodyType::VLine:
+	{
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderPos.IntX(),
+			renderPos.IntY() - size_.Half_IntY(),
+			nullptr
+		);
+
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderPos.IntX(),
+			renderPos.IntY() + size_.Half_IntY()
+		);
+		break;
+	}
+
+	//case CollisionBodyType::Point:
+	//	//점은 선 두개 크로스해서 표시.
+	//	break;
+
+
+	default:
+		GameEngineDebug::MsgBoxError("구현되지 않은 충돌체 형식입니다.");
+		break;
+	}
+
+	mainPen_ = static_cast<HPEN>(SelectObject(
+		backBufferImage->GetHDC(),
+		static_cast<HGDIOBJ>(prevPen_)));
+}
+
+void GameEngineCollisionBody::Reset()
+{
+	isCollided_ = false;
+	SwitchColor();
+	IncludeUpdate();
+}
+
+void GameEngineCollisionBody::Respond(bool _isExcluded /*= false*/)
+{
+	isCollided_ = true;
+	SwitchColor();
+	if (true == _isExcluded)
+	{
+		ExcludeUpdate();
+	}
+}
+
+void GameEngineCollisionBody::SwitchColor()
+{
+	DeleteObject(mainPen_);
+	if (true == isCollided_)
+	{
+		mainPen_ = CreatePen(PS_SOLID, thickness_, collisionColor_);
+	}
+	else
+	{
+		mainPen_ = CreatePen(PS_SOLID, thickness_, normalColor_);
+	}
+}
+
+bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
+{
+	if (nullptr == this)
+	{
+		GameEngineDebug::MsgBoxError("충돌 주체가 없습니다.");
+		return false;
+	}
+
+	if (nullptr == _other)
+	{
+		GameEngineDebug::MsgBoxError("충돌 객체가 없습니다.");
+		return false;
+	}
+
+	return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
+}
+
+float4 GameEngineCollisionBody::GetWorldPos()
+{
+	return parentActor_->GetWorldPos() + localPos_;
+}
+
+GameEngineRect GameEngineCollisionBody::GetRect()
+{
+	return { parentActor_->GetWorldPos() + localPos_, size_ };
 }
 
 bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEngineCollisionBody* _rectB)
@@ -124,7 +310,7 @@ bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEn
 	{
 		return false;
 	}
-	
+
 	if (rect.IRight() > highEnd.IntX() && rect.ILeft() < highEnd.IntX())
 	{
 		return true;
@@ -163,139 +349,4 @@ bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _vLineA, Gam
 	return false;
 }
 
-void GameEngineCollisionBody::Render()
-{
-	if (false == isRenderingOn_)
-	{
-		return;
-	}
 
-	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
-	
-
-	float4 renderPos = float4::ZERO;
-	if (true == isCameraEffect_)
-	{
-		renderPos = parentActor_->GetCameraPos() + localPos_;
-	}
-	else
-	{
-		renderPos = parentActor_->GetWorldPos() + localPos_;
-	}
-
-
-
-	switch (type_)
-	{
-	case CollisionBodyType::Rect:
-	{
-		RECT rect =
-		{
-			renderPos.IntX() - size_.Half_IntX(),
-			renderPos.IntY() - size_.Half_IntY(),
-			renderPos.IntX() + size_.Half_IntX(),
-			renderPos.IntY() + size_.Half_IntY()
-		};
-
-		FrameRect(	//선 굵기는 1로 고정 되어있음.
-			backBufferImage->GetHDC(),
-			&rect,
-			brush_
-		);
-		break;
-	}
-	
-	case CollisionBodyType::HLine:
-	{
-		HPEN prevPen = static_cast<HPEN>(SelectObject(
-			backBufferImage->GetHDC(),
-			static_cast<HGDIOBJ>(pen_)
-		));
-
-		MoveToEx(
-			backBufferImage->GetHDC(),
-			renderPos.IntX() - size_.Half_IntX(),
-			renderPos.IntY(),
-			nullptr
-		);
-
-		LineTo(
-			backBufferImage->GetHDC(),
-			renderPos.IntX() + size_.Half_IntX(),
-			renderPos.IntY()
-		);
-
-		pen_ = static_cast<HPEN>(SelectObject(
-			backBufferImage->GetHDC(),
-			static_cast<HGDIOBJ>(prevPen)
-		));
-
-		break;
-	}
-
-	case CollisionBodyType::VLine:
-	{
-		HPEN prevPen = static_cast<HPEN>(SelectObject(
-			backBufferImage->GetHDC(),
-			static_cast<HGDIOBJ>(pen_)
-		));
-
-		MoveToEx(
-			backBufferImage->GetHDC(),
-			renderPos.IntX(),
-			renderPos.IntY() - size_.Half_IntY(),
-			nullptr
-		);
-
-		LineTo(
-			backBufferImage->GetHDC(),
-			renderPos.IntX(),
-			renderPos.IntY() + size_.Half_IntY()
-		);
-
-		pen_ = static_cast<HPEN>(SelectObject(
-			backBufferImage->GetHDC(),
-			static_cast<HGDIOBJ>(prevPen)
-		));
-		break;
-	}
-
-	//case CollisionBodyType::Point:
-	//	//점은 선 두개 크로스해서 표시.
-	//	break;
-
-
-	default:
-		GameEngineDebug::MsgBoxError("구현되지 않은 충돌체 형식입니다.");
-		break;
-	}
-
-
-}
-
-bool GameEngineCollisionBody::CheckCollision(GameEngineCollisionBody* _other)
-{
-	if (nullptr == this)
-	{
-		GameEngineDebug::MsgBoxError("충돌 주체가 없습니다.");
-		return false;
-	}
-
-	if (nullptr == _other)
-	{
-		GameEngineDebug::MsgBoxError("충돌 객체가 없습니다.");
-		return false;
-	}
-
-	return collisionFunctions_[this->GetTypeInt()][_other->GetTypeInt()](this, _other);
-}
-
-float4 GameEngineCollisionBody::GetWorldPos()
-{
-	return parentActor_->GetWorldPos() + localPos_;
-}
-
-GameEngineRect GameEngineCollisionBody::GetRect()
-{
-	return { parentActor_->GetWorldPos() + localPos_, size_ };
-}

@@ -33,9 +33,8 @@ private:
 
 
 public:	//Member Function Headers
-
-
 	float4 GetCameraPos();
+	void ResetCollisionBodies();
 
 
 public:	//Getter, Setter, Templated Member Functions
@@ -75,10 +74,13 @@ protected:
 	);
 	GameEngineCollisionBody* CreateCollisionBody(
 		const std::string& _collisionBodyName,
-		const float4& _color,
 		CollisionBodyType _type,
-		const float4& _size
+		const float4& _size,
+		const float4& _normalColor,
+		const float4& _collisionColor,
+		int _thickness
 	);
+
 
 protected:
 	void SetRenderOrder(int _renderOrder)

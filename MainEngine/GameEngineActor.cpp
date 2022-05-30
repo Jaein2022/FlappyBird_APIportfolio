@@ -38,6 +38,14 @@ float4 GameEngineActor::GetCameraPos()
 	return this->pos_ - parentLevel_->GetCameraPos();
 }
 
+void GameEngineActor::ResetCollisionBodies()
+{
+	for (GameEngineCollisionBody* const collisionBody : allCollisionBodies_)
+	{
+		collisionBody->Reset();
+	}
+}
+
 GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageName, const std::string& _rendererName)
 {
 	GameEngineRenderer* newRenderer = new GameEngineRenderer(this);
@@ -51,15 +59,17 @@ GameEngineRenderer* GameEngineActor::CreateRenderer(const std::string& _imageNam
 
 GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	const std::string& _collisionBodyName,
-	const float4& _color,
 	CollisionBodyType _type,
-	const float4& _size
+	const float4& _size,
+	const float4& _normalColor,
+	const float4& _collisionColor,
+	int _thickness
 )
 {
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
 	newCollisionBody->SetType(_type);
 	newCollisionBody->SetName(_collisionBodyName);
-	newCollisionBody->SetColor(_color);
+	newCollisionBody->SetColor(_normalColor, _collisionColor, _thickness);
 	newCollisionBody->SetSize(_size);
 	allCollisionBodies_.push_back(newCollisionBody);
 
@@ -68,7 +78,7 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 
 void GameEngineActor::CheckCollision(GameEngineActor* _other)
 {
-	for (GameEngineCollisionBody* const thisCollisionBody : this->GetCollisionBodies())
+	for (GameEngineCollisionBody* const thisCollisionBody : allCollisionBodies_)
 	{
 		if (false == thisCollisionBody->IsInUpdate())
 		{
@@ -79,10 +89,7 @@ void GameEngineActor::CheckCollision(GameEngineActor* _other)
 		{
 			if (true == otherCollisionBody->IsInUpdate())
 			{
-				bool collisionResult =
-					GameEngineCollisionBody::collisionFunctions_
-					[thisCollisionBody->GetTypeInt()][otherCollisionBody->GetTypeInt()]
-					(thisCollisionBody, otherCollisionBody);
+				bool collisionResult = thisCollisionBody->CheckCollision(otherCollisionBody);
 
 				if (true == collisionResult)
 				{

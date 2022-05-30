@@ -71,7 +71,6 @@ void UI::Update()
 				currentScore / 10,
 				RenderPivot::Center
 			);
-
 		}
 		else
 		{

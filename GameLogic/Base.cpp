@@ -17,9 +17,11 @@ void Base::Initialize()
 
 	base_CollisionBody_ = CreateCollisionBody(
 		"baseCollsionBody",
-		float4::RED,
 		CollisionBodyType::HLine,
-		{ baseWidth_, 0 }
+		{ baseWidth_, 0 },
+		float4::RED,
+		float4::BLACK,
+		2
 	);
 	base_CollisionBody_->SetLocalPos({ 0, -56 });
 	base_CollisionBody_->SetCameraEffectOn();
@@ -41,8 +43,8 @@ void Base::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (_other->GetName() == "bird" && CollisionBodyType::Rect == _otherCollisionBody->GetType())
+	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() && "bird" == _other->GetName())
 	{
-		base_CollisionBody_->SetColor(float4::BLACK);
+		base_CollisionBody_->Respond();
 	}
 }

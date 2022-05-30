@@ -104,13 +104,9 @@ void PlayLevel::UpdateLevel()
 			pipe->SetWorldPos(
 				{ pipe->GetWorldPos().IntX() + pipeInterval_ * pipeCount_,
 				GameEngineRandom::GetInst().GetRandomInt(100, 325) });
-			pipe->Relocate();
+			pipe->ResetCollisionBodies();
 		}
 	}
-	
-
-
-
 
 	if (true == GameEngineInput::GetInst().IsDown("M"))
 	{
@@ -129,6 +125,7 @@ void PlayLevel::UpdateLevel()
 		}
 		else if (GameState::GameOver == currentState_)
 		{
+			Reset();
 			currentState_ = GameState::Ready;
 		}
 	}
@@ -137,5 +134,35 @@ void PlayLevel::UpdateLevel()
 void PlayLevel::SwitchMode()
 {
 	GameEngineCollisionBody::SwitchRendering();
+
+}
+
+void PlayLevel::Reset()
+{
+	SetCameraPos(float4::ZERO);
+	bird_->SetWorldPos({ 50, 160 });
+	bird_->ResetCollisionBodies();
+	UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
+	score_ = 0;
+
+	for (int i = 0; i < backgroundCount_; i++)
+	{
+		allBackgrounds_[i]->SetWorldPos({ backgroundWidth_ * i - (backgroundWidth_ / 2), 512 / 2 });
+		allBackgrounds_[i]->ResetCollisionBodies();
+	}
+
+	for (int i = 0; i < baseCount_; i++)
+	{
+		allBases_[i]->SetWorldPos({baseWidth_ * i - (baseWidth_ / 2), 400 + 56});
+		allBases_[i]->ResetCollisionBodies();
+	}
+
+	for (int i = 0; i < pipeCount_; i++)
+	{
+		int pipeActorHeight = GameEngineRandom::GetInst().GetRandomInt(100, 325);
+		allPipes_[i]->SetWorldPos({ pipeInterval_ * i + pipeStartPosX_, pipeActorHeight });
+		allPipes_[i]->ResetCollisionBodies();
+	}
+
 
 }

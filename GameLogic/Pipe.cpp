@@ -27,9 +27,11 @@ void Pipe::Initialize()
 
 	topPipe_CollisionBody_ = CreateCollisionBody(
 		"topPipe_CollisionBody",
-		float4::RED,
 		CollisionBodyType::Rect,
-		{ pipeWidth_, pipeHeight_ }
+		{ pipeWidth_, pipeHeight_ },
+		float4::RED,
+		float4::BLACK,
+		2
 	);
 	topPipe_CollisionBody_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
 	topPipe_CollisionBody_->SetCameraEffectOn();
@@ -43,18 +45,22 @@ void Pipe::Initialize()
 
 	botPipe_CollisionBody_ = CreateCollisionBody(
 		"botPipe_CollisionBody",
-		float4::RED,
 		CollisionBodyType::Rect,
-		{ pipeWidth_, pipeHeight_ }
+		{ pipeWidth_, pipeHeight_ },
+		float4::RED,
+		float4::BLACK,
+		2
 	);
 	botPipe_CollisionBody_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
 	botPipe_CollisionBody_->SetCameraEffectOn();
 
 	scoreCount_CollsionBody_ = CreateCollisionBody(
 		"scoreCount_CollsionBody",
-		float4::YELLOW,
 		CollisionBodyType::VLine,
-		{ 0, GameEngineWindow::GetInst().GetWindowSize().IntY() * 2 }
+		{ 0, GameEngineWindow::GetInst().GetWindowSize().IntY() * 2 },
+		float4::YELLOW,
+		float4::GREEN,
+		2
 	);
 	scoreCount_CollsionBody_->SetLocalPos({ pipeWidth_ / 2 + 34, 0 });
 	scoreCount_CollsionBody_->SetCameraEffectOn();
@@ -85,16 +91,15 @@ void Pipe::ReactCollision(
 	{
 		if (_thisCollisionBody == topPipe_CollisionBody_ )
 		{
-			topPipe_CollisionBody_->SetColor(float4::BLACK);
+			topPipe_CollisionBody_->Respond();
 		}
 		else if (_thisCollisionBody == botPipe_CollisionBody_)
 		{
-			botPipe_CollisionBody_->SetColor(float4::BLACK);
+			botPipe_CollisionBody_->Respond();
 		}
 		else if (_thisCollisionBody == scoreCount_CollsionBody_)
 		{
-			scoreCount_CollsionBody_->SetColor(float4::GREEN);
-			scoreCount_CollsionBody_->ExcludeUpdate();
+			scoreCount_CollsionBody_->Respond(true);
 
 			PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
 			if (nullptr == tempPlayLevel)
@@ -105,10 +110,4 @@ void Pipe::ReactCollision(
 			tempPlayLevel->AddScore();
 		}
 	}
-}
-
-void Pipe::Relocate()
-{
-	scoreCount_CollsionBody_->SetColor(float4::YELLOW);
-	scoreCount_CollsionBody_->IncludeUpdate();
 }

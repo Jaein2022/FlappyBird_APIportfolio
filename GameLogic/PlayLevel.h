@@ -76,6 +76,7 @@ private:
 	void Load() override;
 	void UpdateLevel() override;
 	void SwitchMode();
+	void Reset();
 
 private:
 	void SetState(GameState _state)

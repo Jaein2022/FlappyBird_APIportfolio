@@ -44,9 +44,6 @@ private:
 		GameEngineActor* _other,
 		GameEngineCollisionBody* _otherCollisionBody
 	) override;
-	
-
-	void Relocate();
 
 private:
 

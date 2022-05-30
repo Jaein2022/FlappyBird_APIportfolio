@@ -28,7 +28,7 @@ void Bird::Initialize()
 
 	
 	bird_CollisionBody_ = CreateCollisionBody(
-		"birdCollisionBody", float4::RED, CollisionBodyType::Rect, { 34, 24 });
+		"birdCollisionBody", CollisionBodyType::Rect, { 34, 24 }, float4::RED, float4::BLACK, 2);
 	bird_CollisionBody_->SetCameraEffectOn();
 }
 
@@ -76,7 +76,7 @@ void Bird::ReactCollision(
 	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() ||
 		CollisionBodyType::HLine == _otherCollisionBody->GetType())
 	{
-		bird_CollisionBody_->SetColor(float4::BLACK);
+		bird_CollisionBody_->Respond();
 		PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
 		if (nullptr == tempPlayLevel)
 		{

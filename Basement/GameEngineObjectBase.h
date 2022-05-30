@@ -78,16 +78,6 @@ public:	//Getter, Setter, Templated Member Functions
 		isDead_ = true;
 	}
 
-	void ExcludeUpdate()
-	{
-		isInUpdate_ = false;
-	}
-
-	void IncludeUpdate()
-	{
-		isInUpdate_ = true;
-	}
-
 	void CheckDebug()
 	{
 		isDebugChecked_ = true;
@@ -102,6 +92,16 @@ protected:
 	void SetParent(GameEngineObjectBase* _parent)
 	{
 		parentObject_ = _parent;
+	}
+
+	void ExcludeUpdate()
+	{
+		isInUpdate_ = false;
+	}
+
+	void IncludeUpdate()
+	{
+		isInUpdate_ = true;
 	}
 
 };

@@ -85,7 +85,7 @@ void GameEngineLevel::CheckCollision()
 		GameEngineActor* collisionSubject = subjActorPair.second;
 		for (std::pair<std::string, GameEngineActor*> objActorPair : allActors_)
 		{
-			if (collisionSubject->GetName() != objActorPair.second->GetName())
+			if (collisionSubject->GetName() != objActorPair.first)
 			{
 				collisionSubject->CheckCollision(objActorPair.second);
 			}
