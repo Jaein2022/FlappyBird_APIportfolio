@@ -29,14 +29,16 @@ class PlayLevel : public GameEngineLevel
 	int score_;
 
 	Bird* bird_;
+	const float4 birdStartPos_;
 	UI* UI_;
 
 	std::vector<Background*> allBackgrounds_;
-	const int backgroundWidth_;
+	const float4 backgroundSize_;
 	const int backgroundCount_;
 
 	std::vector<Base*> allBases_;
-	const int baseWidth_;
+	const float4 baseSize_;
+	const int basePosY_;
 	const int baseCount_;
 
 	std::vector<Pipe*> allPipes_;
@@ -44,6 +46,9 @@ class PlayLevel : public GameEngineLevel
 	const int pipeInterval_;	//파이프 액터의 좌우 간격.
 	const int pipeCount_;
 
+	bool isDebuging_;
+	const float playSpeed_;
+	const float gravity_;
 
 
 private:
@@ -63,14 +68,27 @@ public:
 
 
 public:	
-	GameState GetState()
+	GameState GetState() const
 	{
 		return currentState_;
 	}
-	int GetScore()
+	int GetScore() const 
 	{
 		return score_;
 	}
+	bool IsDebuging() const
+	{
+		return isDebuging_;
+	}
+	const float GetGravity() const
+	{
+		return gravity_;
+	}
+	const float GetPlaySpeed() const
+	{
+		return playSpeed_;
+	}
+
 
 private:
 	void Load() override;

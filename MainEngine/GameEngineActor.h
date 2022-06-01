@@ -6,10 +6,8 @@ class GameEngineRenderer;
 class GameEngineLevel;
 class GameEngineActor: public GameEngineNameBase
 {
-	//Friend Classes
 	friend GameEngineLevel;
 
-	//Member Variables
 	GameEngineLevel* parentLevel_;
 
 	std::list<GameEngineRenderer*> allRenderers_;
@@ -32,23 +30,23 @@ private:
 	GameEngineActor& operator=(const GameEngineActor&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 	float4 GetCameraPos();
 	void ResetCollisionBodies();
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 	const float4 GetWorldPos() const
 	{
 		return pos_;
 	}
-	void SetWorldPos(const float4& _pos)		//액터의 위치를 특정 지점으로 재설정.
+	void SetWorldPos(const float4& _pos)//액터의 위치를 특정 지점으로 재설정.
 	{
 		pos_ = _pos;
 	}
-	void Move(const float4& _distance)	//액터의 이동 방향과 속도 설정.
+	void Move(const float4& _speed)	//액터의 이동 방향과 속도 설정.
 	{
-		pos_ += _distance;
+		pos_ += _speed;
 	}
 	GameEngineLevel* const GetLevel()
 	{
@@ -97,7 +95,7 @@ protected:
 	}
 
 
-private://Member Function Headers
+private:
 	void CheckCollision(GameEngineActor* _other);
 
 private:

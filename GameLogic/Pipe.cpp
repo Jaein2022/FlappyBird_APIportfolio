@@ -3,9 +3,8 @@
 #include "PlayLevel.h"
 
 Pipe::Pipe()
-	: pipeWidth_(52),
-	pipeHeight_(320),
-	pipeDistance_(84),
+	: pipeSize_(52, 320),
+	pipeDistance_(84 /*84*/),
 	topPipe_Renderer_(nullptr),
 	topPipe_CollisionBody_(nullptr),
 	botPipe_Renderer_(nullptr),
@@ -22,47 +21,47 @@ void Pipe::Initialize()
 {
 	topPipe_Renderer_ = CreateRenderer("pipe_top.bmp", "topPipe_Renderer");
 	topPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
-	topPipe_Renderer_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
+	topPipe_Renderer_->SetLocalPos({ 0, -(pipeSize_.IntY() + pipeDistance_) / 2});
 	topPipe_Renderer_->SetCameraEffectOn();
 
 	topPipe_CollisionBody_ = CreateCollisionBody(
 		"topPipe_CollisionBody",
 		CollisionBodyType::Rect,
-		{ pipeWidth_, pipeHeight_ },
-		float4::RED,
-		float4::BLACK,
+		pipeSize_,
+		float4::Red,
+		float4::Black,
 		2
 	);
-	topPipe_CollisionBody_->SetLocalPos({ 0, -(pipeHeight_ + pipeDistance_) / 2 });
+	topPipe_CollisionBody_->SetLocalPos({ 0, -(pipeSize_.IntY() + pipeDistance_) / 2});
 	topPipe_CollisionBody_->SetCameraEffectOn();
 
 
 
 	botPipe_Renderer_ = CreateRenderer("pipe_bot.bmp", "botPipe_Renderer");
 	botPipe_Renderer_->SetRenderPivot(RenderPivot::Center);
-	botPipe_Renderer_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
+	botPipe_Renderer_->SetLocalPos({ 0, (pipeSize_.IntY() + pipeDistance_) / 2 });
 	botPipe_Renderer_->SetCameraEffectOn();
 
 	botPipe_CollisionBody_ = CreateCollisionBody(
 		"botPipe_CollisionBody",
 		CollisionBodyType::Rect,
-		{ pipeWidth_, pipeHeight_ },
-		float4::RED,
-		float4::BLACK,
+		pipeSize_,
+		float4::Red,
+		float4::Black,
 		2
 	);
-	botPipe_CollisionBody_->SetLocalPos({ 0, (pipeHeight_ + pipeDistance_) / 2 });
+	botPipe_CollisionBody_->SetLocalPos({ 0, (pipeSize_.IntY() + pipeDistance_) / 2 });
 	botPipe_CollisionBody_->SetCameraEffectOn();
 
 	scoreCount_CollsionBody_ = CreateCollisionBody(
 		"scoreCount_CollsionBody",
 		CollisionBodyType::VLine,
 		{ 0, GameEngineWindow::GetInst().GetWindowSize().IntY() * 2 },
-		float4::YELLOW,
-		float4::GREEN,
+		float4::Yellow,
+		float4::Green,
 		2
 	);
-	scoreCount_CollsionBody_->SetLocalPos({ pipeWidth_ / 2 + 34, 0 });
+	scoreCount_CollsionBody_->SetLocalPos({ pipeSize_.Half_IntX() + 34, 0});
 	scoreCount_CollsionBody_->SetCameraEffectOn();
 }
 

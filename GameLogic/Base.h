@@ -6,8 +6,7 @@ class Base: public GameEngineActor
 	friend class GameEngineLevel;
 
 	//Member Variables
-	const int baseWidth_;
-	const int baseHeight_;
+	const float4 baseSize_;
 	GameEngineRenderer* base_Renderer_;
 	GameEngineCollisionBody* base_CollisionBody_;
 
@@ -23,12 +22,6 @@ private:
 	Base& operator=(const Base& _other) = delete;
 	Base& operator=(const Base&& _other) = delete;
 
-
-public:	
-
-
-
-public:
 
 
 private:

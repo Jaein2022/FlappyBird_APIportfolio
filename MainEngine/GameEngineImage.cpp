@@ -37,7 +37,7 @@ void GameEngineImage::Cut(const float4 _size)
 	cuttingPos_.reserve(xCount * yCount);
 	cuttingSizes_.reserve(xCount * yCount);
 
-	float4 cuttingPos = float4::ZERO;
+	float4 cuttingPos = float4::Zero;
 	float4 cuttingSize = _size;
 
 	for (size_t y = 0; y < yCount; y++)

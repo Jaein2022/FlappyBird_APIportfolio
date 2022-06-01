@@ -8,8 +8,7 @@ class Pipe: public GameEngineActor
 	friend PlayLevel;
 
 	//Member Variables
-	const int pipeWidth_;
-	const int pipeHeight_;
+	const float4 pipeSize_;
 	const int pipeDistance_;	//파이프 상하 간격.
 
 	GameEngineRenderer* topPipe_Renderer_;
@@ -34,6 +33,10 @@ private:
 
 
 public:
+	const float4& GetSize() const
+	{
+		return pipeSize_;
+	}
 
 private:	
 	void Initialize() override;

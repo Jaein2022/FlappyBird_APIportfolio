@@ -35,12 +35,12 @@ void GameEngineRenderer::Animation::Update()
 GameEngineRenderer::GameEngineRenderer(GameEngineActor* _actor)
 	: parentActor_(_actor),
 	renderingImage_(nullptr),
-	renderingImagePos_(float4::ZERO),
-	renderingImageSize_(float4::ONE),
-	renderPivot_(float4::ZERO),
+	renderingImagePos_(float4::Zero),
+	renderingImageSize_(float4::One),
+	renderPivot_(float4::Zero),
 	angle_(0.000f),
-	renderSize_(float4::ONE),
-	localPos_(float4::ZERO),
+	renderSize_(float4::One),
+	localPos_(float4::Zero),
 	maskImage_(nullptr),
 	curAnimation_(nullptr),
 	isCameraEffect_(false)
@@ -94,7 +94,7 @@ void GameEngineRenderer::Render()
 		return;
 	}
 	
-	float4 renderPos = float4::ZERO;
+	float4 renderPos = float4::Zero;
 	if (true == isCameraEffect_)
 	{
 		renderPos = parentActor_->GetCameraPos() + localPos_ - renderPivot_;
@@ -139,7 +139,7 @@ void GameEngineRenderer::SetRenderPivot(RenderPivot _pivot)
 		renderPivot_.y = renderingImage_->GetSize().y;
 		break;
 	case RenderPivot::LeftTop:
-		renderPivot_ = float4::ZERO;
+		renderPivot_ = float4::Zero;
 		break;
 
 	default:
@@ -261,7 +261,7 @@ void GameEngineRenderer::SetFrameIndex(int _index, RenderPivot _pivot)
 		renderPivot_.y += renderSize_.Half().y;
 		break;
 	case RenderPivot::LeftTop:
-		renderPivot_ = float4::ZERO;
+		renderPivot_ = float4::Zero;
 		break;
 
 	default:

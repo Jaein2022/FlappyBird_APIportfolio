@@ -4,7 +4,7 @@ class GameEngineMath
 {
 public:
 	static const float PI;
-	static const float TAU;	
+	static const float PI2;	
 	static const float DegreeToRadian;	//60분법->호도법(0.017453...)
 	static const float RadianToDegree;	//호도법->60분법(57.29577...)
 };
@@ -13,22 +13,24 @@ class float4
 {
 public:
 	//자주 사용하는 숫자 조합을 미리 만들어놓으면 생성자 호출하는 연산비용을 아낄 수 있다.
-	static const float4 ZERO;
-	static const float4 ONE;
-	static const float4 LEFT;	//--x
-	static const float4 RIGHT;	//++x
-	static const float4 UP;		//++y
-	static const float4 DOWN;	//--y
 
-	static const float4 RED;
-	static const float4 GREEN;
-	static const float4 BLUE;
-	static const float4 YELLOW;
-	static const float4 MAGENTA;
-	static const float4 CYAN;
+	static const float4 Zero;
+	static const float4 One;
 
-	static const float4 BLACK;
-	static const float4 WHITE;
+	static const float4 Left;	//--x
+	static const float4 Right;	//++x
+	static const float4 Down;		//++y
+	static const float4 Up;	//--y
+
+	static const float4 Red;	//100
+	static const float4 Green;	//010
+	static const float4 Blue;	//001
+	static const float4 Yellow;	//110
+	static const float4 Magenta;//101
+	static const float4 Cyan;	//001
+
+	static const float4 Black;	//000
+	static const float4 White;	//111
 
 	//익명으로 유니온을 선언하고 그 안에 구조체를 두면, 
 	//유니온처럼 메모리를 공용으로 활용할 수 있는 클래스 멤버 구조체를 사용할 수 있다.
@@ -227,6 +229,8 @@ public:
 		return (this->x != _value.x || this->y != _value.y || this->z != _value.z);
 	}
 
+
+public:
 	float Half_X()
 	{
 		return x * 0.5f;
@@ -262,17 +266,17 @@ public:
 		return static_cast<int>(z);
 	}
 
-	int Half_IntX()
+	int Half_IntX() const 
 	{
 		return static_cast<int>(x * 0.5f);
 	}
 
-	int Half_IntY()
+	int Half_IntY() const
 	{
 		return static_cast<int>(y * 0.5f);
 	}
 
-	int Half_IntZ()
+	int Half_IntZ() const
 	{
 		return static_cast<int>(z * 0.5f);
 	}

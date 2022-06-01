@@ -3,7 +3,15 @@
 #include "Pipe.h"
 #include "PlayLevel.h"
 
-Bird::Bird(): bird_Renderer_(nullptr), bird_CollisionBody_(nullptr)
+Bird::Bird()
+	:birdSize_( 34, 24 ),
+	bird_Renderer_(nullptr),
+	bird_CollisionBody_(nullptr), 
+	parentPlayLevel_(nullptr),
+	initAscendingPower(20.82f),
+	ascendingPower_(0.f),
+	increasedGravity_(0.f),
+	fallingSpeed_(0.f)
 {
 }
 
@@ -13,11 +21,19 @@ Bird::~Bird()
 
 void Bird::Initialize()
 {
-	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
-	if (false == bird_Renderer_->GetRenderingImage()->IsCut())
+	parentPlayLevel_ = reinterpret_cast<PlayLevel*>(this->GetLevel());
+	if (nullptr == parentPlayLevel_)
 	{
-		bird_Renderer_->GetRenderingImage()->Cut({ 34, 24 });
+		GameEngineDebug::MsgBoxError("parentPlayLevel이 없습니다.");
+		return;
 	}
+
+
+	if(false == GameEngineImageManager::GetInst().Find("bird.bmp")->IsCut())
+	{
+		GameEngineImageManager::GetInst().Find("bird.bmp")->Cut(birdSize_);
+	}
+	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
 	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.1f);
 	bird_Renderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
 	bird_Renderer_->ChangeAnimation("Play");
@@ -28,37 +44,31 @@ void Bird::Initialize()
 
 	
 	bird_CollisionBody_ = CreateCollisionBody(
-		"birdCollisionBody", CollisionBodyType::Rect, { 34, 24 }, float4::RED, float4::BLACK, 2);
+		"birdCollisionBody",
+		CollisionBodyType::Rect,
+		{ birdSize_.IntX() - 2, birdSize_.IntY() - 2 },
+		float4::Red,
+		float4::Black,
+		2
+	);
 	bird_CollisionBody_->SetCameraEffectOn();
 }
 
 void Bird::Update()
 {
-	//float4 thispos = this->GetPos();
 	bird_Renderer_->UpdateAnimation();
-	float deltaTime = GameEngineTime::GetInst().GetDeltaTimeF();
 
-	//충돌테스트용 임시 이동체계.
-	if (true == GameEngineInput::GetInst().IsPressed("W"))
-	{
-		Move(float4::DOWN * deltaTime * 100.f);
-	}
-	else if (true == GameEngineInput::GetInst().IsPressed("A"))
-	{
-		Move(float4::LEFT * deltaTime * 100.f);
-		GetLevel()->MoveCamera(float4::LEFT * deltaTime * 100.f);
-	}
-	else if (true == GameEngineInput::GetInst().IsPressed("S"))
-	{
-		Move(float4::UP * deltaTime * 100.f);
-	}
-	else if (true == GameEngineInput::GetInst().IsPressed("D"))
-	{
-		Move(float4::RIGHT * deltaTime * 100.f);
-		GetLevel()->MoveCamera(float4::RIGHT * deltaTime * 100.f);
-	}
 
-	//birdCollisionBody_->CheckCollision();
+	ControlMoving(
+		GameEngineTime::GetInst().GetDeltaTimeF(),
+		parentPlayLevel_->GetGravity(),
+		parentPlayLevel_->GetPlaySpeed()
+	);
+
+
+
+
+
 }
 
 void Bird::Render()
@@ -77,12 +87,106 @@ void Bird::ReactCollision(
 		CollisionBodyType::HLine == _otherCollisionBody->GetType())
 	{
 		bird_CollisionBody_->Respond();
-		PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
-		if (nullptr == tempPlayLevel)
+
+		parentPlayLevel_->SetState(GameState::GameOver);
+	}
+}
+
+void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _playSpeed)
+{
+	if (false == parentPlayLevel_->IsDebuging())
+	{
+		/*static float stackingGravity = 0.f;*/
+
+		switch (parentPlayLevel_->GetState())
 		{
-			GameEngineDebug::MsgBoxError("tempPlayLevel이 없습니다.");
+		case GameState::Ready:
+			fallingSpeed_ = 0.f;
+			increasedGravity_ = 0.f;
+			ascendingPower_ = initAscendingPower;
+
+
+
+			break;
+
+		case GameState::Playing:
+		{
+
+
+			if (true == GameEngineInput::GetInst().IsDown("Space"))
+			{
+				ascendingPower_ = initAscendingPower;
+				increasedGravity_ = 0.f;
+				fallingSpeed_ = 0.f;
+			}
+
+			if (0 < ascendingPower_)
+			{
+				increasedGravity_ += _gravity;
+				ascendingPower_ -= increasedGravity_;
+			}
+			else
+			{
+				increasedGravity_ = 0.f;
+				ascendingPower_ = 0.f;
+			}
+
+			fallingSpeed_ += _deltaTime * _gravity - ascendingPower_;
+			Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
+			Move(float4::Right * _deltaTime * _playSpeed);
+			break;
+		}
+
+		case GameState::GameOver:
+		{
+			if (400 > this->GetWorldPos().IntY())
+			{
+				if (0 < ascendingPower_)
+				{
+					increasedGravity_ += _gravity;
+					ascendingPower_ -= increasedGravity_;
+				}
+				else
+				{
+					increasedGravity_ = 0.f;
+					ascendingPower_ = 0.f;
+				}
+
+				fallingSpeed_ += _deltaTime * _gravity - ascendingPower_;
+
+				Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
+			}
+			else
+			{
+				SetWorldPos({ this->GetWorldPos().x, 400.f });
+			}
+			break;
+		}
+
+
+		default:
+			GameEngineDebug::MsgBoxError("존재하지 않는 게임스테이트입니다.");
 			return;
 		}
-		tempPlayLevel->SetState(GameState::GameOver);
+	}
+	else
+	{
+		//디버깅용 이동체계.
+		if (true == GameEngineInput::GetInst().IsPressed("W"))
+		{
+			Move(float4::Up * _deltaTime * _playSpeed);
+		}
+		else if (true == GameEngineInput::GetInst().IsPressed("A"))
+		{
+			Move(float4::Left * _deltaTime * _playSpeed);
+		}
+		else if (true == GameEngineInput::GetInst().IsPressed("S"))
+		{
+			Move(float4::Down * _deltaTime * _playSpeed);
+		}
+		else if (true == GameEngineInput::GetInst().IsPressed("D"))
+		{
+			Move(float4::Right * _deltaTime * _playSpeed);
+		}
 	}
 }

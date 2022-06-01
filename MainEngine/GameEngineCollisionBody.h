@@ -130,7 +130,7 @@ private:
 
 private:
 
-	void SetColor(const float4& _normalColor, const float4& _collisionColor, int _thickness)
+	void SetPen(const float4& _normalColor, const float4& _collisionColor, int _thickness)
 	{
 		normalColor_ = RGB(
 			static_cast<int>(_normalColor.r * 255.f),

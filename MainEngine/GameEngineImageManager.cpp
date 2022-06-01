@@ -90,8 +90,8 @@ void GameEngineImageManager::ExcuteDoubleBuffering()
 {
     frontBufferImage_->BitCopy(
         backBufferImage_,
-        float4::ZERO,
+        float4::Zero,
         GameEngineWindow::GetInst().GetWindowSize(),
-        float4::ZERO
+        float4::Zero
     );
 }

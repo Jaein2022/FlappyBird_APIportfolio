@@ -2,9 +2,8 @@
 
 class GameEngineRandom
 {
-	std::mt19937_64 mt_;	//Mersenne Twister 유사난수 생성기.
-
 	static GameEngineRandom* inst_;
+	std::mt19937_64 mt_;	//Mersenne Twister 유사난수 생성기.
 
 private:
 	GameEngineRandom() : mt_(

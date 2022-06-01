@@ -6,7 +6,7 @@
 
 GameEngineActor::GameEngineActor()
 	: parentLevel_(nullptr),
-	pos_(float4::ZERO),
+	pos_(float4::Zero),
 	renderOrder_(0),
 	updateOrder_(0)
 {
@@ -69,7 +69,7 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
 	newCollisionBody->SetType(_type);
 	newCollisionBody->SetName(_collisionBodyName);
-	newCollisionBody->SetColor(_normalColor, _collisionColor, _thickness);
+	newCollisionBody->SetPen(_normalColor, _collisionColor, _thickness);
 	newCollisionBody->SetSize(_size);
 	allCollisionBodies_.push_back(newCollisionBody);
 

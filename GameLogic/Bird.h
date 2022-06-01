@@ -8,8 +8,15 @@ class Bird: public GameEngineActor
 	friend PlayLevel;
 
 	//Member Variables
+	const float4 birdSize_;
 	GameEngineRenderer* bird_Renderer_;
 	GameEngineCollisionBody* bird_CollisionBody_;
+
+	PlayLevel* parentPlayLevel_;
+	const float initAscendingPower;
+	float ascendingPower_;
+	float increasedGravity_;
+	float fallingSpeed_;
 
 private:
 	Bird();
@@ -23,11 +30,12 @@ private:
 	Bird& operator=(const Bird& _other) = delete;
 	Bird& operator=(const Bird&& _other) = delete;
 
-public:
-
 
 public:	
-
+	const float4& GetSize() const
+	{
+		return birdSize_;
+	}
 
 
 private:
@@ -39,7 +47,7 @@ private:
 		GameEngineActor* _other,
 		GameEngineCollisionBody* _otherCollisionBody
 	) override;
-
+	void ControlMoving(float _deltaTime, const float _gravity, const float _playSpeed);
 
 };
 

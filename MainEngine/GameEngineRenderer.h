@@ -141,7 +141,7 @@ public:	//Getter, Setter, Templated Member Functions
 		localPos_ += _distance;
 	}
 
-	void SetRenderingImagePos(const float4& _pos = float4::ZERO)
+	void SetRenderingImagePos(const float4& _pos = float4::Zero)
 	{
 		renderingImagePos_ = _pos;
 	}

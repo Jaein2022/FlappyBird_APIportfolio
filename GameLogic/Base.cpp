@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 #include "Base.h"
 
-Base::Base(): baseWidth_(336), baseHeight_(112), base_Renderer_(nullptr), base_CollisionBody_(nullptr)
+Base::Base(): baseSize_(336, 112), base_Renderer_(nullptr), base_CollisionBody_(nullptr)
 {
 }
 
@@ -18,12 +18,12 @@ void Base::Initialize()
 	base_CollisionBody_ = CreateCollisionBody(
 		"baseCollsionBody",
 		CollisionBodyType::HLine,
-		{ baseWidth_, 0 },
-		float4::RED,
-		float4::BLACK,
+		{ baseSize_.IntX(), 0},
+		float4::Red,
+		float4::Black,
 		2
 	);
-	base_CollisionBody_->SetLocalPos({ 0, -56 });
+	base_CollisionBody_->SetLocalPos({ 0, -baseSize_.Half_IntY()});
 	base_CollisionBody_->SetCameraEffectOn();
 }
 

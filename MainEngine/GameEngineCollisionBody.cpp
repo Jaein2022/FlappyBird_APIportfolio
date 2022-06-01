@@ -9,12 +9,12 @@ std::function<bool(GameEngineCollisionBody*, GameEngineCollisionBody*)>
 	GameEngineCollisionBody::collisionFunctions_
 	[static_cast<int>(CollisionBodyType::MAX)][static_cast<int>(CollisionBodyType::MAX)] = { nullptr };
 
-bool GameEngineCollisionBody::isRenderingOn_ = true;
+bool GameEngineCollisionBody::isRenderingOn_ = false;
 
 GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	: parentActor_(_actor),
-	localPos_(float4::ZERO),
-	size_(float4::ZERO),
+	localPos_(float4::Zero),
+	size_(float4::Zero),
 	isCollided_(false),
 	type_(CollisionBodyType::MAX),
 	isCameraEffect_(false),
@@ -76,7 +76,7 @@ void GameEngineCollisionBody::Render()
 
 	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
 	
-	float4 renderPos = float4::ZERO;
+	float4 renderPos = float4::Zero;
 	if (true == isCameraEffect_)
 	{
 		renderPos = parentActor_->GetCameraPos() + localPos_;

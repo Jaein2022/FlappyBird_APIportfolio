@@ -6,6 +6,7 @@
 UI::UI()
 	: parentPlayLevel_(nullptr),
 	readyMessage_Renderer_(nullptr),
+	numberSize_( 24, 36 ),
 	score_FirstDigit_Renderer_(nullptr),
 	score_SecondDigit_Renderer_(nullptr),
 	gameover_Renderer_(nullptr)
@@ -26,16 +27,16 @@ void UI::Initialize()
 	score_FirstDigit_Renderer_ = CreateRenderer("number.bmp", "score_FirstDigit_Renderer");
 	if (false == score_FirstDigit_Renderer_->GetRenderingImage()->IsCut())
 	{
-		score_FirstDigit_Renderer_->GetRenderingImage()->Cut({24, 36});
+		score_FirstDigit_Renderer_->GetRenderingImage()->Cut(numberSize_);
 	}
 		
 	score_SecondDigit_Renderer_ = CreateRenderer("number.bmp", "score_SecondDigit_Renderer");
-	score_SecondDigit_Renderer_->SetLocalPos({ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
 
 
 	gameover_Renderer_ = CreateRenderer("gameover.bmp", "gameover_Renderer");
 	gameover_Renderer_->SetRenderPivot(RenderPivot::Center);
-	gameover_Renderer_->SetLocalPos({ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 90 + 21 });
+	gameover_Renderer_->SetLocalPos(
+		{ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 90 + 21 });
 
 }
 
@@ -49,7 +50,7 @@ void UI::Update()
 		if (currentScore < 10)
 		{
 			score_FirstDigit_Renderer_->SetLocalPos(
-				{ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+				{ 0, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + numberSize_.Half_IntY()});
 
 			score_FirstDigit_Renderer_->SetFrameIndex(
 				currentScore,
@@ -59,9 +60,9 @@ void UI::Update()
 		else if (currentScore >= 10 && currentScore < 100)
 		{
 			score_FirstDigit_Renderer_->SetLocalPos(
-				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + numberSize_.Half_IntY() });
 			score_SecondDigit_Renderer_->SetLocalPos(
-				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + numberSize_.Half_IntY() });
 
 			score_FirstDigit_Renderer_->SetFrameIndex(
 				currentScore % 10,
@@ -75,16 +76,13 @@ void UI::Update()
 		else
 		{
 			score_FirstDigit_Renderer_->SetLocalPos(
-				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+				{ 12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + numberSize_.Half_IntY() });
 			score_SecondDigit_Renderer_->SetLocalPos(
-				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + 18 });
+				{ -12, -GameEngineWindow::GetInst().GetWindowSize().Half_IntY() + 40 + numberSize_.Half_IntY() });
 
 			score_FirstDigit_Renderer_->SetFrameIndex(9, RenderPivot::Center);
 			score_SecondDigit_Renderer_->SetFrameIndex(9, RenderPivot::Center);
 		}
-
-
-
 	}
 }
 

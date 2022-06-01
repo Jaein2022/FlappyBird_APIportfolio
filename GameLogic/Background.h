@@ -20,10 +20,6 @@ private:
 	Background& operator=(const Background& _other) = delete;
 	Background& operator=(const Background&& _other) = delete;
 
-
-public:	
-
-
 public:	
 
 
@@ -36,5 +32,9 @@ private:
 		GameEngineActor* _other,
 		GameEngineCollisionBody* _otherCollisionBody
 	) override;
+
+private:
+
+
 };
 

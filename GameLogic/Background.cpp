@@ -1,7 +1,7 @@
 #include "PreCompile.h"
 #include "Background.h"
 
-Background::Background(): background_Renderer_(nullptr)
+Background::Background() : background_Renderer_(nullptr)
 {
 
 }

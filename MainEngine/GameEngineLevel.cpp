@@ -3,7 +3,7 @@
 #include "GameEngineActor.h"
 #include "GameEngineCollisionBody.h"
 
-GameEngineLevel::GameEngineLevel(): cameraPos_(float4::ZERO), isLoaded_(false)
+GameEngineLevel::GameEngineLevel(): cameraPos_(float4::Zero), isLoaded_(false)
 {
 }
 

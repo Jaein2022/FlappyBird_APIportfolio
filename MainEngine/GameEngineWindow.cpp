@@ -13,8 +13,8 @@ GameEngineWindow::GameEngineWindow()
     windowHandle_(NULL),
     windowClassName_(""),
     windowTitle_(""),
-    windowSize_(float4::ZERO),
-    windowPos_(float4::ZERO),
+    windowSize_(float4::Zero),
+    windowPos_(float4::Zero),
     hdc_(nullptr)
 {
 }
