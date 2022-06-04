@@ -26,7 +26,7 @@ PlayLevel::PlayLevel()
 	pipeCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / pipeInterval_) + 2),
 	isDebuging_(false),
 	playSpeed_(100.f),
-	gravity_(9.8f)
+	gravity_(9.80665f)
 {
 	allBackgrounds_.reserve(backgroundCount_);
 	allBases_.reserve(baseCount_);
@@ -170,7 +170,7 @@ void PlayLevel::Reset()
 	SetCameraPos(float4::Zero);
 	bird_->SetWorldPos(birdStartPos_);
 	bird_->ResetCollisionBodies();
-	UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
+	//UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
 	score_ = 0;
 	GameEngineRandom::GetInst().Renewal();
 	

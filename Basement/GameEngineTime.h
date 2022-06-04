@@ -4,9 +4,17 @@ class GameEngineTime
 {
 	static GameEngineTime* inst_;
 
-	LARGE_INTEGER frequency_;		//초당 CPU 주파수(초당 클럭 반복 회수). 고정값이므로 처음 한번만 잰다.
-	LARGE_INTEGER startCheck_;		//루프 시작시점의 누적 클럭 수.
-	LARGE_INTEGER endCheck_;		//루프 종료지점의 누적 클럭 수.
+	//std::chrono::time_point: epoch라고 사전에 정해놓은, 특정 시점으로부터 
+	// 사용자가 지정한 시점간의 시간 간격이 얼마나 되는지를 duration이라는 클래스로 표현하고 계산하는 클래스.
+
+	//std::chrono::system_clock의 경우에는 유닉스 타임이라고 부르는 그레고리력 1970년 1월 1일 00시 00분 00초가 
+	// epoch이며, 시스템 시간 설정에 따라서 시간이 역행해서 duration이 음수가 될 수도 있다.
+	//std::chrono::steady_clock의 경우에는 시스템 부팅 시점이 epoch가 되며, 
+	// 단방향(monotonic)으로만 시간이 흘러가므로 절대 역행하지 않고, duration이 음수가 나올 수도 없다.
+
+	std::chrono::steady_clock::time_point prev_;
+
+
 	double deltaTime_;				//지난 루프를 한번 수행 할 때 걸린 시간 ==
 	// 루프 한번당 누적되는 클럭 수 / 초당 CPU 주파수.
 	//컴퓨터의 성능이 좋을수록 델타타임 값이 작아지므로, 컴퓨터 성능 격차로 인해 각자 다른 속도로 루프를 수행한다고 해도 

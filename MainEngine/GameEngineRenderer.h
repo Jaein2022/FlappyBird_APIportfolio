@@ -171,6 +171,10 @@ public:	//Getter, Setter, Templated Member Functions
 		return parentActor_;
 	}
 
+	const std::string& GetCurAnimationName()
+	{
+		return curAnimation_->GetName();
+	}
 
 private://Member Function Headers
 

@@ -8,7 +8,7 @@ Bird::Bird()
 	bird_Renderer_(nullptr),
 	bird_CollisionBody_(nullptr), 
 	parentPlayLevel_(nullptr),
-	initAscendingSpeed_(2.75f),	/*20.82f*/
+	initAscendingSpeed_(2.75f),
 	fallingSpeed_(0.f)
 {
 }
@@ -32,7 +32,7 @@ void Bird::Initialize()
 		GameEngineImageManager::GetInst().Find("bird.bmp")->Cut(birdSize_);
 	}
 	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
-	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.1f);
+	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.05f);
 	bird_Renderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
 	bird_Renderer_->ChangeAnimation("Play");
 
@@ -97,11 +97,22 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 		switch (parentPlayLevel_->GetState())
 		{
 		case GameState::Ready:
-			fallingSpeed_ = 0.f;
+			fallingSpeed_ = -initAscendingSpeed_;
+			if ("Ready" != bird_Renderer_->GetCurAnimationName())
+			{
+				bird_Renderer_->ChangeAnimation("Ready", true);
+			}
 			break;
 
 		case GameState::Playing:
 		{
+			if ("Play" != bird_Renderer_->GetCurAnimationName())
+			{
+				bird_Renderer_->ChangeAnimation("Play", true);
+			}
+
+			//연직 상방운동중인 물체의 속도 = 처음 발사된 속도 - (중력가속도 * 발사된 시점에서부터 지난 시간).
+
 			if (true == GameEngineInput::GetInst().IsDown("Space"))
 			{
 				fallingSpeed_ = -initAscendingSpeed_;
@@ -124,6 +135,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			else
 			{
 				SetWorldPos({ this->GetWorldPos().x, 400.f });
+				bird_Renderer_->SetFrameIndex(2, RenderPivot::Center);
 			}
 			break;
 		}

@@ -13,7 +13,7 @@ class Bird: public GameEngineActor
 	GameEngineCollisionBody* bird_CollisionBody_;
 
 	PlayLevel* parentPlayLevel_;
-	const float initAscendingSpeed_;	//초기 상승 속도.
+	const float initAscendingSpeed_;	//스페이스바 눌렀을때 입력되는 초기 상승 속도.
 	float fallingSpeed_;				//현재 추락 속도.
 
 
