@@ -26,7 +26,7 @@ PlayLevel::PlayLevel()
 	pipeCount_((GameEngineWindow::GetInst().GetWindowSize().IntX() / pipeInterval_) + 2),
 	isDebuging_(false),
 	playSpeed_(100.f),
-	gravity_(9.80665f)
+	gravity_(9.8f)
 {
 	allBackgrounds_.reserve(backgroundCount_);
 	allBases_.reserve(baseCount_);
@@ -45,6 +45,7 @@ void PlayLevel::Load()
 	GameEngineInput::GetInst().CreateKey("D", 'D');
 
 	GameEngineInput::GetInst().CreateKey("M", 'M');
+	GameEngineInput::GetInst().CreateKey("N", 'N');
 
 	GameEngineInput::GetInst().CreateKey("Space", ' ');
 
@@ -137,10 +138,15 @@ void PlayLevel::UpdateLevel()
 
 	if (true == GameEngineInput::GetInst().IsDown("M"))
 	{
-		this->SwitchMode();
+		GameEngineCollisionBody::SwitchRendering();
 	}
 
-	if (true == GameEngineInput::GetInst().IsUp("Space"))
+	if (true == GameEngineInput::GetInst().IsDown("N"))
+	{
+		isDebuging_ = !isDebuging_;
+	}
+
+	if (true == GameEngineInput::GetInst().IsDown("Space"))
 	{
 		if (GameState::Ready == currentState_) 
 		{
@@ -156,12 +162,6 @@ void PlayLevel::UpdateLevel()
 			currentState_ = GameState::Ready;
 		}
 	}
-}
-
-void PlayLevel::SwitchMode()
-{
-	GameEngineCollisionBody::SwitchRendering();
-	isDebuging_ = !isDebuging_;
 }
 
 void PlayLevel::Reset()

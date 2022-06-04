@@ -8,9 +8,7 @@ Bird::Bird()
 	bird_Renderer_(nullptr),
 	bird_CollisionBody_(nullptr), 
 	parentPlayLevel_(nullptr),
-	initAscendingPower(20.82f),
-	ascendingPower_(0.f),
-	increasedGravity_(0.f),
+	initAscendingSpeed_(2.75f),	/*20.82f*/
 	fallingSpeed_(0.f)
 {
 }
@@ -96,42 +94,21 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 {
 	if (false == parentPlayLevel_->IsDebuging())
 	{
-		/*static float stackingGravity = 0.f;*/
-
 		switch (parentPlayLevel_->GetState())
 		{
 		case GameState::Ready:
 			fallingSpeed_ = 0.f;
-			increasedGravity_ = 0.f;
-			ascendingPower_ = initAscendingPower;
-
-
-
 			break;
 
 		case GameState::Playing:
 		{
-
-
 			if (true == GameEngineInput::GetInst().IsDown("Space"))
 			{
-				ascendingPower_ = initAscendingPower;
-				increasedGravity_ = 0.f;
-				fallingSpeed_ = 0.f;
+				fallingSpeed_ = -initAscendingSpeed_;
 			}
 
-			if (0 < ascendingPower_)
-			{
-				increasedGravity_ += _gravity;
-				ascendingPower_ -= increasedGravity_;
-			}
-			else
-			{
-				increasedGravity_ = 0.f;
-				ascendingPower_ = 0.f;
-			}
+			fallingSpeed_ += _gravity * _deltaTime;
 
-			fallingSpeed_ += _deltaTime * _gravity - ascendingPower_;
 			Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
 			Move(float4::Right * _deltaTime * _playSpeed);
 			break;
@@ -141,19 +118,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 		{
 			if (400 > this->GetWorldPos().IntY())
 			{
-				if (0 < ascendingPower_)
-				{
-					increasedGravity_ += _gravity;
-					ascendingPower_ -= increasedGravity_;
-				}
-				else
-				{
-					increasedGravity_ = 0.f;
-					ascendingPower_ = 0.f;
-				}
-
-				fallingSpeed_ += _deltaTime * _gravity - ascendingPower_;
-
+				fallingSpeed_ += _gravity * _deltaTime;
 				Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
 			}
 			else

@@ -44,9 +44,9 @@ public:
 	{
 		pos_ = _pos;
 	}
-	void Move(const float4& _speed)	//액터의 이동 방향과 속도 설정.
+	void Move(const float4& _distance)	//액터의 이동 방향과 이동 거리 설정.
 	{
-		pos_ += _speed;
+		pos_ += _distance;
 	}
 	GameEngineLevel* const GetLevel()
 	{
