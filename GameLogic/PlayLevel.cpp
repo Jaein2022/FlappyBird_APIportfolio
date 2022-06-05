@@ -170,7 +170,6 @@ void PlayLevel::Reset()
 	SetCameraPos(float4::Zero);
 	bird_->SetWorldPos(birdStartPos_);
 	bird_->ResetCollisionBodies();
-	//UI_->SetWorldPos(GameEngineWindow::GetInst().GetWindowSize().Half());
 	score_ = 0;
 	GameEngineRandom::GetInst().Renewal();
 	

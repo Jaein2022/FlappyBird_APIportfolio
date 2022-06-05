@@ -94,6 +94,7 @@ void GameEngineRenderer::Render()
 		return;
 	}
 	
+	//벡버퍼 위에 렌더러가 보여주려는 이미지를 그리기 시작하는 왼쪽상단 지점.
 	float4 renderPos = float4::Zero;
 	if (true == isCameraEffect_)
 	{
@@ -104,7 +105,7 @@ void GameEngineRenderer::Render()
 		renderPos = parentActor_->GetWorldPos() + localPos_ - renderPivot_;
 	}
 	
-	if (0.000f == angle_)
+	if (nullptr == maskImage_)
 	{
 		backBufferImage->TransparentCopy(
 			renderingImage_,
@@ -119,8 +120,10 @@ void GameEngineRenderer::Render()
 	{
 		backBufferImage->PlgCopy(
 			renderingImage_,
-			renderPos,
+			renderingImagePos_,
 			renderingImageSize_,
+			renderPos,
+			renderSize_,
 			maskImage_,
 			angle_
 		);

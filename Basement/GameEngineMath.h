@@ -231,22 +231,22 @@ public:
 
 
 public:
-	float Half_X()
+	float Half_X() const
 	{
 		return x * 0.5f;
 	}
 
-	float Half_Y()
+	float Half_Y() const
 	{
 		return y * 0.5f;
 	}
 
-	float Half_Z()
+	float Half_Z() const
 	{
 		return z * 0.5f;
 	}
 
-	float4 Half()
+	float4 Half() const
 	{
 		return { Half_X(), Half_Y(), Half_Z() };
 	}
@@ -297,14 +297,21 @@ public:
 		return result;
 	}
 
-	void Rotate2DByDegree(float _degree)
+	const float4& Rotate2DByDegree(float _degree)
 	{
 		(*this) = float4::Cal2DRotationByDegree(*this, _degree);
+		return *this;
 	}
 
-	void Rotate2DByRadian(float _radian)
+	const float4& Rotate2DByRadian(float _radian)
 	{
 		(*this) = float4::Cal2DRotationByRadian(*this, _radian);
+		return *this;
+	}
+
+	POINT ConvertToPoint()
+	{
+		return POINT{ this->IntX(), this->IntY() };
 	}
 };
 
@@ -338,7 +345,7 @@ public:
 	}	
 	float Bot()
 	{
-		return pos_.y - size_.Half_Y();
+		return pos_.y + size_.Half_Y();
 	}
 
 	int ILeft()

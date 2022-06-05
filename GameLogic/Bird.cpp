@@ -34,8 +34,8 @@ void Bird::Initialize()
 	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
 	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.05f);
 	bird_Renderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
-	bird_Renderer_->ChangeAnimation("Play");
-
+	bird_Renderer_->ChangeAnimation("Ready");
+	bird_Renderer_->SetMaskImage("birdMask.bmp");
 
 	bird_Renderer_->SetCameraEffectOn();
 
@@ -44,7 +44,7 @@ void Bird::Initialize()
 	bird_CollisionBody_ = CreateCollisionBody(
 		"birdCollisionBody",
 		CollisionBodyType::Rect,
-		{ birdSize_.IntX() - 2, birdSize_.IntY() - 2 },
+		birdSize_ ,
 		float4::Red,
 		float4::Black,
 		2
@@ -98,6 +98,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 		{
 		case GameState::Ready:
 			fallingSpeed_ = -initAscendingSpeed_;
+			bird_Renderer_->SetAngle(0.f);
 			if ("Ready" != bird_Renderer_->GetCurAnimationName())
 			{
 				bird_Renderer_->ChangeAnimation("Ready", true);
@@ -117,6 +118,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			{
 				fallingSpeed_ = -initAscendingSpeed_;
 			}
+			bird_Renderer_->SetAngle(fallingSpeed_ * 10.f);
 
 			fallingSpeed_ += _gravity * _deltaTime;
 
@@ -131,12 +133,14 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			{
 				fallingSpeed_ += _gravity * _deltaTime;
 				Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
+				bird_Renderer_->SetAngle(fallingSpeed_ * 10.f);
 			}
 			else
 			{
 				SetWorldPos({ this->GetWorldPos().x, 400.f });
 				bird_Renderer_->SetFrameIndex(2, RenderPivot::Center);
 			}
+
 			break;
 		}
 

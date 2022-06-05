@@ -93,6 +93,8 @@ private://Member Function Headers
 		GameEngineImage* _srcImage,
 		const float4& _srcImagePos,
 		const float4& _srcImageSize,
+		const float4& _renderPos,
+		const float4& _renderSize,
 		GameEngineImage* _maskImage,
 		float _angle
 	);

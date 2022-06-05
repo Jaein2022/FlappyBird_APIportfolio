@@ -66,7 +66,7 @@ class GameEngineRenderer: public GameEngineNameBase
 	float4 renderPivot_;	//렌더링하는 이미지의 기준점. 
 	//이 점을 기준으로 액터포스나 피벗포스에 이미지를 배치한다.
 
-	float angle_;				//렌더러의 기울기.
+	float angle_;			//렌더러의 회전값.
 	float4 renderSize_;			//자른 렌더링이미지를 백버퍼 위에 렌더링할 크기. 웬만하면 renderingImageSize_와 동일하게 할 것.
 	float4 localPos_;
 	//액터 위치를 벗어난 곳에서 액터를 따라다니는 렌더러를 배치할때, 어느 방향으로 얼마나 떨어진 지점에 배치할지 정하는 지점.
@@ -129,6 +129,11 @@ public:	//Getter, Setter, Templated Member Functions
 	void SetLocalPos(const float4& _pos)
 	{
 		localPos_ = _pos;
+	}
+
+	void SetAngle(float _angle)
+	{
+		angle_ = _angle;
 	}
 
 	float4 GetLocalPos()
