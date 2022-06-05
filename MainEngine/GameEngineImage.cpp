@@ -162,31 +162,32 @@ void GameEngineImage::PlgCopy(
 		return;
 	}
 
-	                                          
-	GameEngineRect renderRect = GameEngineRect(float4::Zero, _renderSize);
+	if (1 != _maskImage->imageInfo_.bmBitsPixel)
+	{
+		//픽셀별 색상이 순수하게 0이나 1로만 되어있는 흑백 비트맵 이미지만 마스크 이미지로 사용할 수 있다. 
+		GameEngineDebug::MsgBoxError("사용할 수 없는 마스크 이미지입니다.");
+		return;
+	}     
 
 	float4 renderCenter = _renderPos + _renderSize.Half();
 
-	float4 tempVertex_LT = renderRect.LeftTopfloat4();	//좌상.
-	float4 tempVertex_RT = renderRect.RightTopfloat4();	//우상.
-	float4 tempVertex_LB = renderRect.LeftBotfloat4();	//좌하.
-	
-	tempVertex_LT.Rotate2DByDegree(_angle);
-	tempVertex_RT.Rotate2DByDegree(_angle);
-	tempVertex_LB.Rotate2DByDegree(_angle);
+	GameEngineRect renderRect = GameEngineRect(float4::Zero, _renderSize);
 
-
-	float4 renderVertex_LT = {renderCenter + tempVertex_LT};//좌상.
-	float4 renderVertex_RT = {renderCenter + tempVertex_RT};//우상.
-	float4 renderVertex_LB = {renderCenter + tempVertex_LB};//좌하.
+	float4 renderVertex_LT = { //좌상.
+		renderCenter + renderRect.LeftTopfloat4().Rotate2DByDegree(_angle)
+	};
+	float4 renderVertex_RT = { //우상. 
+		renderCenter + renderRect.RightTopfloat4().Rotate2DByDegree(_angle)
+	};
+	float4 renderVertex_LB = { //좌하.
+		renderCenter + renderRect.LeftBotfloat4().Rotate2DByDegree(_angle)
+	};
 
 	POINT renderVertexes[3] = {
 		renderVertex_LT.ConvertToPoint(),
 		renderVertex_RT.ConvertToPoint(),
 		renderVertex_LB.ConvertToPoint() 
 	};
-
-
 
 	//좌상, 우상, 좌하 순으로 배치.
 
@@ -198,7 +199,7 @@ void GameEngineImage::PlgCopy(
 		_srcImagePos.IntY(),	//srcImage를 가져올, srcImage 내 왼쪽상단 y좌표.
 		_srcImageSize.IntX(),	//srcImage를 가져올 가로 픽셀길이.
 		_srcImageSize.IntY(),	//srcImage를 가져올 세로 픽셀길이.
-		/*_maskImage->imageHBMP_*/nullptr, //마스크 이미지의 정보를 가진 핸들.
+		_maskImage->imageHBMP_, //마스크 이미지의 정보를 가진 핸들.
 		_srcImagePos.IntX(),		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 x좌표.
 		_srcImagePos.IntY()		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 y좌표.
 		//마스크 이미지는 srcImage와 같은 크기 같은 위치에서 복사를 시작해야 한다.

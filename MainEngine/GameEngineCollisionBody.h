@@ -25,7 +25,7 @@ class GameEngineCollisionBody : public GameEngineNameBase
 	HPEN mainPen_;
 	HPEN prevPen_;
 	COLORREF normalColor_;
-	COLORREF collisionColor_;
+	COLORREF responseColor_;
 	int thickness_;
 
 
@@ -130,17 +130,17 @@ private:
 
 private:
 
-	void SetPen(const float4& _normalColor, const float4& _collisionColor, int _thickness)
+	void SetPen(const float4& _normalColor, const float4& _responseColor, int _thickness)
 	{
 		normalColor_ = RGB(
 			static_cast<int>(_normalColor.r * 255.f),
 			static_cast<int>(_normalColor.g * 255.f),
 			static_cast<int>(_normalColor.b * 255.f)
 		);
-		collisionColor_ = RGB(
-			static_cast<int>(_collisionColor.r * 255.f),
-			static_cast<int>(_collisionColor.g * 255.f),
-			static_cast<int>(_collisionColor.b * 255.f)
+		responseColor_ = RGB(
+			static_cast<int>(_responseColor.r * 255.f),
+			static_cast<int>(_responseColor.g * 255.f),
+			static_cast<int>(_responseColor.b * 255.f)
 		);
 		thickness_ = _thickness;
 		mainPen_ = CreatePen(PS_SOLID, thickness_, normalColor_);

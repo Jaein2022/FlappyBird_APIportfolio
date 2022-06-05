@@ -42,7 +42,7 @@ void Bird::Initialize()
 
 	
 	bird_CollisionBody_ = CreateCollisionBody(
-		"birdCollisionBody",
+		"bird_CollisionBody",
 		CollisionBodyType::Rect,
 		birdSize_ ,
 		float4::Red,
@@ -62,11 +62,6 @@ void Bird::Update()
 		parentPlayLevel_->GetGravity(),
 		parentPlayLevel_->GetPlaySpeed()
 	);
-
-
-
-
-
 }
 
 void Bird::Render()
@@ -112,15 +107,17 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 				bird_Renderer_->ChangeAnimation("Play", true);
 			}
 
-			//연직 상방운동중인 물체의 속도 = 처음 발사된 속도 - (중력가속도 * 발사된 시점에서부터 지난 시간).
+			//연직 상방운동중인 물체의 속도 = 처음 발사된 속도 - 중력가속도 * 발사된 시점에서부터 지난 시간.
 
 			if (true == GameEngineInput::GetInst().IsDown("Space"))
 			{
 				fallingSpeed_ = -initAscendingSpeed_;
 			}
+			fallingSpeed_ += _gravity * _deltaTime;
+
 			bird_Renderer_->SetAngle(fallingSpeed_ * 10.f);
 
-			fallingSpeed_ += _gravity * _deltaTime;
+
 
 			Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
 			Move(float4::Right * _deltaTime * _playSpeed);

@@ -62,14 +62,14 @@ GameEngineCollisionBody* GameEngineActor::CreateCollisionBody(
 	CollisionBodyType _type,
 	const float4& _size,
 	const float4& _normalColor,
-	const float4& _collisionColor,
+	const float4& _responseColor,
 	int _thickness
 )
 {
 	GameEngineCollisionBody* newCollisionBody = new GameEngineCollisionBody(this);
 	newCollisionBody->SetType(_type);
 	newCollisionBody->SetName(_collisionBodyName);
-	newCollisionBody->SetPen(_normalColor, _collisionColor, _thickness);
+	newCollisionBody->SetPen(_normalColor, _responseColor, _thickness);
 	newCollisionBody->SetSize(_size);
 	allCollisionBodies_.push_back(newCollisionBody);
 

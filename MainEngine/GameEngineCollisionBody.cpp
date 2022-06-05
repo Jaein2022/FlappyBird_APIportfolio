@@ -21,7 +21,7 @@ GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	mainPen_(NULL),
 	prevPen_(NULL),
 	normalColor_(NULL),
-	collisionColor_(NULL),
+	responseColor_(NULL),
 	thickness_(0)
 {
 	SetParent(_actor);
@@ -221,7 +221,7 @@ void GameEngineCollisionBody::SwitchColor()
 	DeleteObject(mainPen_);
 	if (true == isCollided_)
 	{
-		mainPen_ = CreatePen(PS_SOLID, thickness_, collisionColor_);
+		mainPen_ = CreatePen(PS_SOLID, thickness_, responseColor_);
 	}
 	else
 	{

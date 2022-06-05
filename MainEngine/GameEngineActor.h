@@ -75,7 +75,7 @@ protected:
 		CollisionBodyType _type,
 		const float4& _size,
 		const float4& _normalColor,
-		const float4& _collisionColor,
+		const float4& _responseColor,
 		int _thickness
 	);
 
