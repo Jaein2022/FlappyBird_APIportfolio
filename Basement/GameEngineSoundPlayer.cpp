@@ -3,7 +3,9 @@
 #include "GameEngineSound.h"
 #include "GameEngineDebug.h"
 
-GameEngineSoundPlayer::GameEngineSoundPlayer(): playChannel_(nullptr), playCount_(-1)
+GameEngineSoundPlayer::GameEngineSoundPlayer()
+	: playChannel_(nullptr),
+	playCount_(-1)
 {
 }
 
@@ -18,7 +20,7 @@ bool GameEngineSoundPlayer::IsPlaying()
 	return check;
 }
 
-void GameEngineSoundPlayer::PlayCountReset(int _count)
+void GameEngineSoundPlayer::ResetPlayCount(int _count)
 {
 	playCount_ = _count;
 }

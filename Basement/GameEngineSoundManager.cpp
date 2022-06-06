@@ -103,9 +103,10 @@ GameEngineSound* GameEngineSoundManager::Find(const std::string& _name)
     }
 }
 
-GameEngineSoundPlayer* GameEngineSoundManager::CreateSoundPlayer()
+GameEngineSoundPlayer* GameEngineSoundManager::CreateSoundPlayer(const std::string& _playerName)
 {
-    GameEngineSoundPlayer* newSoundplayer = new GameEngineSoundPlayer();
-    allSoundPlayers_.push_back(newSoundplayer);
-    return  newSoundplayer;
+    GameEngineSoundPlayer* newSoundPlayer = new GameEngineSoundPlayer();
+    newSoundPlayer->SetName(_playerName);
+    allSoundPlayers_.push_back(newSoundPlayer);
+    return newSoundPlayer;
 }

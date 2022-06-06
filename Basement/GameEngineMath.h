@@ -19,8 +19,8 @@ public:
 
 	static const float4 Left;	//--x
 	static const float4 Right;	//++x
-	static const float4 Down;		//++y
-	static const float4 Up;	//--y
+	static const float4 Down;	//++y
+	static const float4 Up;		//--y
 
 	static const float4 Red;	//100
 	static const float4 Green;	//010

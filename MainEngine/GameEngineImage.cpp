@@ -200,7 +200,7 @@ void GameEngineImage::PlgCopy(
 		_srcImageSize.IntX(),	//srcImage를 가져올 가로 픽셀길이.
 		_srcImageSize.IntY(),	//srcImage를 가져올 세로 픽셀길이.
 		_maskImage->imageHBMP_, //마스크 이미지의 정보를 가진 핸들.
-		_srcImagePos.IntX(),		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 x좌표.
+		_srcImagePos.IntX(),	//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 x좌표.
 		_srcImagePos.IntY()		//마스크 이미지를 가져올, 마스크 이미지 내 왼쪽상단 y좌표.
 		//마스크 이미지는 srcImage와 같은 크기 같은 위치에서 복사를 시작해야 한다.
 	);

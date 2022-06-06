@@ -3,13 +3,15 @@
 #include "Pipe.h"
 #include "PlayLevel.h"
 
+
 Bird::Bird()
 	:birdSize_( 34, 24 ),
 	bird_Renderer_(nullptr),
 	bird_CollisionBody_(nullptr), 
 	parentPlayLevel_(nullptr),
 	initAscendingSpeed_(2.75f),
-	fallingSpeed_(0.f)
+	fallingSpeed_(0.f),
+	bird_SoundPlayer_(nullptr)
 {
 }
 
@@ -32,7 +34,7 @@ void Bird::Initialize()
 		GameEngineImageManager::GetInst().Find("bird.bmp")->Cut(birdSize_);
 	}
 	bird_Renderer_ = CreateRenderer("bird.bmp", "bird_Renderer");
-	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.05f);
+	bird_Renderer_->CreateAnimation("Play", "bird.bmp", 0, 3, 0.075f);
 	bird_Renderer_->CreateAnimation("Ready", "bird.bmp", 0, 3, 0.5f);
 	bird_Renderer_->ChangeAnimation("Ready");
 	bird_Renderer_->SetMaskImage("birdMask.bmp");
@@ -44,18 +46,39 @@ void Bird::Initialize()
 	bird_CollisionBody_ = CreateCollisionBody(
 		"bird_CollisionBody",
 		CollisionBodyType::Rect,
-		birdSize_ ,
+		{ birdSize_.y, birdSize_.y },
 		float4::Red,
 		float4::Black,
 		2
 	);
 	bird_CollisionBody_->SetCameraEffectOn();
+
+
+	bird_SoundPlayer_ = GameEngineSoundManager::GetInst().CreateSoundPlayer("wing_SoundPlayer");
+	//swoosh_SoundPlayer_ = GameEngineSoundManager::GetInst().CreateSoundPlayer("swoosh_SoundPlayer", "swoosh.wav");
 }
 
 void Bird::Update()
 {
 	bird_Renderer_->UpdateAnimation();
 
+	//속도별 버드 렌더러 기울기 조정.
+	if (0.0f > fallingSpeed_)
+	{
+		bird_Renderer_->SetAngle(-20.f);
+	}
+	else if (0.f <= fallingSpeed_ && 0.4f > fallingSpeed_)
+	{
+		bird_Renderer_->SetAngle(0.f);
+	}
+	else if (0.4f <= fallingSpeed_ && 0.6f > fallingSpeed_)
+	{
+		bird_Renderer_->SetAngle(20.f);
+	}
+	else if (0.6f <= fallingSpeed_)
+	{
+		bird_Renderer_->SetAngle(65.f);
+	}
 
 	ControlMoving(
 		GameEngineTime::GetInst().GetDeltaTimeF(),
@@ -76,12 +99,23 @@ void Bird::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() ||
-		CollisionBodyType::HLine == _otherCollisionBody->GetType())
+	if (CollisionBodyType::HLine == _otherCollisionBody->GetType() &&
+		std::string::npos != _other->GetName().find("base"))
 	{
-		bird_CollisionBody_->Respond();
-
 		parentPlayLevel_->SetState(GameState::GameOver);
+		bird_CollisionBody_->Respond(true);
+		bird_SoundPlayer_->PlayOverLap("die.wav", 0);
+		//베이스와 충돌해서 게임오버되면 밀어내게 설정되어 있어서 한번만 소리난다.
+	}
+
+	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() &&
+		 std::string::npos != _other->GetName().find("pipe"))
+	{
+		parentPlayLevel_->SetState(GameState::GameOver);
+		bird_CollisionBody_->Respond(true);
+ 		bird_SoundPlayer_->PlayOverLap("hit.wav", 0);
+		//파이프와 충돌해서 게임오버되면 밀어내게 설정되어 있지 않어서 업데이트에서 제외시키지 않으면 
+		//무한정 소리난다.
 	}
 }
 
@@ -97,6 +131,8 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			if ("Ready" != bird_Renderer_->GetCurAnimationName())
 			{
 				bird_Renderer_->ChangeAnimation("Ready", true);
+
+				bird_SoundPlayer_->PlayOverLap("swoosh.wav", 0);
 			}
 			break;
 
@@ -105,6 +141,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			if ("Play" != bird_Renderer_->GetCurAnimationName())
 			{
 				bird_Renderer_->ChangeAnimation("Play", true);
+				bird_SoundPlayer_->PlayOverLap("wing.wav", 0);
 			}
 
 			//연직 상방운동중인 물체의 속도 = 처음 발사된 속도 - 중력가속도 * 발사된 시점에서부터 지난 시간.
@@ -112,12 +149,9 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			if (true == GameEngineInput::GetInst().IsDown("Space"))
 			{
 				fallingSpeed_ = -initAscendingSpeed_;
+				bird_SoundPlayer_->PlayOverLap("wing.wav", 0);
 			}
 			fallingSpeed_ += _gravity * _deltaTime;
-
-			bird_Renderer_->SetAngle(fallingSpeed_ * 10.f);
-
-
 
 			Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
 			Move(float4::Right * _deltaTime * _playSpeed);
@@ -126,15 +160,14 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 
 		case GameState::GameOver:
 		{
-			if (400 > this->GetWorldPos().IntY())
+			if (400.f - birdSize_.Half_Y() > this->GetWorldPos().y)
 			{
 				fallingSpeed_ += _gravity * _deltaTime;
 				Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
-				bird_Renderer_->SetAngle(fallingSpeed_ * 10.f);
 			}
 			else
 			{
-				SetWorldPos({ this->GetWorldPos().x, 400.f });
+				SetWorldPos({ this->GetWorldPos().x, 400.f - birdSize_.Half_Y()});
 				bird_Renderer_->SetFrameIndex(2, RenderPivot::Center);
 			}
 

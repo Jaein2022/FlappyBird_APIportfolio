@@ -1,5 +1,6 @@
 #pragma once
 
+class GameEngineSoundPlayer;
 class PlayLevel;
 class Bird: public GameEngineActor
 {
@@ -15,6 +16,8 @@ class Bird: public GameEngineActor
 	PlayLevel* parentPlayLevel_;
 	const float initAscendingSpeed_;	//스페이스바 눌렀을때 입력되는 초기 상승 속도.
 	float fallingSpeed_;				//현재 추락 속도.
+
+	GameEngineSoundPlayer* bird_SoundPlayer_;
 
 
 private:

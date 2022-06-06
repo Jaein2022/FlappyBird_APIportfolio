@@ -44,7 +44,7 @@ public:
 	void Load(const std::string& _name, const std::string& _path); // 파일이름 따로 경로 따로 사운드파일 불러오기.
 	GameEngineSound* Find(const std::string& _name);							
 
-	GameEngineSoundPlayer* CreateSoundPlayer();	//사운드플레이어 생성.
+	GameEngineSoundPlayer* CreateSoundPlayer(const std::string& _playerName);	//사운드플레이어 생성.
 
 public:
 	static GameEngineSoundManager& GetInst()

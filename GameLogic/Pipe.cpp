@@ -9,7 +9,8 @@ Pipe::Pipe()
 	topPipe_CollisionBody_(nullptr),
 	botPipe_Renderer_(nullptr),
 	botPipe_CollisionBody_(nullptr),
-	scoreCount_CollsionBody_(nullptr)
+	scoreCount_CollsionBody_(nullptr),
+	score_SoundPlayer_(nullptr)
 {
 }
 
@@ -63,6 +64,8 @@ void Pipe::Initialize()
 	);
 	scoreCount_CollsionBody_->SetLocalPos({ pipeSize_.Half_IntX() + 34, 0});
 	scoreCount_CollsionBody_->SetCameraEffectOn();
+
+	score_SoundPlayer_ = GameEngineSoundManager::GetInst().CreateSoundPlayer("score_SoundPlayer");
 }
 
 void Pipe::Update()
@@ -99,7 +102,7 @@ void Pipe::ReactCollision(
 		else if (_thisCollisionBody == scoreCount_CollsionBody_)
 		{
 			scoreCount_CollsionBody_->Respond(true);
-
+			score_SoundPlayer_->PlayOverLap("point.wav", 0);
 			PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
 			if (nullptr == tempPlayLevel)
 			{

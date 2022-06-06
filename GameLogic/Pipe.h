@@ -19,6 +19,8 @@ class Pipe: public GameEngineActor
 
 	GameEngineCollisionBody* scoreCount_CollsionBody_;	
 
+	GameEngineSoundPlayer* score_SoundPlayer_;
+
 private:
 	Pipe();
 	~Pipe();
