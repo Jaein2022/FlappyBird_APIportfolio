@@ -158,13 +158,13 @@ void PlayLevel::UpdateLevel()
 		}
 		else if (GameState::GameOver == currentState_)
 		{
-			Reset();
+			ResetLevel();
 			currentState_ = GameState::Ready;
 		}
 	}
 }
 
-void PlayLevel::Reset()
+void PlayLevel::ResetLevel()
 {
 	GameEngineTime::GetInst().Reset();
 	SetCameraPos(float4::Zero);

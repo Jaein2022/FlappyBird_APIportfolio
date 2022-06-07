@@ -43,8 +43,4 @@ void Base::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() && "bird" == _other->GetName())
-	{
-		base_CollisionBody_->Respond();
-	}
 }

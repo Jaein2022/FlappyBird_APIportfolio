@@ -104,18 +104,26 @@ void Bird::ReactCollision(
 	{
 		parentPlayLevel_->SetState(GameState::GameOver);
 		bird_CollisionBody_->Respond(true);
+		_otherCollisionBody->Respond(true);
 		bird_SoundPlayer_->PlayOverLap("die.wav", 0);
 		//베이스와 충돌해서 게임오버되면 밀어내게 설정되어 있어서 한번만 소리난다.
 	}
 
-	if (CollisionBodyType::Rect == _otherCollisionBody->GetType() &&
-		 std::string::npos != _other->GetName().find("pipe"))
+	if (std::string::npos != _other->GetName().find("pipe"))
 	{
-		parentPlayLevel_->SetState(GameState::GameOver);
-		bird_CollisionBody_->Respond(true);
- 		bird_SoundPlayer_->PlayOverLap("hit.wav", 0);
-		//파이프와 충돌해서 게임오버되면 밀어내게 설정되어 있지 않어서 업데이트에서 제외시키지 않으면 
-		//무한정 소리난다.
+		_otherCollisionBody->Respond(true);
+
+		if (CollisionBodyType::Rect == _otherCollisionBody->GetType())
+		{
+			parentPlayLevel_->SetState(GameState::GameOver);
+			bird_CollisionBody_->Respond(true);
+			bird_SoundPlayer_->PlayOverLap("hit.wav", 0);
+		}
+		else if (CollisionBodyType::VLine == _otherCollisionBody->GetType())
+		{
+			parentPlayLevel_->AddScore();
+			bird_SoundPlayer_->PlayOverLap("point.wav", 0);
+		}
 	}
 }
 

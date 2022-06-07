@@ -89,27 +89,4 @@ void Pipe::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (_other->GetName() == "bird" && CollisionBodyType::Rect == _otherCollisionBody->GetType())
-	{
-		if (_thisCollisionBody == topPipe_CollisionBody_ )
-		{
-			topPipe_CollisionBody_->Respond();
-		}
-		else if (_thisCollisionBody == botPipe_CollisionBody_)
-		{
-			botPipe_CollisionBody_->Respond();
-		}
-		else if (_thisCollisionBody == scoreCount_CollsionBody_)
-		{
-			scoreCount_CollsionBody_->Respond(true);
-			score_SoundPlayer_->PlayOverLap("point.wav", 0);
-			PlayLevel* tempPlayLevel = reinterpret_cast<PlayLevel*>(this->GetLevel());
-			if (nullptr == tempPlayLevel)
-			{
-				GameEngineDebug::MsgBoxError("tempPlayLevel이 없습니다.");
-				return;
-			}
-			tempPlayLevel->AddScore();
-		}
-	}
 }

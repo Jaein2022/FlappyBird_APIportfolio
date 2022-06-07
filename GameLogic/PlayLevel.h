@@ -93,7 +93,7 @@ public:
 private:
 	void Load() override;
 	void UpdateLevel() override;
-	void Reset();
+	void ResetLevel();
 
 private:
 	void SetState(GameState _state)

@@ -184,10 +184,6 @@ void GameEngineCollisionBody::Render()
 		break;
 	}
 
-	//case CollisionBodyType::Point:
-	//	//점은 선 두개 크로스해서 표시.
-	//	break;
-
 
 	default:
 		GameEngineDebug::MsgBoxError("구현되지 않은 충돌체 형식입니다.");
