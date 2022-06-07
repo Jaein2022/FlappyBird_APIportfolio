@@ -36,7 +36,8 @@ public:
 
 
 public:	
-	void MoveToParent(const std::string& _directoryName);
+	void MoveToParent(const std::string& _directoryName);	//지정한 이름을 가진 디렉토리가 나올때까지 위로 이동.
+	void MoveToParent();	//한단계 위로 이동.
 	void MoveToChild(const std::string& _directoryName);
 	std::vector<std::string> CollectAllFileNames();
 

@@ -14,9 +14,9 @@ int APIENTRY wWinMain(
 {
     GameEngineDebug::LeakCheckOn();
 
-#ifdef _DEBUG
+#ifdef _DEBUG               //디버그모드에서만 하고, 릴리즈모드에서는 하지 않는다.
     int* i = new int(1);	//릭 체크가 이루어지고 있는지를 확인하기 위한 의도적인 릭.
-#endif                      //릴리즈모드에서는 하지 않는다.
+#endif                     
 
     GameEngineWindow::GetInst().RegisterWindowClass(hInstance, "FlappyBird_APIportfolio");
     GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 560, 500 + 30/*윈도우 타이틀바 폭*/});
@@ -46,8 +46,9 @@ void InitializeGame()
 
 void LoadResources()
 {
+
     GameEnginePath soundResourcePath = GameEnginePath();
-    soundResourcePath.MoveToParent("FlappyBird_APIportfolio");
+    soundResourcePath.MoveToParent();
     soundResourcePath.MoveToChild("Resource");
     soundResourcePath.MoveToChild("Sound");
     std::vector<std::string> allSoundFileNames = soundResourcePath.CollectAllFileNames();
@@ -58,7 +59,7 @@ void LoadResources()
 
 
     GameEnginePath imageResourcePath = GameEnginePath();
-    imageResourcePath.MoveToParent("FlappyBird_APIportfolio");
+    imageResourcePath.MoveToParent();
     imageResourcePath.MoveToChild("Resource");
     imageResourcePath.MoveToChild("Image");
     std::vector<std::string> allImageFileNames = imageResourcePath.CollectAllFileNames();

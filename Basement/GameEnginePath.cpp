@@ -101,6 +101,15 @@ void GameEnginePath::MoveToParent(const std::string& _directoryName)
 	}
 }
 
+void GameEnginePath::MoveToParent()
+{
+	if (path_.root_path() == path_)
+	{
+		GameEngineDebug::MsgBoxError("더 이상 위로 올라갈 수 없습니다.");
+	}
+	this->path_ = this->path_.parent_path();
+}
+
 void GameEnginePath::MoveToChild(const std::string& _directoryName)
 {
 	this->path_.append(_directoryName);
