@@ -5,12 +5,14 @@
 
 
 Bird::Bird()
-	:birdSize_( 34, 24 ),
+	:birdSize_(34, 24),
 	bird_Renderer_(nullptr),
-	bird_CollisionBody_(nullptr), 
+	bird_CollisionBody_(nullptr),
 	parentPlayLevel_(nullptr),
 	initAscendingSpeed_(2.75f),
 	fallingSpeed_(0.f),
+	initAscendingSecond_(0.5f),
+	ascendingSecond_(0.f),
 	bird_SoundPlayer_(nullptr)
 {
 }
@@ -62,23 +64,14 @@ void Bird::Update()
 {
 	bird_Renderer_->UpdateAnimation();
 
-	//속도별 버드 렌더러 기울기 조정.
-	if (0.0f > fallingSpeed_)
+	if (true == GameEngineInput::GetInst().IsDown("Space"))
 	{
-		bird_Renderer_->SetAngle(-20.f);
+		fallingSpeed_ = -initAscendingSpeed_;
+		ascendingSecond_ = initAscendingSecond_;
+		bird_SoundPlayer_->PlayOverLap("wing.wav", 0);
 	}
-	else if (0.f <= fallingSpeed_ && 0.4f > fallingSpeed_)
-	{
-		bird_Renderer_->SetAngle(0.f);
-	}
-	else if (0.4f <= fallingSpeed_ && 0.6f > fallingSpeed_)
-	{
-		bird_Renderer_->SetAngle(20.f);
-	}
-	else if (0.6f <= fallingSpeed_)
-	{
-		bird_Renderer_->SetAngle(65.f);
-	}
+
+	SetAngle(GameEngineTime::GetInst().GetDeltaTimeF());
 
 	ControlMoving(
 		GameEngineTime::GetInst().GetDeltaTimeF(),
@@ -153,12 +146,6 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			}
 
 			//연직 상방운동중인 물체의 속도 = 처음 발사된 속도 - 중력가속도 * 발사된 시점에서부터 지난 시간.
-
-			if (true == GameEngineInput::GetInst().IsDown("Space"))
-			{
-				fallingSpeed_ = -initAscendingSpeed_;
-				bird_SoundPlayer_->PlayOverLap("wing.wav", 0);
-			}
 			fallingSpeed_ += _gravity * _deltaTime;
 
 			Move(float4::Down * _deltaTime * _playSpeed * fallingSpeed_);
@@ -178,7 +165,6 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 				SetWorldPos({ this->GetWorldPos().x, 400.f - birdSize_.Half_Y()});
 				bird_Renderer_->SetFrameIndex(2, RenderPivot::Center);
 			}
-
 			break;
 		}
 
@@ -208,4 +194,30 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 			Move(float4::Right * _deltaTime * _playSpeed);
 		}
 	}
+}
+
+void Bird::SetAngle(float _deltaTime)
+{
+	if (0.f <= ascendingSecond_)
+	{
+		ascendingSecond_ -= _deltaTime;
+		bird_Renderer_->SetAngle(-20.f);
+	}
+	else
+	{
+		if (0.5f > fallingSpeed_)
+		{
+			bird_Renderer_->SetAngle(0.f);
+		}
+		else if (0.5f <= fallingSpeed_ && 0.6f > fallingSpeed_)
+		{
+			bird_Renderer_->SetAngle(20.f);
+		}
+		else if (0.6f <= fallingSpeed_)
+		{
+			bird_Renderer_->SetAngle(70.f);
+		}
+	}
+
+
 }

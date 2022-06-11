@@ -16,6 +16,8 @@ class Bird: public GameEngineActor
 	PlayLevel* parentPlayLevel_;
 	const float initAscendingSpeed_;	//스페이스바 눌렀을때 입력되는 초기 상승 속도.
 	float fallingSpeed_;				//현재 추락 속도.
+	float initAscendingSecond_;
+	float ascendingSecond_;
 
 	GameEngineSoundPlayer* bird_SoundPlayer_;
 
@@ -38,6 +40,10 @@ public:
 	{
 		return birdSize_;
 	}
+	const float GetAngle() const
+	{
+		return bird_Renderer_->GetAngle();
+	}
 
 
 private:
@@ -50,6 +56,6 @@ private:
 		GameEngineCollisionBody* _otherCollisionBody
 	) override;
 	void ControlMoving(float _deltaTime, const float _gravity, const float _playSpeed);
-
+	void SetAngle(float _deltaTime);		//버드 렌더러 기울기 조정.
 };
 

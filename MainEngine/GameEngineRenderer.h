@@ -136,6 +136,11 @@ public:	//Getter, Setter, Templated Member Functions
 		angle_ = _angle;
 	}
 
+	float GetAngle()
+	{
+		return angle_;
+	}
+
 	float4 GetLocalPos()
 	{
 		return localPos_;
