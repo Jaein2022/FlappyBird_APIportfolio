@@ -44,11 +44,10 @@ void Bird::Initialize()
 	bird_Renderer_->SetCameraEffectOn();
 
 
-	
 	bird_CollisionBody_ = CreateCollisionBody(
 		"bird_CollisionBody",
 		CollisionBodyType::RRect,
-		birdSize_,
+		float4( birdSize_.y, birdSize_.y ),	//<-버드 충돌체 크기 조정.
 		float4::Red,
 		float4::Black,
 		2
