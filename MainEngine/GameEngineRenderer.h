@@ -53,11 +53,8 @@ class GameEngineRenderer: public GameEngineNameBase
 	};
 
 
-
-	//Friend Classes
 	friend GameEngineActor;
 
-	//Member Variables
 	GameEngineActor* parentActor_;
 
 	GameEngineImage* renderingImage_;	//Render() 함수 내에서 최종적으로 렌더할 이미지.
@@ -92,7 +89,7 @@ private:
 	GameEngineRenderer& operator=(const GameEngineRenderer&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 	void SetImage(const std::string& _imageName);
 	void SetMaskImage(const std::string& _imageName);
 	void Render();
@@ -115,7 +112,7 @@ public:	//Member Function Headers
 	void SetFrameIndex(int _index, RenderPivot _pivot);
 	bool IsCurAnimationFinished();
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 	GameEngineImage* const GetRenderingImage() const
 	{
 		return renderingImage_;
@@ -148,7 +145,12 @@ public:	//Getter, Setter, Templated Member Functions
 
 	void Move(const float4& _distance)
 	{
-		localPos_ += _distance;
+		this->localPos_ += _distance;
+	}
+
+	void Rotate(float _rotation)
+	{
+		this->angle_ += _rotation;
 	}
 
 	void SetRenderingImagePos(const float4& _pos = float4::Zero)
@@ -186,7 +188,7 @@ public:	//Getter, Setter, Templated Member Functions
 		return curAnimation_->GetName();
 	}
 
-private://Member Function Headers
+private:
 
 };
 

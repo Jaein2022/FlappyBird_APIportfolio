@@ -4,7 +4,6 @@ class GameEngineObjectBase
 {
 	//게임 내 모든 오브젝트의 기본 기능(업데이트 제외 여부, 디버깅 보조) 담당 클래스. 
 	 
-	//Member Variables
 	bool isDead_;					//true == 사망 판정. 사망처리가 아닌 사망 판정임에 주의.
 	bool isInUpdate_;				//false == 업데이트 제외 판정.
 	bool isDebugChecked_;			//true == 해당 오브젝트만 디버그 체크를 함.
@@ -28,7 +27,7 @@ private:
 
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 	bool IsNull()
 	{
 		return nullptr == this;

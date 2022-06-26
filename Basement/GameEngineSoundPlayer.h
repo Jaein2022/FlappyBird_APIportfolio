@@ -4,10 +4,8 @@
 
 class GameEngineSoundPlayer: public GameEngineNameBase
 {
-	//Friend Classes
 	friend GameEngineSoundManager;
 
-	//Member Variables
 	FMOD::Channel* playChannel_;
 	int playCount_;
 
@@ -25,7 +23,7 @@ private:
 	GameEngineSoundPlayer& operator=(const GameEngineSoundPlayer&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 	bool IsPlaying();
 	void ResetPlayCount(int _count = -1);
 	void PlayOverLap(const std::string& _name, int _loopCount = 1);	// 겹쳐서 재생 기존의 사운드가 재생되고 있어도 그냥 재생한다.

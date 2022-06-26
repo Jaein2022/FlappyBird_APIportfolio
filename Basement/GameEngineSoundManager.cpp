@@ -40,7 +40,7 @@ GameEngineSoundManager::~GameEngineSoundManager()
 
 void GameEngineSoundManager::Initialize()
 {
-    // 내부코드에서 NEW를 할 가능성이 매우 높다.
+    // 내부코드에서 new를 할 가능성이 매우 높다.
     FMOD::System_Create(&soundSystem_);
     if (nullptr == soundSystem_)
     {

@@ -43,6 +43,8 @@ void PlayLevel::Load()
 	GameEngineInput::GetInst().CreateKey("A", 'A');
 	GameEngineInput::GetInst().CreateKey("S", 'S');
 	GameEngineInput::GetInst().CreateKey("D", 'D');
+	GameEngineInput::GetInst().CreateKey("Q", 'Q');
+	GameEngineInput::GetInst().CreateKey("E", 'E');
 
 	GameEngineInput::GetInst().CreateKey("M", 'M');
 	GameEngineInput::GetInst().CreateKey("N", 'N');

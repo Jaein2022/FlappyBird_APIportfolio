@@ -27,7 +27,7 @@ void Pipe::Initialize()
 
 	topPipe_CollisionBody_ = CreateCollisionBody(
 		"topPipe_CollisionBody",
-		CollisionBodyType::Rect,
+		CollisionBodyType::FRect,
 		pipeSize_,
 		float4::Red,
 		float4::Black,
@@ -45,7 +45,7 @@ void Pipe::Initialize()
 
 	botPipe_CollisionBody_ = CreateCollisionBody(
 		"botPipe_CollisionBody",
-		CollisionBodyType::Rect,
+		CollisionBodyType::FRect,
 		pipeSize_,
 		float4::Red,
 		float4::Black,

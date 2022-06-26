@@ -78,7 +78,7 @@ void GameEngineImage::BitCopy(
 		_srcImagePos.IntY(),		//srcImage를 가져올, srcImage 내 왼쪽상단 y좌표.
 		_srcImageSize.IntX(),		//srcImage에서 잘라올 이미지의 가로 픽셀길이.
 		_srcImageSize.IntY(),		//srcImage에서 잘라올 이미지의 세로 픽셀길이.
-		_srcImage->GetHDC(),			//그릴 srcImage의 DC핸들.
+		_srcImage->GetHDC(),		//그릴 srcImage의 DC핸들.
 		_renderPos.IntX(),			//srcImage가 그려질 백버퍼 이미지 내 x좌표. 왼쪽상단 기준.
 		_renderPos.IntY(),			//srcImage가 그려질 백버퍼 이미지 내 y좌표. 왼쪽상단 기준.
 		SRCCOPY						//복사방식. SRCCOPY: 원본 이미지를 변경없이 그대로 복사. 
@@ -124,7 +124,7 @@ void GameEngineImage::TransparentCopy(
 		_renderPos.IntY(),			//src이미지가 그려질 백버퍼 이미지 내 y좌표. 왼쪽상단 기준.
 		_renderSize.IntX(),			//src이미지가 그려질 백버퍼 이미지 내 x 길이.
 		_renderSize.IntY(),			//src이미지가 그려질 백버퍼 이미지 내 y 길이.
-		_srcImage->GetHDC(),			//src 이미지의 HDC.
+		_srcImage->GetHDC(),		//src 이미지의 HDC.
 		_srcImagePos.IntX(),		//src이미지를 가져올, src이미지 내 왼쪽상단 x좌표. 
 		_srcImagePos.IntY(),		//src이미지를 가져올, src이미지 내 왼쪽상단 y좌표.
 		_srcImageSize.IntX(),		//src이미지를 가져올 가로 픽셀길이.
@@ -174,13 +174,13 @@ void GameEngineImage::PlgCopy(
 	GameEngineRect renderRect = GameEngineRect(float4::Zero, _renderSize);
 
 	float4 renderVertex_LT = { //좌상.
-		renderCenter + renderRect.LeftTopfloat4().Rotate2DByDegree(_angle)
+		renderCenter + renderRect.GetLeftTop().Rotate2DByDegree(_angle)
 	};
 	float4 renderVertex_RT = { //우상. 
-		renderCenter + renderRect.RightTopfloat4().Rotate2DByDegree(_angle)
+		renderCenter + renderRect.GetRightTop().Rotate2DByDegree(_angle)
 	};
 	float4 renderVertex_LB = { //좌하.
-		renderCenter + renderRect.LeftBotfloat4().Rotate2DByDegree(_angle)
+		renderCenter + renderRect.GetLeftBot().Rotate2DByDegree(_angle)
 	};
 
 	POINT renderVertexes[3] = {
@@ -193,7 +193,7 @@ void GameEngineImage::PlgCopy(
 
 	int plgBltResult = PlgBlt(	//
 		this->imageHDC_,		//sourceImage가 그려질 전체 백버퍼 이미지의 HDC.
-		renderVertexes,		//srcImage를 배치할, 백버퍼이미지 내 세 점의 위치를 가진 POINT 구조체 배열.  
+		renderVertexes,			//srcImage를 배치할, 백버퍼이미지 내 세 점의 위치를 가진 POINT 구조체 배열.  
 		_srcImage->GetHDC(),	//srcImage의 HDC.
 		_srcImagePos.IntX(),	//srcImage를 가져올, srcImage 내 왼쪽상단 x좌표. 
 		_srcImagePos.IntY(),	//srcImage를 가져올, srcImage 내 왼쪽상단 y좌표.
@@ -260,8 +260,8 @@ bool GameEngineImage::Load(const std::string& _path)
 		nullptr,			//불러오려는 이미지가 있는 exe파일이나 라이브러리의 인스턴스 핸들. 이미지 하나만 있는 파일을 불러올때는 NULL을 넣는다.
 		_path.c_str(),		//불러오려는 이미지파일의 경로를 포함한 이름.
 		IMAGE_BITMAP,		//이미지 타입. IMAGE_BITMAP를 넣으면 비트맵 형식의 파일을 불러온다.
-		0,					//이미지 가로길이. 여길 0으로 하고 마지막 인자가 LR_DEFAULTSIZE가 아니라면 이미지 자제 크기로 불러온다.
-		0,					//이미지 세로길이. 여길 0으로 하고 마지막 인자가 LR_DEFAULTSIZE가 아니라면 이미지 자제 크기로 불러온다.
+		0,					//이미지 가로길이. 여길 0으로 하고 마지막 인자가 LR_DEFAULTSIZE가 아니라면 이미지 자체 크기로 불러온다.
+		0,					//이미지 세로길이. 여길 0으로 하고 마지막 인자가 LR_DEFAULTSIZE가 아니라면 이미지 자체 크기로 불러온다.
 		LR_LOADFROMFILE		//이미지 하나만 있는 파일을 불러올때 두번째 인자에 파일 경로와 이름을, 여기에 LR_LOADFROMFILE를 넣어준다.
 	);
 
@@ -286,7 +286,7 @@ bool GameEngineImage::Load(const std::string& _path)
 	);										//HGDIOBJ: DC용 공용 HANDLE.
 
 	prevHBMP_ = static_cast<HBITMAP>(tempHandle);
-	//imageHDC가 가지고 있던 이미지의 핸들은 위에서 tempHandle이 반환받아 prevHBMP로 전달해서 보관한다. 
+	//imageHDC_가 가지고 있던 이미지의 핸들은 위에서 tempHandle이 반환받아 prevHBMP_로 전달해서 보관한다. 
 
 	GetImageInfo();
 

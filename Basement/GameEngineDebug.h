@@ -16,8 +16,8 @@ private:
 	GameEngineDebug& operator=(const GameEngineDebug&& _other) = delete;
 
 
-public:	//Member Function Headers
-	static void LeakCheckOn();
+public:
+	static void CheckLeak();
 	static void MsgBoxError(const std::string& _errorMessage);
 };
 

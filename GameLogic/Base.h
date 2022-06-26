@@ -2,10 +2,8 @@
 
 class Base: public GameEngineActor
 {
-	//Friend Classes
 	friend class GameEngineLevel;
 
-	//Member Variables
 	const float4 baseSize_;
 	GameEngineRenderer* base_Renderer_;
 	GameEngineCollisionBody* base_CollisionBody_;

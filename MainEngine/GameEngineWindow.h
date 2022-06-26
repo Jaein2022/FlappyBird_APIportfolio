@@ -4,7 +4,6 @@ class GameEngineWindow
 {
 	//윈도우 생성 및 관리기능을 내 방식대로 감싼 클래스.
 
-	//Member Variables
 	static GameEngineWindow* inst_;
 
 	bool isWindowOn_;
@@ -31,7 +30,7 @@ private:
 	GameEngineWindow& operator=(const GameEngineWindow&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 	void RegisterWindowClass(HINSTANCE _hInstance, const std::string& _windowClassName);
 	void CreateMainWindow(
 		const std::string& _windowTitle,
@@ -43,7 +42,7 @@ public:	//Member Function Headers
 	void TurnOffWindow();
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:	
 	static GameEngineWindow& GetInst()
 	{
 		return *inst_;

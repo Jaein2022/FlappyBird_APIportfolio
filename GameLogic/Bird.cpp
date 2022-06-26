@@ -23,7 +23,7 @@ Bird::~Bird()
 
 void Bird::Initialize()
 {
-	parentPlayLevel_ = reinterpret_cast<PlayLevel*>(this->GetLevel());
+	parentPlayLevel_ = dynamic_cast<PlayLevel*>(this->GetLevel());
 	if (nullptr == parentPlayLevel_)
 	{
 		GameEngineDebug::MsgBoxError("parentPlayLevel이 없습니다.");
@@ -47,8 +47,8 @@ void Bird::Initialize()
 	
 	bird_CollisionBody_ = CreateCollisionBody(
 		"bird_CollisionBody",
-		CollisionBodyType::Rect,
-		{ birdSize_.y, birdSize_.y },
+		CollisionBodyType::RRect,
+		birdSize_,
 		float4::Red,
 		float4::Black,
 		2
@@ -57,7 +57,6 @@ void Bird::Initialize()
 
 
 	bird_SoundPlayer_ = GameEngineSoundManager::GetInst().CreateSoundPlayer("wing_SoundPlayer");
-	//swoosh_SoundPlayer_ = GameEngineSoundManager::GetInst().CreateSoundPlayer("swoosh_SoundPlayer", "swoosh.wav");
 }
 
 void Bird::Update()
@@ -99,14 +98,13 @@ void Bird::ReactCollision(
 		bird_CollisionBody_->Respond(true);
 		_otherCollisionBody->Respond(true);
 		bird_SoundPlayer_->PlayOverLap("die.wav", 0);
-		//베이스와 충돌해서 게임오버되면 밀어내게 설정되어 있어서 한번만 소리난다.
 	}
 
 	if (std::string::npos != _other->GetName().find("pipe"))
 	{
 		_otherCollisionBody->Respond(true);
 
-		if (CollisionBodyType::Rect == _otherCollisionBody->GetType())
+		if (CollisionBodyType::FRect == _otherCollisionBody->GetType())
 		{
 			parentPlayLevel_->SetState(GameState::GameOver);
 			bird_CollisionBody_->Respond(true);
@@ -127,8 +125,10 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 		switch (parentPlayLevel_->GetState())
 		{
 		case GameState::Ready:
+		{
 			fallingSpeed_ = -initAscendingSpeed_;
 			bird_Renderer_->SetAngle(0.f);
+			bird_CollisionBody_->SetRrectAngle(0.f);
 			if ("Ready" != bird_Renderer_->GetCurAnimationName())
 			{
 				bird_Renderer_->ChangeAnimation("Ready", true);
@@ -136,6 +136,7 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 				bird_SoundPlayer_->PlayOverLap("swoosh.wav", 0);
 			}
 			break;
+		}
 
 		case GameState::Playing:
 		{
@@ -192,32 +193,49 @@ void Bird::ControlMoving(float _deltaTime, const float _gravity, const float _pl
 		else if (true == GameEngineInput::GetInst().IsPressed("D"))
 		{
 			Move(float4::Right * _deltaTime * _playSpeed);
+		}	
+		else if (true == GameEngineInput::GetInst().IsPressed("Q"))
+		{
+			bird_Renderer_->Rotate(360.f * _deltaTime);
+			bird_CollisionBody_->RotateRrect(360.f * _deltaTime);
+		}	
+		else if (true == GameEngineInput::GetInst().IsPressed("E"))
+		{
+			bird_Renderer_->Rotate(-360.f * _deltaTime);
+			bird_CollisionBody_->RotateRrect(-360.f * _deltaTime);
 		}
 	}
 }
 
 void Bird::SetAngle(float _deltaTime)
 {
+	if (true == parentPlayLevel_->IsDebuging())
+	{
+		return;
+	}
+
 	if (0.f <= ascendingSecond_)
 	{
 		ascendingSecond_ -= _deltaTime;
 		bird_Renderer_->SetAngle(-20.f);
+		bird_CollisionBody_->SetRrectAngle(-20.f);
 	}
 	else
 	{
 		if (0.5f > fallingSpeed_)
 		{
 			bird_Renderer_->SetAngle(0.f);
+			bird_CollisionBody_->SetRrectAngle(0.f);
 		}
 		else if (0.5f <= fallingSpeed_ && 0.6f > fallingSpeed_)
 		{
 			bird_Renderer_->SetAngle(20.f);
+			bird_CollisionBody_->SetRrectAngle(20.f);
 		}
 		else if (0.6f <= fallingSpeed_)
 		{
 			bird_Renderer_->SetAngle(70.f);
+			bird_CollisionBody_->SetRrectAngle(70.f);
 		}
 	}
-
-
 }

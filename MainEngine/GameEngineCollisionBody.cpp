@@ -4,6 +4,7 @@
 #include "GameEngineImage.h"
 #include "GameEngineImageManager.h"
 #include "GameEngineWindow.h"
+#include "GameEngineLevel.h"
 
 std::function<bool(GameEngineCollisionBody*, GameEngineCollisionBody*)>
 	GameEngineCollisionBody::collisionFunctions_
@@ -17,6 +18,8 @@ GameEngineCollisionBody::GameEngineCollisionBody(GameEngineActor* _actor)
 	size_(float4::Zero),
 	isCollided_(false),
 	type_(CollisionBodyType::MAX),
+	collisionBody_(),
+	angle_(0.f),
 	isCameraEffect_(false),
 	mainPen_(NULL),
 	prevPen_(NULL),
@@ -36,18 +39,21 @@ GameEngineCollisionBody::~GameEngineCollisionBody()
 void GameEngineCollisionBody::Initialize()
 {
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::Rect)]
-		= std::bind(&GameEngineCollisionBody::RectToRect, std::placeholders::_1, std::placeholders::_2);
+	collisionFunctions_[static_cast<int>(CollisionBodyType::FRect)][static_cast<int>(CollisionBodyType::FRect)]
+		= std::bind(&GameEngineCollisionBody::FRectToFRect, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::HLine)]
-		= std::bind(&GameEngineCollisionBody::RectToHLine, std::placeholders::_1, std::placeholders::_2);
+	collisionFunctions_[static_cast<int>(CollisionBodyType::FRect)][static_cast<int>(CollisionBodyType::HLine)]
+		= std::bind(&GameEngineCollisionBody::FRectToHLine, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::Rect)][static_cast<int>(CollisionBodyType::VLine)]
-		= std::bind(&GameEngineCollisionBody::RectToVLine, std::placeholders::_1, std::placeholders::_2);
+	collisionFunctions_[static_cast<int>(CollisionBodyType::FRect)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::FRectToVLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::FRect)][static_cast<int>(CollisionBodyType::RRect)]
+		= std::bind(&GameEngineCollisionBody::FRectToRRect, std::placeholders::_1, std::placeholders::_2);
 
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::Rect)]
-		= std::bind(&GameEngineCollisionBody::HLineToRect, std::placeholders::_1, std::placeholders::_2);
+	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::FRect)]
+		= std::bind(&GameEngineCollisionBody::HLineToFRect, std::placeholders::_1, std::placeholders::_2);
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::HLine)]
 		= std::bind(&GameEngineCollisionBody::HLineToHLine, std::placeholders::_1, std::placeholders::_2);
@@ -55,15 +61,34 @@ void GameEngineCollisionBody::Initialize()
 	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::VLine)]
 		= std::bind(&GameEngineCollisionBody::HLineToVLine, std::placeholders::_1, std::placeholders::_2);
 
+	collisionFunctions_[static_cast<int>(CollisionBodyType::HLine)][static_cast<int>(CollisionBodyType::RRect)]
+		= std::bind(&GameEngineCollisionBody::HLineToRRect, std::placeholders::_1, std::placeholders::_2);
 
-	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::Rect)]
-		= std::bind(&GameEngineCollisionBody::VLineToRect, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::FRect)]
+		= std::bind(&GameEngineCollisionBody::VLineToFRect, std::placeholders::_1, std::placeholders::_2);
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::HLine)]
 		= std::bind(&GameEngineCollisionBody::VLineToHLine, std::placeholders::_1, std::placeholders::_2);
 
 	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::VLine)]
 		= std::bind(&GameEngineCollisionBody::VLineToVLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::VLine)][static_cast<int>(CollisionBodyType::RRect)]
+		= std::bind(&GameEngineCollisionBody::VLineToRRect, std::placeholders::_1, std::placeholders::_2);
+
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::RRect)][static_cast<int>(CollisionBodyType::FRect)]
+		= std::bind(&GameEngineCollisionBody::RRectToFRect, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::RRect)][static_cast<int>(CollisionBodyType::HLine)]
+		= std::bind(&GameEngineCollisionBody::RRectToHLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::RRect)][static_cast<int>(CollisionBodyType::VLine)]
+		= std::bind(&GameEngineCollisionBody::RRectToVLine, std::placeholders::_1, std::placeholders::_2);
+
+	collisionFunctions_[static_cast<int>(CollisionBodyType::RRect)][static_cast<int>(CollisionBodyType::RRect)]
+		= std::bind(&GameEngineCollisionBody::RRectToRRect, std::placeholders::_1, std::placeholders::_2);
 
 }
 
@@ -76,27 +101,23 @@ void GameEngineCollisionBody::Render()
 
 	GameEngineImage* backBufferImage = GameEngineImageManager::GetInst().GetBackBufferImage();
 	
-	float4 renderPos = float4::Zero;
+	float4 renderPos = float4(collisionBody_.AABB.Center.x, collisionBody_.AABB.Center.y);
 	if (true == isCameraEffect_)
 	{
-		renderPos = parentActor_->GetCameraPos() + localPos_;
-	}
-	else
-	{
-		renderPos = parentActor_->GetWorldPos() + localPos_;
+		renderPos -= parentActor_->GetLevel()->GetCameraPos();
 	}
 
 	prevPen_ = static_cast<HPEN>(SelectObject(
 		backBufferImage->GetHDC(),
 		static_cast<HGDIOBJ>(mainPen_))
-		);
+	);
+
+	GameEngineRect renderRect = GameEngineRect(renderPos, size_);
 
 	switch (type_)
 	{
-	case CollisionBodyType::Rect:
+	case CollisionBodyType::FRect:
 	{
-		GameEngineRect renderRect = GameEngineRect(renderPos, size_);
-
 		MoveToEx(
 			backBufferImage->GetHDC(),
 			renderRect.ILeft(),
@@ -153,15 +174,50 @@ void GameEngineCollisionBody::Render()
 	{
 		MoveToEx(
 			backBufferImage->GetHDC(),
-			renderPos.IntX() - size_.Half_IntX(),
-			renderPos.IntY(),
+			renderRect.ILeft(),
+			renderRect.ITop(),
 			nullptr
 		);
-
 		LineTo(
 			backBufferImage->GetHDC(),
-			renderPos.IntX() + size_.Half_IntX(),
-			renderPos.IntY()
+			renderRect.IRight(),
+			renderRect.ITop()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.ITop(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.ITop()
 		);
 
 		break;
@@ -171,16 +227,127 @@ void GameEngineCollisionBody::Render()
 	{
 		MoveToEx(
 			backBufferImage->GetHDC(),
-			renderPos.IntX(),
-			renderPos.IntY() - size_.Half_IntY(),
+			renderRect.ILeft(),
+			renderRect.ITop(),
 			nullptr
 		);
-
 		LineTo(
 			backBufferImage->GetHDC(),
-			renderPos.IntX(),
-			renderPos.IntY() + size_.Half_IntY()
+			renderRect.IRight(),
+			renderRect.ITop()
 		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.ITop(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.IRight(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.IBot(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			renderRect.ILeft(),
+			renderRect.ITop()
+		);
+		break;
+	}
+	case CollisionBodyType::RRect:
+	{
+		DirectX::XMVECTOR rRectQuaternionRotation = DirectX::XMLoadFloat4(
+			&(this->collisionBody_.OBB.Orientation));
+
+		DirectX::XMVECTOR rRectAxis;
+		float radianAngle;
+		DirectX::XMQuaternionToAxisAngle(&rRectAxis, &radianAngle, rRectQuaternionRotation);
+	
+		GameEngineRect renderOBB = GameEngineRect(
+			float4::Zero, 
+			float4(this->collisionBody_.OBB.Extents.x * 2.f, 
+				this->collisionBody_.OBB.Extents.y * 2.f)
+		);
+
+		if (0.0f > rRectAxis.m128_f32[2])
+		{
+			radianAngle = -radianAngle;
+		}
+
+		float4 lt = renderPos + renderOBB.GetLeftTop().Rotate2DByRadian(radianAngle);
+		float4 rt = renderPos + renderOBB.GetRightTop().Rotate2DByRadian(radianAngle);
+		float4 lb = renderPos + renderOBB.GetLeftBot().Rotate2DByRadian(radianAngle);
+		float4 rb = renderPos + renderOBB.GetRightBot().Rotate2DByRadian(radianAngle);
+
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			lt.IntX(),
+			lt.IntY(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			rt.IntX(),
+			rt.IntY()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			rt.IntX(),
+			rt.IntY(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			rb.IntX(),
+			rb.IntY()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			rb.IntX(),
+			rb.IntY(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			lb.IntX(),
+			lb.IntY()
+		);
+
+		MoveToEx(
+			backBufferImage->GetHDC(),
+			lb.IntX(),
+			lb.IntY(),
+			nullptr
+		);
+		LineTo(
+			backBufferImage->GetHDC(),
+			lt.IntX(),
+			lt.IntY()
+		);
+
 		break;
 	}
 
@@ -210,6 +377,78 @@ void GameEngineCollisionBody::Respond(bool _isExcluded /*= false*/)
 	{
 		ExcludeUpdate();
 	}
+}
+
+void GameEngineCollisionBody::SetTypeAndSize(CollisionBodyType _type, const float4& _size)
+{
+	type_ = _type;
+	size_ = _size;
+
+	switch (type_)
+	{
+	case CollisionBodyType::FRect:
+	{
+		collisionBody_.AABB.Center = DirectX::XMFLOAT3(
+			this->GetActor()->GetWorldPos().x + localPos_.x,
+			this->GetActor()->GetWorldPos().y + localPos_.y,
+			0.f
+		);
+		collisionBody_.AABB.Extents = DirectX::XMFLOAT3(size_.Half_X(), size_.Half_Y(), 1.f);
+		break;
+	}
+
+	case CollisionBodyType::HLine:
+	{
+		collisionBody_.AABB.Center = DirectX::XMFLOAT3(
+			this->GetActor()->GetWorldPos().x + localPos_.x,
+			this->GetActor()->GetWorldPos().y + localPos_.y,
+			0.f
+		);
+		collisionBody_.AABB.Extents = DirectX::XMFLOAT3(size_.Half_X(), 2.f, 1.f);
+		break;
+	}
+
+	case CollisionBodyType::VLine:
+	{
+		collisionBody_.AABB.Center = DirectX::XMFLOAT3(
+			this->GetActor()->GetWorldPos().x + localPos_.x,
+			this->GetActor()->GetWorldPos().y + localPos_.y,
+			0.f
+		);
+		collisionBody_.AABB.Extents = DirectX::XMFLOAT3(2.f, size_.Half_Y(), 1.f);
+		break;
+	}
+
+	case CollisionBodyType::RRect:
+	{
+		collisionBody_.OBB.Center = DirectX::XMFLOAT3(
+			this->GetActor()->GetWorldPos().x + localPos_.x,
+			this->GetActor()->GetWorldPos().y + localPos_.y,
+			0.f
+		);
+		collisionBody_.OBB.Extents = DirectX::XMFLOAT3(size_.Half_X(), size_.Half_Y(), 1.f);
+		break;
+	}
+
+	default:
+		GameEngineDebug::MsgBoxError("생성할 수 없는 타입의 충돌체입니다.");
+		return;
+	}
+}
+
+void GameEngineCollisionBody::SetRrectAngle(float _degree)
+{
+	angle_ = _degree;
+
+	DirectX::XMFLOAT4 obbOrientation;
+
+	DirectX::XMStoreFloat4(
+		&obbOrientation,
+		DirectX::XMQuaternionRotationRollPitchYaw(
+			0.f, 0.f, angle_ * GameEngineMath::DegreeToRadian)
+	);
+
+	this->collisionBody_.OBB.Orientation = obbOrientation;
 }
 
 void GameEngineCollisionBody::SwitchColor()
@@ -252,97 +491,160 @@ GameEngineRect GameEngineCollisionBody::GetRect()
 	return { parentActor_->GetWorldPos() + localPos_, size_ };
 }
 
-bool GameEngineCollisionBody::RectToRect(GameEngineCollisionBody* _rectA, GameEngineCollisionBody* _rectB)
+bool GameEngineCollisionBody::FRectToFRect(GameEngineCollisionBody* _fRectA, GameEngineCollisionBody* _fRectB)
 {
-	GameEngineRect rectA = _rectA->GetRect();
-	GameEngineRect rectB = _rectB->GetRect();
+	_fRectA->collisionBody_.AABB.Center.x = _fRectA->GetWorldPos().x;
+	_fRectA->collisionBody_.AABB.Center.y = _fRectA->GetWorldPos().y;
 
-	if (rectA.IRight() < rectB.ILeft())
-	{
-		return false;
-	}
-	if (rectA.ILeft() > rectB.IRight())
-	{
-		return false;
-	}
-	if (rectA.ITop() > rectB.IBot())
-	{
-		return false;
-	}
-	if (rectA.IBot() < rectB.ITop())
-	{
-		return false;
-	}
-	return true;
+	_fRectB->collisionBody_.AABB.Center.x = _fRectB->GetWorldPos().x;
+	_fRectB->collisionBody_.AABB.Center.y = _fRectB->GetWorldPos().y;
+
+	return _fRectA->collisionBody_.AABB.Intersects(_fRectB->collisionBody_.AABB);
 }
 
-bool GameEngineCollisionBody::RectToHLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _hLine)
+bool GameEngineCollisionBody::FRectToHLine(GameEngineCollisionBody* _fRect, GameEngineCollisionBody* _hLine)
 {
-	GameEngineRect rect = _rect->GetRect();
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
 
-	float4 leftEnd = _hLine->GetWorldPos() - _hLine->GetSize().Half();
-	float4 rightEnd = _hLine->GetWorldPos() + _hLine->GetSize().Half();
+	_hLine->collisionBody_.AABB.Center.x = _hLine->GetWorldPos().x;
+	_hLine->collisionBody_.AABB.Center.y = _hLine->GetWorldPos().y;
 
-	if (rect.IRight() < leftEnd.IntX() || rect.ILeft() > rightEnd.IntX())
-	{
-		return false;
-	}
-
-	if (rect.IBot() > leftEnd.IntY() && rect.ITop() < leftEnd.IntY())
-	{
-		return true;
-	}
-
-	return false;
+	return _fRect->collisionBody_.AABB.Intersects(_hLine->collisionBody_.AABB);
 }
 
-bool GameEngineCollisionBody::RectToVLine(GameEngineCollisionBody* _rect, GameEngineCollisionBody* _vLine)
+bool GameEngineCollisionBody::FRectToVLine(GameEngineCollisionBody* _fRect, GameEngineCollisionBody* _vLine)
 {
-	GameEngineRect rect = _rect->GetRect();
-	float4 highEnd = _vLine->GetWorldPos() - _vLine->GetSize().Half();
-	float4 lowEnd = _vLine->GetWorldPos() + _vLine->GetSize().Half();
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
 
-	if (rect.IBot() < highEnd.IntY() || rect.ITop() > lowEnd.IntY())
-	{
-		return false;
-	}
+	_vLine->collisionBody_.AABB.Center.x = _vLine->GetWorldPos().x;
+	_vLine->collisionBody_.AABB.Center.y = _vLine->GetWorldPos().y;
 
-	if (rect.IRight() > highEnd.IntX() && rect.ILeft() < highEnd.IntX())
-	{
-		return true;
-	}
-
-	return false;
+	return _fRect->collisionBody_.AABB.Intersects(_vLine->collisionBody_.AABB);
 }
 
-bool GameEngineCollisionBody::HLineToRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _rect)
+bool GameEngineCollisionBody::FRectToRRect(GameEngineCollisionBody* _fRect, GameEngineCollisionBody* _rRect)
 {
-	return RectToHLine(_rect, _hLine);
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
+
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	return _fRect->collisionBody_.AABB.Intersects(_rRect->collisionBody_.OBB);
+}
+
+bool GameEngineCollisionBody::HLineToFRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _fRect)
+{
+	_hLine->collisionBody_.AABB.Center.x = _hLine->GetWorldPos().x;
+	_hLine->collisionBody_.AABB.Center.y = _hLine->GetWorldPos().y;
+
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
+
+	return _hLine->collisionBody_.AABB.Intersects(_fRect->collisionBody_.AABB);
 }
 
 bool GameEngineCollisionBody::HLineToHLine(GameEngineCollisionBody* _hLineA, GameEngineCollisionBody* _hLineB)
 {
+	//return _hLineA->collisionBody_.AABB.Intersects(_hLineB->collisionBody_.AABB);
 	return false;
 }
 
 bool GameEngineCollisionBody::HLineToVLine(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _vLine)
 {
+	//return _hLine->collisionBody_.AABB.Intersects(_vLine->collisionBody_.AABB);
 	return false;
 }
 
-bool GameEngineCollisionBody::VLineToRect(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _rect)
+bool GameEngineCollisionBody::HLineToRRect(GameEngineCollisionBody* _hLine, GameEngineCollisionBody* _rRect)
 {
-	return RectToVLine(_rect, _vLine);
+	_hLine->collisionBody_.AABB.Center.x = _hLine->GetWorldPos().x;
+	_hLine->collisionBody_.AABB.Center.y = _hLine->GetWorldPos().y;
+
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	return _hLine->collisionBody_.AABB.Intersects(_rRect->collisionBody_.OBB);
+}
+
+bool GameEngineCollisionBody::VLineToFRect(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _fRect)
+{
+	_vLine->collisionBody_.AABB.Center.x = _vLine->GetWorldPos().x;
+	_vLine->collisionBody_.AABB.Center.y = _vLine->GetWorldPos().y;
+
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
+
+	return _vLine->collisionBody_.AABB.Intersects(_fRect->collisionBody_.AABB);
 }
 
 bool GameEngineCollisionBody::VLineToHLine(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _hLine)
 {
+	//return _vLine->collisionBody_.AABB.Intersects(_hLine->collisionBody_.AABB);
 	return false;
 }
 
 bool GameEngineCollisionBody::VLineToVLine(GameEngineCollisionBody* _vLineA, GameEngineCollisionBody* _vLineB)
 {
+	//return _vLineA->collisionBody_.AABB.Intersects(_vLineB->collisionBody_.AABB);
 	return false;
+}
+
+bool GameEngineCollisionBody::VLineToRRect(GameEngineCollisionBody* _vLine, GameEngineCollisionBody* _rRect)
+{
+	_vLine->collisionBody_.AABB.Center.x = _vLine->GetWorldPos().x;
+	_vLine->collisionBody_.AABB.Center.y = _vLine->GetWorldPos().y;
+
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	return _vLine->collisionBody_.AABB.Intersects(_rRect->collisionBody_.OBB);
+}
+
+bool GameEngineCollisionBody::RRectToFRect(GameEngineCollisionBody* _rRect, GameEngineCollisionBody* _fRect)
+{
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	_fRect->collisionBody_.AABB.Center.x = _fRect->GetWorldPos().x;
+	_fRect->collisionBody_.AABB.Center.y = _fRect->GetWorldPos().y;
+
+	return _rRect->collisionBody_.OBB.Intersects(_fRect->collisionBody_.AABB);
+}
+
+bool GameEngineCollisionBody::RRectToHLine(GameEngineCollisionBody* _rRect, GameEngineCollisionBody* _hLine)
+{
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	_hLine->collisionBody_.AABB.Center.x = _hLine->GetWorldPos().x;
+	_hLine->collisionBody_.AABB.Center.y = _hLine->GetWorldPos().y;
+
+	return _rRect->collisionBody_.OBB.Intersects(_hLine->collisionBody_.AABB);
+}
+
+bool GameEngineCollisionBody::RRectToVLine(GameEngineCollisionBody* _rRect, GameEngineCollisionBody* _vLine)
+{
+	_rRect->collisionBody_.OBB.Center.x = _rRect->GetWorldPos().x;
+	_rRect->collisionBody_.OBB.Center.y = _rRect->GetWorldPos().y;
+
+	_vLine->collisionBody_.AABB.Center.x = _vLine->GetWorldPos().x;
+	_vLine->collisionBody_.AABB.Center.y = _vLine->GetWorldPos().y;
+
+	return _rRect->collisionBody_.OBB.Intersects(_vLine->collisionBody_.AABB);
+}
+
+bool GameEngineCollisionBody::RRectToRRect(GameEngineCollisionBody* _rRectA, GameEngineCollisionBody* _rRectB)
+{
+	_rRectA->collisionBody_.OBB.Center.x = _rRectA->GetWorldPos().x;
+	_rRectA->collisionBody_.OBB.Center.y = _rRectA->GetWorldPos().y;
+
+	_rRectB->collisionBody_.OBB.Center.x = _rRectB->GetWorldPos().x;
+	_rRectB->collisionBody_.OBB.Center.y = _rRectB->GetWorldPos().y;
+
+	return _rRectA->collisionBody_.OBB.Intersects(_rRectB->collisionBody_.OBB);
 }
 
 

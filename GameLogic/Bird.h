@@ -4,11 +4,9 @@ class GameEngineSoundPlayer;
 class PlayLevel;
 class Bird: public GameEngineActor
 {
-	//Friend Classes
 	friend class GameEngineLevel;
 	friend PlayLevel;
 
-	//Member Variables
 	const float4 birdSize_;
 	GameEngineRenderer* bird_Renderer_;
 	GameEngineCollisionBody* bird_CollisionBody_;

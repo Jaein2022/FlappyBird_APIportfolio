@@ -232,9 +232,6 @@ void GameEngineWindow::Update(std::function<void()> _updateGame)
         {
             GameEngineTime::GetInst().Update();
             _updateGame();
-
-            //GameEngineInput::GetInst().Update();
-            //GameEngineSoundManager::GetInst().Update();
         }
     }
 }

@@ -6,11 +6,9 @@
 class GameEngineSound: public GameEngineNameBase
 {
 
-	//Friend Classes
 	friend class GameEngineSoundManager;
 	friend class GameEngineSoundPlayer;
 
-	//Member Variables
 	FMOD::Sound* sound_;
 
 
@@ -28,7 +26,7 @@ private:
 	GameEngineSound& operator=(const GameEngineSound&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:	
 	bool Load(const std::string& _path);
 
 

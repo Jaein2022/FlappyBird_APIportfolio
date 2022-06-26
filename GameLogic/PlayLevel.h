@@ -13,23 +13,18 @@ class PlayLevel : public GameEngineLevel
 
 
 	friend class GameEngineLevelManager;
-	friend void Pipe::ReactCollision(
-		GameEngineCollisionBody* _thisCollisionBody,
-		GameEngineActor* _other,
-		GameEngineCollisionBody* _otherCollisionBody
-	);	
 	friend void Bird::ReactCollision(
 		GameEngineCollisionBody* _thisCollisionBody,
 		GameEngineActor* _other,
 		GameEngineCollisionBody* _otherCollisionBody
 	);
 
-	//Member Variables.
-	GameState currentState_;
-	int score_;
+	GameState currentState_;	//현재 게임 상태.
+	int score_;					//점수
 
-	Bird* bird_;
-	const float4 birdStartPos_;
+	Bird* bird_;				
+	const float4 birdStartPos_;	//버드 시작 지점.
+
 	UI* UI_;
 
 	std::vector<Background*> allBackgrounds_;
@@ -42,7 +37,7 @@ class PlayLevel : public GameEngineLevel
 	const int baseCount_;
 
 	std::vector<Pipe*> allPipes_;
-	const int pipeStartPosX_;
+	const int pipeStartPosX_;	//파이프 액터의 첫 배치 지점의 x좌표.
 	const int pipeInterval_;	//파이프 액터의 좌우 간격.
 	const int pipeCount_;
 

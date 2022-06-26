@@ -11,11 +11,9 @@ class GameEngineSoundPlayer;
 class GameEngineSound;
 class GameEngineSoundManager
 {
-	//Friend Classes
 	friend GameEngineSound;
 	friend GameEngineSoundPlayer;
 
-	//Member Variables
 	static GameEngineSoundManager* inst_;
 
 	FMOD::System* soundSystem_; // FMOD가 제공해주는 인터페이스.

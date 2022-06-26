@@ -39,10 +39,10 @@ private:
 	GameEngineLevel& operator=(const GameEngineLevel&& _other) = delete;
 
 
-public:	//Member Function Headers.
+public:
 	
 
-public:	//Getter, Setter, Templated Member Functions.
+public:
 	float4 GetCameraPos()
 	{
 		return cameraPos_;

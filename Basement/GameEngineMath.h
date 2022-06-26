@@ -14,23 +14,23 @@ class float4
 public:
 	//자주 사용하는 숫자 조합을 미리 만들어놓으면 생성자 호출하는 연산비용을 아낄 수 있다.
 
-	static const float4 Zero;
-	static const float4 One;
+	static const float4 Zero;	//0000
+	static const float4 One;	//1111
 
 	static const float4 Left;	//--x
 	static const float4 Right;	//++x
 	static const float4 Down;	//++y
 	static const float4 Up;		//--y
 
-	static const float4 Red;	//100
-	static const float4 Green;	//010
-	static const float4 Blue;	//001
-	static const float4 Yellow;	//110
-	static const float4 Magenta;//101
-	static const float4 Cyan;	//001
+	static const float4 Red;	//1001
+	static const float4 Green;	//0101
+	static const float4 Blue;	//0011
+	static const float4 Yellow;	//1101
+	static const float4 Magenta;//1011
+	static const float4 Cyan;	//0011
 
-	static const float4 Black;	//000
-	static const float4 White;	//111
+	static const float4 Black;	//0001
+	static const float4 White;	//1111
 
 	//익명으로 유니온을 선언하고 그 안에 구조체를 두면, 
 	//유니온처럼 메모리를 공용으로 활용할 수 있는 클래스 멤버 구조체를 사용할 수 있다.
@@ -219,14 +219,24 @@ public:
 		return *this;
 	}
 
-	bool operator==(const float4& _value) const
+	bool operator==(const float4& _other) const
 	{
-		return (this->x == _value.x && this->y == _value.y && this->z == _value.z);
+		return fabsf(this->x - _other.x) <= FLT_EPSILON &&
+			fabsf(this->y - _other.y) <= FLT_EPSILON &&
+			fabsf(this->z - _other.z) <= FLT_EPSILON;
+		//FLT_EPSILON: 1.192092896e-07F. float으로 표현할 수 있는 가장 작은 수 + 1.0f.
+		//실수는 부동소수점 시스템 때문에 항상 약간의 오차가 발생하고, 그래서 일반적인 방식으로 대소를 비교해선 안되고,
+		//두 숫자간 차이가 기준이 되는 일정 수치 이하일 때 같다고 표현하고, 그보다 크다면 다르다고 표현하는 방식을 써야 한다.
 	}
 
-	bool operator!=(const float4& _value) const
+	bool operator!=(const float4& _other) const
 	{
-		return (this->x != _value.x || this->y != _value.y || this->z != _value.z);
+		return fabsf(this->x - _other.x) > FLT_EPSILON ||
+			fabsf(this->y - _other.y) > FLT_EPSILON ||
+			fabsf(this->z - _other.z) > FLT_EPSILON;
+		//FLT_EPSILON: 1.192092896e-07F. float으로 표현할 수 있는 가장 작은 수 + 1.0f.
+		//실수는 부동소수점 시스템 때문에 항상 약간의 오차가 발생하고, 그래서 일반적인 방식으로 대소를 비교해선 안되고,
+		//두 숫자간 차이가 기준이 되는 일정 수치 이하일 때 같다고 표현하고, 그보다 크다면 다르다고 표현하는 방식을 써야 한다.
 	}
 
 
@@ -317,13 +327,21 @@ public:
 
 struct GameEngineRect
 {
-
 	float4 pos_;
 	float4 size_;
+
+	float4 leftTop_;
+	float4 leftBot_;
+	float4 rightTop_;
+	float4 rightBot_;
 
 public:
 	GameEngineRect(const float4& _pos, const float4& _size): pos_(_pos), size_(_size)
 	{
+		leftTop_ = { pos_.x - size_.Half_X(), pos_.y - size_.Half_Y() };
+		leftBot_ = { pos_.x - size_.Half_X(), pos_.y + size_.Half_Y() };
+		rightTop_ = { pos_.x + size_.Half_X(), pos_.y - size_.Half_Y() };
+		rightBot_ = { pos_.x + size_.Half_X(), pos_.y + size_.Half_Y() };
 	}
 
 	~GameEngineRect()
@@ -333,55 +351,54 @@ public:
 public:
 	float Left()
 	{
-		return pos_.x - size_.Half_X();
+		return leftTop_.x;
 	}	
 	float Right()
 	{
-		return pos_.x + size_.Half_X();
+		return rightTop_.x;
 	}	
 	float Top()
 	{
-		return pos_.y - size_.Half_Y();
+		return leftTop_.y;
 	}	
 	float Bot()
 	{
-		return pos_.y + size_.Half_Y();
+		return leftBot_.y;
 	}
 
 	int ILeft()
 	{
-		return pos_.IntX() - size_.Half_IntX();
+		return leftTop_.IntX();
 	}	
 	int IRight()
 	{
-		return pos_.IntX() + size_.Half_IntX();
+		return rightTop_.IntX();
 	}	
 	int ITop()
 	{
-		return pos_.IntY() - size_.Half_IntY();
+		return leftTop_.IntY();
 	}	
 	int IBot()
 	{
-		return pos_.IntY() + size_.Half_IntY();
+		return leftBot_.IntY();
 	}
 
-	float4 LeftTopfloat4()
+	float4 GetLeftTop()
 	{
-		return { Left(), Top() };
+		return leftTop_;
 	}
-	float4 RightTopfloat4()
+	float4 GetRightTop()
 	{
-		return { Right(), Top() };
+		return rightTop_;
 	}
-	float4 LeftBotfloat4()
+	float4 GetLeftBot()
 	{
-		return { Left(), Bot() };
+		return leftBot_;
 	}
-	float4 RightBotfloat4()
+	float4 GetRightBot()
 	{
-		return { Right(), Bot() };
+		return rightBot_;
 	}
 
 private:
-
 };

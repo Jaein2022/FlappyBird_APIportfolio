@@ -3,11 +3,9 @@
 class PlayLevel;
 class Pipe: public GameEngineActor
 {
-	//Friend Classes
 	friend class GameEngineLevel;
 	friend PlayLevel;
 
-	//Member Variables
 	const float4 pipeSize_;
 	const int pipeDistance_;	//파이프 상하 간격.
 

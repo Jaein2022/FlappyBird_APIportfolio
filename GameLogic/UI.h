@@ -6,8 +6,6 @@ class UI: public GameEngineActor
 {
 	friend class GameEngineLevel;
 
-
-	//Member Variables.
 	PlayLevel* parentPlayLevel_;
 	GameEngineRenderer* readyMessage_Renderer_;	//이 게임에서 유일하게 얘만 렌더피봇이 바닥.
 	const float4 numberSize_;

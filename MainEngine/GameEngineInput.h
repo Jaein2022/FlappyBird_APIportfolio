@@ -46,7 +46,7 @@ private:
 	GameEngineInput& operator=(const GameEngineInput&& _other) = delete;
 
 
-public:	//Member Function Headers
+public:
 	void CreateKey(const std::string& _keyName, int _keyValue);
 	void Update();
 	bool IsDown(const std::string& _keyName);
@@ -55,7 +55,7 @@ public:	//Member Function Headers
 	bool IsFree(const std::string& _keyName);
 
 
-public:	//Getter, Setter, Templated Member Functions
+public:
 	static GameEngineInput& GetInst()
 	{
 		return *inst_;
@@ -71,7 +71,7 @@ public:	//Getter, Setter, Templated Member Functions
 	}
 
 
-private://Member Function Headers
+private:
 
 
 };

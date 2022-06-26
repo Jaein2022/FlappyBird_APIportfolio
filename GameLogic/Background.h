@@ -2,7 +2,7 @@
 
 class Background: public GameEngineActor
 {
-	//배경: 뒷배경 이동 배치 및 렌더링 담당.
+	//배경: 뒷배경 렌더링 담당.
 
 	friend class GameEngineLevel;
 

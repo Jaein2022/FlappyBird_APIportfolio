@@ -12,7 +12,7 @@ int APIENTRY wWinMain(
     _In_ int       nCmdShow
 )
 {
-    GameEngineDebug::LeakCheckOn();
+    GameEngineDebug::CheckLeak();
 
 #ifdef _DEBUG               //디버그모드에서만 하고, 릴리즈모드에서는 하지 않는다.
     int* i = new int(1);	//릭 체크가 이루어지고 있는지를 확인하기 위한 의도적인 릭.
@@ -39,14 +39,12 @@ int APIENTRY wWinMain(
 
 void InitializeGame()
 {
-
     GameEngineSoundManager::GetInst().Initialize();
     GameEngineCollisionBody::Initialize();
 }
 
 void LoadResources()
 {
-
     GameEnginePath soundResourcePath = GameEnginePath();
     soundResourcePath.MoveToParent();
     soundResourcePath.MoveToChild("Resource");
@@ -71,11 +69,8 @@ void LoadResources()
 
 void UpdateGame()
 {
-
-
     GameEngineInput::GetInst().Update();
     GameEngineLevelManager::GetInst().Update();
-    
     GameEngineSoundManager::GetInst().Update();
 }
 
