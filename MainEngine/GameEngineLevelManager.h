@@ -1,6 +1,6 @@
 #pragma once
+#include "GameEngineLevel.h"
 
-class GameEngineLevel;
 class GameEngineLevelManager
 {
 	static GameEngineLevelManager* inst_;
