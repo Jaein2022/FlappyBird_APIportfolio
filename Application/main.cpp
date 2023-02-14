@@ -19,7 +19,7 @@ int APIENTRY wWinMain(
 #endif                     
 
     GameEngineWindow::GetInst().RegisterWindowClass(hInstance, "FlappyBird_APIportfolio");
-    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 560, 500 + 30/*윈도우 타이틀바 폭*/});
+    GameEngineWindow::GetInst().CreateMainWindow("FlappyBird", { 400, 300 }, { 280, 500 + 30/*윈도우 타이틀바 폭*/});
 
     InitializeGame();
 

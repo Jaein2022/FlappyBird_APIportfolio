@@ -48,7 +48,7 @@ void Bird::Initialize()
 		"bird_CollisionBody",
 		CollisionBodyType::RRect,
 		float4( birdSize_.y, birdSize_.y ),	//<-버드 충돌체 크기 조정.
-		float4::Red,
+		float4::Blue,
 		float4::Black,
 		2
 	);
@@ -90,30 +90,25 @@ void Bird::ReactCollision(
 	GameEngineCollisionBody* _otherCollisionBody
 )
 {
-	if (CollisionBodyType::HLine == _otherCollisionBody->GetType() &&
-		std::string::npos != _other->GetName().find("base"))
+	if (CollisionBodyType::HLine == _otherCollisionBody->GetType())
 	{
 		parentPlayLevel_->SetState(GameState::GameOver);
 		bird_CollisionBody_->Respond(true);
 		_otherCollisionBody->Respond(true);
 		bird_SoundPlayer_->PlayOverLap("die.wav", 0);
 	}
-
-	if (std::string::npos != _other->GetName().find("pipe"))
+	else if (CollisionBodyType::FRect == _otherCollisionBody->GetType())
 	{
+		parentPlayLevel_->SetState(GameState::GameOver);
+		bird_CollisionBody_->Respond(true);
 		_otherCollisionBody->Respond(true);
-
-		if (CollisionBodyType::FRect == _otherCollisionBody->GetType())
-		{
-			parentPlayLevel_->SetState(GameState::GameOver);
-			bird_CollisionBody_->Respond(true);
-			bird_SoundPlayer_->PlayOverLap("hit.wav", 0);
-		}
-		else if (CollisionBodyType::VLine == _otherCollisionBody->GetType())
-		{
-			parentPlayLevel_->AddScore();
-			bird_SoundPlayer_->PlayOverLap("point.wav", 0);
-		}
+		bird_SoundPlayer_->PlayOverLap("hit.wav", 0);
+	}
+	else if (CollisionBodyType::VLine == _otherCollisionBody->GetType())
+	{
+		parentPlayLevel_->AddScore();
+		_otherCollisionBody->Respond(true);
+		bird_SoundPlayer_->PlayOverLap("point.wav", 0);
 	}
 }
 

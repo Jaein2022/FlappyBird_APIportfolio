@@ -5,7 +5,6 @@
 #include "Pipe.h"
 #include "Base.h"
 #include "UI.h"
-#include <Basement\GameEngineRandom.h>
 
 PlayLevel::PlayLevel()
 	: score_(0),
